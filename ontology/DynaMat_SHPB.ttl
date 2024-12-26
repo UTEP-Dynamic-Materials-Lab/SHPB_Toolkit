@@ -176,7 +176,11 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasAbbreviation
 :hasAbbreviation rdf:type owl:DatatypeProperty ;
-                 rdfs:domain :User ;
+                 rdfs:domain [ rdf:type owl:Class ;
+                               owl:unionOf ( :Material
+                                             :User
+                                           )
+                             ] ;
                  rdfs:range xsd:string ;
                  rdfs:comment "Abbreviation or initials of the user." .
 
@@ -282,6 +286,13 @@ xsd:date rdf:type rdfs:Datatype .
 :hasSize rdf:type owl:DatatypeProperty ;
          rdfs:range xsd:integer ;
          rdfs:comment "Indicates the size of the dataset, such as the number of points in a series." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStrainGaugeDistance
+:hasStrainGaugeDistance rdf:type owl:DatatypeProperty ;
+                        rdfs:domain :Bar ;
+                        rdfs:range xsd:float ;
+                        rdfs:comment "Specifies the strain gauge distance measured from the sample interface in meters" .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStructure
@@ -497,6 +508,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AL6061
 :AL6061 rdf:type owl:NamedIndividual ,
                  :Material ;
+        :hasAbbreviation "AL6061" ;
         :hasLegendName "Aluminum 6061 Alloy" ;
         :hasMaterialType :AluminumAlloy ;
         rdfs:comment "6061 aluminum alloy, a common material for structural applications." .
@@ -505,6 +517,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AL7075
 :AL7075 rdf:type owl:NamedIndividual ,
                  :Material ;
+        :hasAbbreviation "AL7075" ;
         :hasLegendName "Aluminum 7075 Alloy" ;
         :hasMaterialType :AluminumAlloy ;
         rdfs:comment "7075 aluminum alloy, used in aerospace and high-strength applications." .
@@ -522,18 +535,11 @@ xsd:date rdf:type rdfs:Datatype .
                rdfs:comment "Category for aluminum alloy materials." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Brass101
-:Brass101 rdf:type owl:NamedIndividual ,
-                   :Material ;
-          :hasMaterial :CopperAlloy ;
-          :hasLegendName "Brass 101 Alloy" ;
-          rdfs:comment "A generic brass alloy tested for mechanical properties." .
-
-
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Brass414
 :Brass414 rdf:type owl:NamedIndividual ,
                    :Material ;
           :hasMaterial :CopperAlloy ;
+          :hasAbbreviation "CU414" ;
           :hasLegendName "Brass 414 Alloy" ;
           rdfs:comment "A generic brass alloy tested for mechanical properties." .
 
@@ -544,6 +550,15 @@ xsd:date rdf:type rdfs:Datatype .
                :hasAbbreviation "BES" ;
                :hasFullName "Brian E. Schuster" ;
                :hasAfilliation "The University of Texas at El Paso" .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CU101
+:CU101 rdf:type owl:NamedIndividual ,
+                :Material ;
+       :hasMaterial :CopperAlloy ;
+       :hasAbbreviation "CU101" ;
+       :hasLegendName "Copper 101 Alloy" ;
+       rdfs:comment "A generic brass alloy tested for mechanical properties." .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CalibrationResistance
@@ -675,6 +690,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SS316
 :SS316 rdf:type owl:NamedIndividual ,
                 :Material ;
+       :hasAbbreviation "SS316" ;
        :hasLegendName "Stainless Steel 316 Alloy" ;
        :hasMaterialType :SteelAlloy ;
        rdfs:comment "316 stainless steel alloy, commonly used in SHPB testing." .
@@ -689,6 +705,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Steel1018
 :Steel1018 rdf:type owl:NamedIndividual ,
                     :Material ;
+           :hasAbbreviation "ST1018" ;
            :hasLegendName "Steel 1018 Alloy" ;
            :hasMaterialType :SteelAlloy ;
            rdfs:comment "1018 steel alloy, commonly used in SHPB testing." .
@@ -703,6 +720,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SteelC350
 :SteelC350 rdf:type owl:NamedIndividual ,
                     :Material ;
+           :hasAbbreviation "STC350" ;
            :hasLegendName "Steel C350 Alloy" ;
            :hasMaterialType :SteelAlloy ;
            rdfs:comment "C350 maraging steel, a high-strength material often tested in SHPB experiments." .
