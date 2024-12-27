@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget
-from GUI.metadata import AddExperimentWindow 
+from GUI.add_experiment import AddExperimentWindow
 
 class MainWindow(QMainWindow):
     def __init__(self, ontology_path):

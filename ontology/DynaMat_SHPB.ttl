@@ -20,6 +20,10 @@
 :hasMaterialType rdf:type owl:AnnotationProperty .
 
 
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasName
+:hasName rdf:type owl:AnnotationProperty .
+
+
 #################################################################
 #    Datatypes
 #################################################################
@@ -132,6 +136,13 @@ xsd:date rdf:type rdfs:Datatype .
                         rdfs:comment "Links laboratory metadata to strain gauge properties." .
 
 
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStrengthModel
+:hasStrengthModel rdf:type owl:ObjectProperty ;
+                  rdfs:domain :FEMetadata ;
+                  rdfs:range :StrengthModel ;
+                  rdfs:comment "Links finite element metadata to the associated strength model used for analysis." .
+
+
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStrikerPressure
 :hasStrikerPressure rdf:type owl:ObjectProperty ;
                     rdfs:domain :TestingConditions ;
@@ -217,6 +228,13 @@ xsd:date rdf:type rdfs:Datatype .
                         rdfs:range xsd:float ;
                         rdfs:comment "Specifies the data acquisition rate, such as sampling frequency in Hz." ,
                                      "Specifies the date the data acquisition rate." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasElementSize
+:hasElementSize rdf:type owl:DatatypeProperty ;
+                rdfs:domain :FEMetadata ;
+                rdfs:range xsd:float ;
+                rdfs:comment "Specifies the size of elements used in the finite element mesh (e.g., mm)." .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasEncoding
@@ -589,14 +607,29 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Density
 :Density rdf:type owl:NamedIndividual ,
-                  :MechanicalProperty ;
-         rdfs:comment "The mass per unit volume of the material." .
+                  :MechanicalProperty ,
+                  :Parameter ;
+         :hasName "Density" ;
+         rdfs:comment "Density of the material." ,
+                      "The mass per unit volume of the material." .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ElasticModulus
 :ElasticModulus rdf:type owl:NamedIndividual ,
-                         :MechanicalProperty ;
-                rdfs:comment "Represents the stiffness of the material in the elastic range." .
+                         :MechanicalProperty ,
+                         :Parameter ;
+                :hasName "Elastic Modulus" ;
+                rdfs:comment "Elastic modulus of the material." ,
+                             "Represents the stiffness of the material in the elastic range." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ElasticStrengthModel
+:ElasticStrengthModel rdf:type owl:NamedIndividual ,
+                               :StrengthModel ;
+                      :hasParameter :Density ,
+                                    :ElasticModulus ,
+                                    :PoissonsRatio ;
+                      :hasName "Elastic Strength Model" .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#EmilioLoera
@@ -639,10 +672,43 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:comment "Represents the gauge factor of the strain gauge." .
 
 
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#HardeningExponent
+:HardeningExponent rdf:type owl:NamedIndividual ,
+                            :Parameter ;
+                   :hasName "n (Hardening Exponent)" ;
+                   rdfs:comment "Hardening exponent of the material." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#HardeningModulus
+:HardeningModulus rdf:type owl:NamedIndividual ,
+                           :Parameter ;
+                  :hasName "B (Hardening Modulus)" ;
+                  rdfs:comment "Hardening modulus of the material." .
+
+
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Incident
 :Incident rdf:type owl:NamedIndividual ,
                    :SignalType ;
           rdfs:comment "Indicates the signal from the incident bar." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#IncidentBar
+:IncidentBar rdf:type owl:NamedIndividual ,
+                      :Bar ;
+             :hasLegendName "Incident Bar" .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#JohnsonCookModelSimplified
+:JohnsonCookModelSimplified rdf:type owl:NamedIndividual ,
+                                     :StrengthModel ;
+                            :hasParameter :Density ,
+                                          :ElasticModulus ,
+                                          :HardeningExponent ,
+                                          :HardeningModulus ,
+                                          :PoissonsRatio ,
+                                          :ThermalSofteningCoefficient ,
+                                          :YieldStrength ;
+                            :hasName "Johnson-Cook Simplified Model" .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MomentumTrapEngaged
@@ -665,8 +731,11 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#PoissonsRatio
 :PoissonsRatio rdf:type owl:NamedIndividual ,
-                        :MechanicalProperty ;
-               rdfs:comment "The ratio of transverse strain to axial strain in the elastic range." .
+                        :MechanicalProperty ,
+                        :Parameter ;
+               :hasName "Poisson's Ratio" ;
+               rdfs:comment "Poisson's ratio of the material." ,
+                            "The ratio of transverse strain to axial strain in the elastic range." .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#PulseTest
@@ -732,10 +801,29 @@ xsd:date rdf:type rdfs:Datatype .
               rdfs:comment "Represents strain energy." .
 
 
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrikerBar
+:StrikerBar rdf:type owl:NamedIndividual ,
+                     :Bar ;
+            :hasLegendName "Striker Bar" .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ThermalSofteningCoefficient
+:ThermalSofteningCoefficient rdf:type owl:NamedIndividual ,
+                                      :Parameter ;
+                             :hasName "C (Thermal Softening Coefficient)" ;
+                             rdfs:comment "Thermal softening coefficient in the Johnson-Cook model." .
+
+
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Transmitted
 :Transmitted rdf:type owl:NamedIndividual ,
                       :SignalType ;
              rdfs:comment "Indicates the signal from the transmitted bar." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TransmittedBar
+:TransmittedBar rdf:type owl:NamedIndividual ,
+                         :Bar ;
+                :hasLegendName "Transmitted Bar" .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TrueStrain
@@ -754,6 +842,13 @@ xsd:date rdf:type rdfs:Datatype .
 :WaveSpeed rdf:type owl:NamedIndividual ,
                     :MechanicalProperty ;
            rdfs:comment "Speed of stress waves through the material during testing." .
+
+
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#YieldStrength
+:YieldStrength rdf:type owl:NamedIndividual ,
+                        :Parameter ;
+               :hasName "A (Yield Strength)" ;
+               rdfs:comment "Initial yield strength of the material." .
 
 
 ###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

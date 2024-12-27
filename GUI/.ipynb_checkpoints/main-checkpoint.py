@@ -38,6 +38,23 @@ class AddExperimentWindow(QWidget):
         layout.addWidget(self.test_name_label)
         layout.addWidget(self.test_name_display)
 
+        # Test Type Toggle
+        test_type_label = QLabel("Test Type:")
+        self.pulse_test_radio = QRadioButton("Pulse Test")
+        self.specimen_test_radio = QRadioButton("Specimen Test")
+        self.test_type_group = QButtonGroup()
+        self.test_type_group.addButton(self.pulse_test_radio)
+        self.test_type_group.addButton(self.specimen_test_radio)
+        self.specimen_test_radio.setChecked(True)  # Default to Specimen Test
+        self.pulse_test_radio.toggled.connect(self.update_test_name)
+        self.pulse_test_radio.toggled.connect(self.toggle_material_selection)
+        test_type_layout = QHBoxLayout()
+        test_type_layout.addWidget(self.pulse_test_radio)
+        test_type_layout.addWidget(self.specimen_test_radio)
+        layout.addWidget(test_type_label)
+        layout.addLayout(test_type_layout)
+
+
         # User Selection
         user_label = QLabel("User:")
         self.user_combo = QComboBox()
@@ -55,7 +72,7 @@ class AddExperimentWindow(QWidget):
         layout.addWidget(date_label)
         layout.addWidget(self.date_input)
 
-        # Material Selection
+        # Material Selection (Disabled for Pulse Test)
         material_label = QLabel("Material:")
         self.material_combo = QComboBox()
         self.populate_materials()
@@ -117,6 +134,14 @@ class AddExperimentWindow(QWidget):
         for row in self.ontology.query(query):
             self.user_combo.addItem(f"{row.fullName} ({row.abbreviation})", row.abbreviation)
 
+    def toggle_material_selection(self):
+        """Enable or disable material selection based on test type."""
+        if self.pulse_test_radio.isChecked():
+            self.material_combo.setEnabled(False)
+            self.material_combo.setCurrentIndex(-1)  # Clear selection
+        else:
+            self.material_combo.setEnabled(True)
+
     def populate_materials(self):
         query = """
         PREFIX : <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#>
@@ -135,13 +160,14 @@ class AddExperimentWindow(QWidget):
 
 
     def update_test_name(self):
+        """Update the test name dynamically based on input fields."""
         user_abbreviation = self.user_combo.currentData()
         date = self.date_input.date().toString("yyyyMMdd")
-        material_abbreviation = self.material_combo.currentData()
+        material_abbreviation = self.material_combo.currentData() if self.material_combo.isEnabled() else "PULSE"
         lab_fea = "LAB" if self.lab_radio.isChecked() else "FEA"
         ht_rt = "HT" if self.ht_radio.isChecked() else "RT"
         experiment_id = f"{self.exp_id_spinbox.value():03}"
-
+    
         if user_abbreviation and material_abbreviation:
             test_name = f"{user_abbreviation}_{date}_{material_abbreviation}_{lab_fea}_{ht_rt}_{experiment_id}"
             self.test_name_display.setText(test_name)
