@@ -37,6 +37,17 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
+###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasDimension
+:hasDimension rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf owl:topObjectProperty ;
+              rdfs:domain [ rdf:type owl:Class ;
+                            owl:unionOf ( :Bar
+                                          :Specimen
+                                        )
+                          ] ;
+              rdfs:range :Dimension .
+
+
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasExtractedPulse
 :hasExtractedPulse rdf:type owl:ObjectProperty ;
                    rdfs:domain :SecondaryData ;
@@ -54,23 +65,14 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMaterial
 :hasMaterial rdf:type owl:ObjectProperty ;
              rdfs:subPropertyOf owl:topObjectProperty ;
-             rdfs:domain [ rdf:type owl:Class ;
-                           owl:unionOf ( :Bar
-                                         :Specimen
+             rdfs:domain :Material ,
+                         [ rdf:type owl:Class ;
+                           owl:unionOf ( :AluminiumAlloy
+                                         :CopperAlloy
+                                         :SteelAlloy
                                        )
                          ] ;
              rdfs:range :Material .
-
-
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMaterialClass
-:hasMaterialClass rdf:type owl:ObjectProperty ;
-                  rdfs:domain [ rdf:type owl:Class ;
-                                owl:unionOf ( :Bar
-                                              :Specimen
-                                            )
-                              ] ;
-                  rdfs:range :Material ;
-                  rdfs:comment "Links bars or specimens to their associated material." .
 
 
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMechanicalProperty
@@ -811,6 +813,14 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#IncidentBar
 :IncidentBar rdf:type owl:NamedIndividual ,
                       :Bar ;
+             :hasDimension :CrossSection ,
+                           :Length ,
+                           :StrainGaugeDistance ;
+             :hasMaterial :SteelC350 ;
+             :hasMechanicalProperty :Density ,
+                                    :ElasticModulus ,
+                                    :PoissonsRatio ,
+                                    :WaveSpeed ;
              :hasLegendName "Incident Bar" .
 
 
@@ -1137,6 +1147,13 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrikerBar
 :StrikerBar rdf:type owl:NamedIndividual ,
                      :Bar ;
+            :hasDimension :CrossSection ,
+                          :Length ;
+            :hasMaterial :SteelC350 ;
+            :hasMechanicalProperty :Density ,
+                                   :ElasticModulus ,
+                                   :PoissonsRatio ,
+                                   :WaveSpeed ;
             :hasLegendName "Striker Bar" .
 
 
@@ -1179,6 +1196,14 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TransmittedBar
 :TransmittedBar rdf:type owl:NamedIndividual ,
                          :Bar ;
+                :hasDimension :CrossSection ,
+                              :Length ,
+                              :StrainGaugeDistance ;
+                :hasMaterial :SteelC350 ;
+                :hasMechanicalProperty :Density ,
+                                       :ElasticModulus ,
+                                       :PoissonsRatio ,
+                                       :WaveSpeed ;
                 :hasLegendName "Transmitted Bar" .
 
 
