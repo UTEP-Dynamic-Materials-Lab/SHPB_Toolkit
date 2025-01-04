@@ -12,8 +12,10 @@ class AddExperimentWindow(QWidget):
     def __init__(self, ontology_path):
         super().__init__()
         self.setWindowTitle("Add Experiment Metadata")
-        self.setGeometry(100, 100, 500, 400)
 
+        # Set the anchor and window size 
+        self.setGeometry(100, 100, 600, 450)  # Pixels Left to Right, Top to Bottom : (Anchor X, Anchor Y, Size in X, Sixe in Y)
+        
         self.is_fea = False  # Track whether the test type is FEA
 
         # Load ontology
@@ -303,14 +305,14 @@ class AddExperimentWindow(QWidget):
     def populate_users(self):
         query = """
         PREFIX : <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#>
-        SELECT ?user ?fullName ?abbreviation WHERE {
+        SELECT ?user ?Name ?abbreviation WHERE {
             ?user a :User ;
-                  :hasFullName ?fullName ;
+                  :hasName ?Name ;
                   :hasAbbreviation ?abbreviation .
         }
         """
         for row in self.ontology.query(query):
-            self.user_combo.addItem(f"{row.fullName} ({row.abbreviation})", row.abbreviation)
+            self.user_combo.addItem(f"{row.Name} ({row.abbreviation})", row.abbreviation)
 
     def toggle_material_selection(self):
         """Enable or disable material selection based on test type."""

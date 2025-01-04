@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QComboBox, QDateEdit, QMessageBox, QTabWidget, QSpinBox, QRadioButton,
-    QButtonGroup, QDoubleSpinBox
+    QButtonGroup, QDoubleSpinBox, QScrollArea
 )
 
 from PyQt6.QtCore import QDate
@@ -87,7 +87,7 @@ class AddExperimentWindow(QWidget):
         self.lab_fea_group.addButton(self.lab_radio)
         self.lab_fea_group.addButton(self.fea_radio)
         self.lab_radio.setChecked(True)
-        self.lab_radio.toggled.connect(self.update_fea_mode)  # Dynamically update FEA-specific options
+        self.lab_radio.toggled.connect(self.confirm_fea_mode)  # Dynamically update FEA-specific options
         test_type_layout = QHBoxLayout()
         test_type_layout.addWidget(self.lab_radio)
         test_type_layout.addWidget(self.fea_radio)
@@ -118,22 +118,55 @@ class AddExperimentWindow(QWidget):
         layout.addWidget(exp_id_label)
         layout.addWidget(self.exp_id_spinbox)
 
+        # Confirm/Edit Button
+        self.confirm_button = QPushButton("Confirm")
+        self.confirm_button.clicked.connect(self.toggle_confirm_edit)
+        layout.addWidget(self.confirm_button)
+
         landing_page.setLayout(layout)
         self.tabs.addTab(landing_page, "Test Name Entry")
 
+    def toggle_confirm_edit(self):
+        """Toggle between Confirm and Edit modes."""
+        if self.confirm_button.text() == "Confirm":
+            # Confirm mode: Disable all inputs
+            self.user_combo.setEnabled(False)
+            self.date_input.setEnabled(False)
+            self.material_combo.setEnabled(False)
+            self.lab_radio.setEnabled(False)
+            self.fea_radio.setEnabled(False)
+            self.ht_radio.setEnabled(False)
+            self.rt_radio.setEnabled(False)
+            self.exp_id_spinbox.setEnabled(False)
     
-    def update_fea_mode(self, is_checked):
-        """Update state based on FEA/LAB toggle and adjust FEA metadata visibility."""
-        self.is_fea = is_checked
+            # Change button to Edit
+            self.confirm_button.setText("Edit")
+        else:
+            # Edit mode: Enable all inputs
+            self.user_combo.setEnabled(True)
+            self.date_input.setEnabled(True)
+            self.material_combo.setEnabled(True)
+            self.lab_radio.setEnabled(True)
+            self.fea_radio.setEnabled(True)
+            self.ht_radio.setEnabled(True)
+            self.rt_radio.setEnabled(True)
+            self.exp_id_spinbox.setEnabled(True)
     
-        # Update the visibility of FEA-specific fields in the bar metadata tab
+            # Change button to Confirm
+            self.confirm_button.setText("Confirm")
+        
+    def confirm_fea_mode(self):
+        """Confirm and set the global FEA state when the confirm button is clicked."""
+        self.is_fea = self.fea_radio.isChecked()
+        self.refresh_bar_tabs()
+    
+    def refresh_bar_tabs(self):
+        """Refresh the bar tabs to display FEA-specific fields if applicable."""
         for bar_name, widgets in self.bar_tabs.items():
-            widgets["elastic_modulus_input"].setVisible(is_fea_enabled)
-            widgets["density_input"].setVisible(is_fea_enabled)
-            widgets["poisson_ratio_input"].setVisible(is_fea_enabled)
-    
-        self.update_test_name()
-
+            widgets["fea_layout_widget"].setVisible(self.is_fea)
+            if self.is_fea:
+                self.populate_strength_models(widgets["strength_model_combo"])
+                self.update_fea_parameters(widgets["strength_model_combo"], widgets["fea_parameter_layout"])
 
     def init_conditions_page(self):
         # Striker and Conditions Page
@@ -190,7 +223,7 @@ class AddExperimentWindow(QWidget):
     
     def init_bar_metadata_page(self):
         """Initialize the Bar Metadata tab."""
-        bar_metadata_page = QTabWidget()
+        self.bar_metadata_page = QTabWidget()
         self.bar_tabs = {}  # Dictionary to store widgets for each bar
     
         # Fetch Bar Instances from Ontology
@@ -198,21 +231,23 @@ class AddExperimentWindow(QWidget):
     
         # Create a tab for each Bar
         for bar_uri, bar_legend_name in bar_instances.items():
-            self.add_bar_tab(bar_metadata_page, bar_legend_name)
+            self.add_bar_tab(bar_legend_name)
     
-        self.tabs.addTab(bar_metadata_page, "Bar Metadata")
+        self.tabs.addTab(self.bar_metadata_page, "Bar Metadata")
     
-    def add_bar_tab(self, parent_tab_widget, bar_name):
+    def add_bar_tab(self, bar_name):
         """Create and add a tab for a specific bar."""
         bar_tab = QWidget()
         bar_tab_layout = QVBoxLayout()
     
         # Material Selection
+        material_layout = QHBoxLayout()
         material_label = QLabel(f"{bar_name} Material:")
         material_combo = QComboBox()
         self.populate_materials(material_combo)
-        bar_tab_layout.addWidget(material_label)
-        bar_tab_layout.addWidget(material_combo)
+        material_layout.addWidget(material_label)
+        material_layout.addWidget(material_combo)
+        bar_tab_layout.addLayout(material_layout)
     
         # Length Input
         self.add_input_field(bar_tab_layout, "Length:", ["m", "mm"])
@@ -230,20 +265,39 @@ class AddExperimentWindow(QWidget):
         self.add_input_field(bar_tab_layout, "Poisson Ratio:", [])
         self.add_input_field(bar_tab_layout, "Density:", ["Kg/m^3", "Kg/mm^3", "g/mm^3"])
     
-        # Add FEA-specific fields if applicable
-        if self.is_fea:
-            fea_layout = QVBoxLayout()
-            strength_model_combo = QComboBox()
-            strength_model_combo.currentIndexChanged.connect(
-                lambda: self.update_fea_parameters(strength_model_combo, fea_layout)
-            )
-            self.populate_strength_models(strength_model_combo)
-            fea_layout.addWidget(strength_model_combo)
-            bar_tab_layout.addLayout(fea_layout)
-    
+      # Add FEA-Specific Fields
+        fea_layout = QVBoxLayout()
+        fea_layout.setContentsMargins(0, 0, 10, 10)
+        
+        # Strength Model Selector
+        strength_model_layout = QHBoxLayout()
+        strength_model_label = QLabel("Strength Model:")
+        strength_model_combo = QComboBox()
+        strength_model_combo.currentIndexChanged.connect(
+            lambda: self.update_fea_parameters(strength_model_combo, fea_layout))
+        strength_model_layout.addWidget(strength_model_label)
+        strength_model_layout.addWidget(strength_model_combo)
+        fea_layout.addLayout(strength_model_layout)
+        
+        # Populate Strength Models from Ontology
+        self.populate_strength_models(strength_model_combo)
+        
+        # Create a container widget for the FEA layout
+        fea_layout_widget = QWidget()
+        fea_layout_widget.setLayout(fea_layout)
+        fea_layout_widget.setVisible(self.is_fea)  # Set visibility based on FEA state
+        bar_tab_layout.addWidget(fea_layout_widget)
+        
+        # Add bar widgets to the bar_tabs dictionary
+        self.bar_tabs[bar_name] = {
+            "material_combo": material_combo,
+            "fea_layout_widget": fea_layout_widget,
+            "strength_model_combo": strength_model_combo,
+            "fea_parameter_layout": fea_layout,
+        }
+        
         bar_tab.setLayout(bar_tab_layout)
-        parent_tab_widget.addTab(bar_tab, bar_name)
-
+        self.bar_metadata_page.addTab(bar_tab, bar_name)
 
 
     def populate_users(self):
@@ -333,29 +387,64 @@ class AddExperimentWindow(QWidget):
     def update_fea_parameters(self, combo_box, fea_layout):
         """Update the parameters displayed for the selected FEA model."""
         model_uri = combo_box.currentData()
+        if not model_uri:
+            return
+    
+        # SPARQL query to fetch parameters
         query = f"""
         PREFIX : <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#>
-        SELECT ?param ?paramName ?units WHERE {{
+        SELECT ?param ?paramName WHERE {{
             <{model_uri}> :hasParameter ?param .
-            ?param :hasName ?paramName ;
-                   :hasUnits ?units .
+            ?param :hasName ?paramName .
+                   
         }}
         """
-        for i in reversed(range(fea_layout.count())):
-            fea_layout.itemAt(i).widget().deleteLater()
     
+        # Ensure parameter layout exists
+        if not hasattr(self, 'parameter_layout'):
+            self.parameter_layout = QVBoxLayout()
+            self.parameter_widget = QWidget()
+            self.parameter_widget.setLayout(self.parameter_layout)
+            fea_layout.addWidget(self.parameter_widget)
+    
+        # Clear existing parameter widgets
+        while self.parameter_layout.count():
+            child = self.parameter_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+    
+        # Populate parameters dynamically based on ontology query
         for row in self.ontology.query(query):
+            param_name = str(row.paramName)
+            param_units = str("Test")
+    
+            # Parameter input with units
             param_layout = QHBoxLayout()
-            param_label = QLabel(row.paramName)
+            param_label = QLabel(param_name)
             param_input = QDoubleSpinBox()
-            param_input.setRange(0, 100000)
+            param_input.setRange(0, 100000)  # Adjust range as needed
             param_input.setDecimals(3)
-            param_units = QComboBox()
-            param_units.addItems([row.units])
+            param_units_combo = QComboBox()
+    
+            # Assign units from ontology
+            unit_set = {
+                "Density": ["Kg/m³", "Kg/mm³", "g/mm³"],
+                "Elastic Modulus": ["Pa", "MPa", "GPa"],
+                "Poisson Ratio": ["None"],  # No units
+                "Strength Parameter": ["Unitless"],  # Example for other parameters
+            }
+    
+            if param_name in unit_set:
+                param_units_combo.addItems(unit_set[param_name])
+            else:
+                param_units_combo.addItems(["Pa", "MPa", "GPa"])
+    
             param_layout.addWidget(param_label)
             param_layout.addWidget(param_input)
-            param_layout.addWidget(param_units)
-            fea_layout.addLayout(param_layout)
+            param_layout.addWidget(param_units_combo)
+            self.parameter_layout.addLayout(param_layout)
+
+
 
     def add_input_field(self, parent_layout, label_text, units):
         """Add a labeled input field with optional units."""
@@ -373,6 +462,7 @@ class AddExperimentWindow(QWidget):
             layout.addWidget(unit_combo)
     
         parent_layout.addLayout(layout)
+
 
 
 
