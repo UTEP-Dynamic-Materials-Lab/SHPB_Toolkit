@@ -1,17 +1,26 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QLineEdit, QDateEdit, QSpinBox, QPushButton, QHBoxLayout
+    QWidget, QVBoxLayout, QLabel, QLineEdit, QDateEdit, QSpinBox, QPushButton, QHBoxLayout, QComboBox
 )
-from PyQt6.QtCore import QDate
-from GUI.components.common_widgets import UserSelector, MaterialSelector, TestTypeSelector, EnvironmentSelector, TestConditionSelector
+from PyQt6.QtCore import QDate, Qt
+from PyQt6.QtCore import pyqtSignal
+from rdflib import Graph, Namespace, URIRef
+from GUI.components.common_widgets import MaterialSelector, ClassInstanceSelection, SetDefaults
 
 class TestDescriptionWidget(QWidget):
-    def __init__(self, ontology_path, test_config):
+    current_test_mode = pyqtSignal(str)
+       
+    def __init__(self, ontology_path, test_config, experiment_temp_file):
         super().__init__()
         self.setWindowTitle("Test Description")
         self.setGeometry(100, 100, 600, 450)
 
+        self.test_config = test_config        
+        self.experiment = experiment_temp_file
+
+        self.ontology = Graph()
         self.ontology_path = ontology_path
-        self.test_config = test_config
+        self.ontology.parse(self.ontology_path, format="turtle")
+        self.namespace = Namespace("https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#")
 
         # Main Layout
         self.layout = QVBoxLayout()
@@ -19,8 +28,13 @@ class TestDescriptionWidget(QWidget):
 
         self.init_ui()
 
+    #################################################
+    ## WIDGETS INITIALIZATION
+    #################################################
+
     def init_ui(self):
-        """Initialize UI components."""
+        """Initialize UI components."""      
+        
         # Test Name Display
         test_name_label = QLabel("Generated Test Name:")
         self.test_name_display = QLineEdit()
@@ -29,8 +43,11 @@ class TestDescriptionWidget(QWidget):
         self.layout.addWidget(self.test_name_display)
 
         # Add User Selector
-        self.user_selector = UserSelector(self.ontology_path, self.test_config)
-        self.user_selector.user_changed.connect(self.update_test_name)
+        user_label = QLabel("User:")
+        self.layout.addWidget(user_label)
+        self.user_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.User)
+        self.user_selector.currentIndexChanged.connect(self.update_test_name)
+        self.user_selector.currentIndexChanged.connect(self.update_user)
         self.layout.addWidget(self.user_selector)
 
         # Add Date Input
@@ -42,25 +59,41 @@ class TestDescriptionWidget(QWidget):
         self.layout.addWidget(date_label)
         self.layout.addWidget(self.date_input)
         
-        # Add Test Condition Selector
-        self.test_condition_selector = TestConditionSelector(self.test_config)
-        self.test_condition_selector.condition_changed.connect(self.update_test_condition) 
-        self.layout.addWidget(self.test_condition_selector)
-
-        # Add Material Selector
-        self.material_selector = MaterialSelector(self.ontology_path, self.test_config)
-        self.material_selector.material_changed.connect(self.update_test_name)
-        self.layout.addWidget(self.material_selector)
-
         # Add Test Type Selector
-        self.test_type_selector = TestTypeSelector(self.test_config)
-        self.test_type_selector.test_type_changed.connect(self.update_test_name)
+        test_type_label = QLabel("Test Type:")
+        self.layout.addWidget(test_type_label)
+        self.test_type_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.TestType)
+        SetDefaults(self.ontology_path, self.test_config.test_type, self.test_type_selector)
+        self.test_type_selector.currentIndexChanged.connect(self.update_test_name)
+        self.test_type_selector.currentIndexChanged.connect(self.update_test_type)        
         self.layout.addWidget(self.test_type_selector)
 
+        # Add Material Selector
+        material_label = QLabel("Specimen Material:")
+        self.layout.addWidget(material_label)
+        self.material_selector = MaterialSelector(self.ontology_path, self.experiment.DYNAMAT.Material)
+        SetDefaults(self.ontology_path, self.test_config.specimen_material, self.material_selector)
+        self.material_selector.currentIndexChanged.connect(self.update_test_name)
+        self.material_selector.currentIndexChanged.connect(self.update_material) 
+        self.layout.addWidget(self.material_selector)
+        
+        # Add Test Mode Selector
+        test_mode_label = QLabel("Test Mode:")
+        self.layout.addWidget(test_mode_label)
+        self.test_mode_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.TestMode)
+        SetDefaults(self.ontology_path, self.test_config.test_mode, self.test_mode_selector)
+        self.test_mode_selector.currentIndexChanged.connect(self.update_test_name)
+        self.test_mode_selector.currentIndexChanged.connect(self.update_test_mode)
+        self.layout.addWidget(self.test_mode_selector)
+
         # Add Environment Selector
-        self.environment_selector = EnvironmentSelector(self.test_config)
-        self.environment_selector.environment_changed.connect(self.update_environment)
-        self.layout.addWidget(self.environment_selector)
+        temp_mode_label = QLabel("Temperature Mode:")
+        self.layout.addWidget(temp_mode_label)
+        self.temp_mode_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.TestTemperature)
+        SetDefaults(self.ontology_path, self.test_config.temp_mode, self.temp_mode_selector)
+        self.temp_mode_selector.currentIndexChanged.connect(self.update_test_name)
+        self.temp_mode_selector.currentIndexChanged.connect(self.update_temp_mode)        
+        self.layout.addWidget(self.temp_mode_selector)
 
         # Experiment ID
         exp_id_label = QLabel("Experiment ID:")
@@ -74,7 +107,11 @@ class TestDescriptionWidget(QWidget):
         # Confirm/Edit Button
         self.confirm_button = QPushButton("Confirm")
         self.confirm_button.clicked.connect(self.toggle_confirm_edit)
-        self.layout.addWidget(self.confirm_button)
+        self.layout.addWidget(self.confirm_button)          
+
+    #################################################
+    ## DATA CAPTURE AND RDF GENERATION
+    #################################################
 
     def toggle_confirm_edit(self):
         """Toggle between Confirm and Edit modes."""
@@ -83,38 +120,176 @@ class TestDescriptionWidget(QWidget):
         self.date_input.setEnabled(editable)
         self.material_selector.setEnabled(editable)
         self.test_type_selector.setEnabled(editable)
-        self.environment_selector.setEnabled(editable)
+        self.test_mode_selector.setEnabled(editable)
+        self.temp_mode_selector.setEnabled(editable)
         self.exp_id_spinbox.setEnabled(editable)
 
         self.confirm_button.setText("Confirm" if editable else "Edit")
 
+        # Add data to temp file
+        if not editable:
+            self.experiment.initialize_temp()
+            metadata_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Metadata"]
+            primary_data_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Primary_Data"]
+            secondary_data_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Secondary_Data"]
+            specimen_uri = self.experiment.DYNAMAT["Test_Specimen"]
+            testing_conditions_uri = self.experiment.DYNAMAT["Testing_Conditions"]
+            
+            # Add Metadata Triples
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.Metadata))
+            self.experiment.set_triple(str(primary_data_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.PrimaryMetadata))
+            self.experiment.set_triple(str(secondary_data_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Secondary_Metadata))           
+            
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestName), self.test_name_display.text())
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestDate),
+                                       self.date_input.date().toString("yyyy-MM-dd"))
+            
+            user_uri, user_abbreviation = self.user_selector.currentData()
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasUser), user_uri)
+            self.experiment.add_instance_data(user_uri)
+
+            test_type_uri, test_type_abbreviation = self.test_type_selector.currentData()
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.TestingConditions))            
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestingConditions),
+                                       testing_conditions_uri)
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestType), test_type_uri)
+            self.experiment.add_instance_data(test_type_uri)
+
+            test_mode_uri, test_mode_abbreviation = self.test_mode_selector.currentData()
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestMode), test_mode_uri)
+            self.experiment.add_instance_data(test_mode_uri)
+
+            temp_mode_uri, temp_mode_abbreviation = self.temp_mode_selector.currentData()
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestTemperature), temp_mode_uri)
+            self.experiment.add_instance_data(temp_mode_uri)
+            
+            if test_type_abbreviation == "Specimen":                
+                material_uri, material_abbreviation = self.material_selector.currentData()
+                if test_mode_abbreviation == "LAB":
+                    self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type),
+                                                   self.experiment.DYNAMAT.LABSpecimen)
+                else:
+                    self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.FEASpecimen)
+                        
+                self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen), specimen_uri)
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
+                self.experiment.add_instance_data(material_uri)
+            else: 
+                print("No Specimen Class added to file, because PULSE Test Type Selected")
+                try: 
+                    self.experiment.remove_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen), specimen_uri)
+                    self.experiment.remove_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
+                except: 
+                    None
+            self.experiment.save()       
+
+    #################################################
+    ## TEST NAME GENERATION FIELD
+    #################################################
+    
     def update_test_name(self):
         """Update the test name dynamically."""
-        user_abbreviation = self.test_config.user
-        date = self.date_input.date().toString("yyyyMMdd")
-        material_abbreviation = self.test_config.specimen_material or "PULSE"
-        lab_fea = "LAB" if not self.test_config.is_fea else "FEA"
-        ht_rt = self.test_config.environment
-        experiment_id = f"{self.exp_id_spinbox.value():03}"
+        user_uri, user_abbreviation = self.user_selector.currentData()
+        date = self.date_input.date().toString("yyyyMMdd")        
+        test_type_uri, _ = self.test_type_selector.currentData()
+        test_mode_uri, _ = self.test_mode_selector.currentData() 
+        temp_mode_uri, _ = self.temp_mode_selector.currentData()
+        test_type_uri = URIRef(test_type_uri) if isinstance(test_type_uri, str) else test_type_uri
+        test_mode_uri = URIRef(test_mode_uri) if isinstance(test_mode_uri, str) else test_mode_uri
+        temp_mode_uri= URIRef(temp_mode_uri) if isinstance(temp_mode_uri, str) else temp_mode_uri
 
-        if user_abbreviation and material_abbreviation:
-            test_name = f"{user_abbreviation}_{date}_{material_abbreviation}_{lab_fea}_{ht_rt}_{experiment_id}"
-            self.test_name_display.setText(test_name)
-        else:
-            self.test_name_display.setText("Incomplete Input: Please fill all fields")
+        try:
+            if isinstance(test_type_uri, URIRef) and test_type_uri == self.experiment.DYNAMAT.SpecimenTest:
+                material_uri, material_abbreviation = self.material_selector.currentData()
+            else:
+                material_abbreviation = "PULSE" 
+                
+            if isinstance(test_mode_uri, URIRef) and test_mode_uri == self.experiment.DYNAMAT.LABMode:
+                lab_fea = "LAB"
+            else: lab_fea = "FEA"
+                
+            if isinstance(temp_mode_uri, URIRef) and temp_mode_uri == self.experiment.DYNAMAT.RoomTemperature:
+                ht_rt = "RT"
+            else: ht_rt = "HT"        
+            experiment_id = f"{self.exp_id_spinbox.value():03}"
+        
+            if user_abbreviation and material_abbreviation:
+                test_name = f"{user_abbreviation}_{date}_{material_abbreviation}_{lab_fea}_{ht_rt}_{experiment_id}"
+                self.test_name_display.setText(test_name)
+                self.update_global_name(test_name)
 
-    def update_test_condition(self, condition):
-        """Handle updates to the test condition."""
-        self.test_config.test_condition = condition
-        if condition == "Pulse":
+        except: self.test_name_display.setText("Incomplete Input: Please fill all fields")
+    
+    def update_global_name(self, test_name):
+        """Update the global test name for later triplet assignment."""
+        self.test_config.test_name = test_name
+         
+    #################################################
+    ## MATERIAL SELECTION FIELD
+    #################################################
+    def update_material(self):
+        """Update the test configuration and emit the selected material."""
+        test_type_uri, _ = self.test_type_selector.currentData()
+        test_type_uri = URIRef(test_type_uri) if isinstance(test_type_uri, str) else test_type_uri
+        if isinstance(test_type_uri, URIRef) and test_type_uri == self.experiment.DYNAMAT.SpecimenTest:
+            material_uri, material_abbreviation = self.material_selector.currentData()
+            if material_abbreviation:
+                self.test_config.specimen_material = material_uri  # Update global state          
+        else: return           
+      
+
+    #################################################
+    ## USER SELECTION FIELD
+    ################################################# 
+    
+    def update_user(self):
+        """Update the test configuration and emit the selected user."""
+        user_uri, user_abbreviation = self.user_selector.currentData()
+        self.test_config.user = user_uri  # Update global state  
+
+    #################################################
+    ## TEST TYPE (SPECIMEN/PULSE) SELECTION FIELD
+    #################################################
+    
+    def update_test_type(self):
+        """Update the test configuration and emit the selected user."""
+        test_type_uri, _ = self.test_type_selector.currentData()
+        self.test_config.test_type = test_type_uri  # Update global state
+        test_type_uri = URIRef(test_type_uri) if isinstance(test_type_uri, str) else test_type_uri  
+        
+        if isinstance(test_type_uri, URIRef) and test_type_uri == self.experiment.DYNAMAT.PulseTest:
             self.material_selector.setEnabled(False)
-            self.material_selector.material_combo.setCurrentIndex(-1)  # Clear material selection
+            self.material_selector.setCurrentIndex(-1)  # Clear material selection
         else:
+            #self.material_selector = self.populate_materials()
             self.material_selector.setEnabled(True)
-        self.update_test_name()  # Ensure the test name reflects the condition
+            SetDefaults(self.ontology_path, self.test_config.specimen_material, self.material_selector)
+            
+        self.update_test_name()  # Ensure the test name reflects the condition    
 
-    def update_environment(self, environment):
-        """Update environment."""
-        self.test_config.environment = environment
-        self.update_test_name()
+    #################################################
+    ## TEST MODE (LAB/FEA) SELECTION FIELD
+    #################################################
+    
+    def update_test_mode(self):
+        """Update the test configuration and emit the selected user."""
+        test_mode, abbreviation = self.test_mode_selector.currentData()
+        self.test_config.test_mode = test_mode  # Update global state
+        self.current_test_mode.emit(test_mode)
+        
+
+    #################################################
+    ## TEST TEMPERATURE MODE (RT/HT) SELECTION FIELD
+    #################################################
+    
+    def update_temp_mode(self):
+        """Update the test configuration and emit the selected user."""
+        temp_mode, abbreviation = self.temp_mode_selector.currentData()
+        self.test_config.temp_mode = temp_mode  # Update global state
+
+        
+
 

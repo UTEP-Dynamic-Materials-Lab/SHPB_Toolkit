@@ -1,26 +1,26 @@
-@prefix : <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#> .
+@prefix : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#> .
+@base <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
 
-<http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB> rdf:type owl:Ontology .
+<https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology> rdf:type owl:Ontology .
 
 #################################################################
 #    Annotation properties
 #################################################################
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasAfilliation
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasAfilliation
 :hasAfilliation rdf:type owl:AnnotationProperty .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMaterialType
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterialType
 :hasMaterialType rdf:type owl:AnnotationProperty .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasName
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasName
 :hasName rdf:type owl:AnnotationProperty ;
          rdfs:range xsd:string .
 
@@ -37,7 +37,13 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasDimension
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasBar
+:hasBar rdf:type owl:ObjectProperty ;
+        rdfs:domain :TestingConditions ;
+        rdfs:range :Bar .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasDimension
 :hasDimension rdf:type owl:ObjectProperty ;
               rdfs:subPropertyOf owl:topObjectProperty ;
               rdfs:domain [ rdf:type owl:Class ;
@@ -48,21 +54,21 @@ xsd:date rdf:type rdfs:Datatype .
               rdfs:range :Dimension .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasExtractedPulse
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasExtractedPulse
 :hasExtractedPulse rdf:type owl:ObjectProperty ;
                    rdfs:domain :SecondaryData ;
                    rdfs:range :ExtractedSignal ;
                    rdfs:comment "Links secondary data to extracted time-series signals, such as strain." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasExtractedTime
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasExtractedTime
 :hasExtractedTime rdf:type owl:ObjectProperty ;
                   rdfs:domain :SecondaryData ;
                   rdfs:range :ExtractedSignal ;
                   rdfs:comment "Links secondary data to extracted related series, such as stress-strain curves." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMaterial
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterial
 :hasMaterial rdf:type owl:ObjectProperty ;
              rdfs:subPropertyOf owl:topObjectProperty ;
              rdfs:domain :Material ,
@@ -75,74 +81,108 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:range :Material .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMechanicalProperty
-:hasMechanicalProperty rdf:type owl:ObjectProperty ;
-                       rdfs:domain [ rdf:type owl:Class ;
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterialProcessing
+:hasMaterialProcessing rdf:type owl:ObjectProperty ;
+                       rdfs:subPropertyOf owl:topObjectProperty ;
+                       rdfs:domain :Specimen ,
+                                   [ rdf:type owl:Class ;
                                      owl:unionOf ( :Bar
                                                    :Specimen
                                                  )
                                    ] ;
+                       rdfs:range :MaterialProcessing .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMechanicalProperty
+:hasMechanicalProperty rdf:type owl:ObjectProperty ;
+                       rdfs:domain :Bar ,
+                                   :Specimen ;
                        rdfs:range :MechanicalProperty ;
                        rdfs:comment "Links a determined mechanical property from an experiment to the specimen." ,
                                     "Links a general mechanical property to a Bar or Specimen." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMomentumTrapCondition
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMomentumTrapCondition
 :hasMomentumTrapCondition rdf:type owl:ObjectProperty ;
                           rdfs:domain :TestingConditions ;
                           rdfs:range :MomentumTrap ;
                           rdfs:comment "Links metadata to test configurations, such as momentum trap engagement." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasParameter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasParameter
 :hasParameter rdf:type owl:ObjectProperty ;
               rdfs:domain :StrengthModel ;
               rdfs:range :Parameter ;
               rdfs:comment "Links a strength model to its parameters." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasSensorSignal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSensorSignal
 :hasSensorSignal rdf:type owl:ObjectProperty ;
                  rdfs:domain :PrimaryData ;
                  rdfs:comment "Links primary data to specific time-series signals, such as strain." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasSpecimen
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasShape
+:hasShape rdf:type owl:ObjectProperty ;
+          rdfs:domain :Specimen ;
+          rdfs:range :Shape .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSpecimen
 :hasSpecimen rdf:type owl:ObjectProperty ;
              rdfs:domain :Metadata ;
              rdfs:range :Specimen ;
              rdfs:comment "Links metadata to the specimen details." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStrainGaugeProperty
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrainGaugeProperty
 :hasStrainGaugeProperty rdf:type owl:ObjectProperty ;
                         rdfs:domain :TestingConditions ;
                         rdfs:range :StrainGaugeProperties ;
                         rdfs:comment "Links laboratory metadata to strain gauge properties." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasStrengthModel
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrengthModel
 :hasStrengthModel rdf:type owl:ObjectProperty ;
                   rdfs:domain :FEMetadata ;
                   rdfs:range :StrengthModel ;
                   rdfs:comment "Links finite element metadata to the associated strength model used for analysis." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasTestType
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStructure
+:hasStructure rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf owl:topObjectProperty ;
+              rdfs:domain :Specimen ;
+              rdfs:range :Structure .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestMode
+:hasTestMode rdf:type owl:ObjectProperty ;
+             rdfs:domain :TestingConditions ;
+             rdfs:range :TestMode .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestTemperature
+:hasTestTemperature rdf:type owl:ObjectProperty ;
+                    rdfs:domain :TestingConditions ;
+                    rdfs:range :TestTemperature .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestType
 :hasTestType rdf:type owl:ObjectProperty ;
              rdfs:domain :Metadata ;
              rdfs:range :TestType ;
              rdfs:comment "Links test metadata to its associated test type, such as pulse or specimen testing." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasTestingConditions
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestingConditions
 :hasTestingConditions rdf:type owl:ObjectProperty ;
                       rdfs:domain :Metadata ;
                       rdfs:range :TestingConditions ;
                       rdfs:comment "Specifies the type of setup used, such as lab-based or simulation-based." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasTime
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTime
 :hasTime rdf:type owl:ObjectProperty ;
          rdfs:domain [ rdf:type owl:Class ;
                        owl:unionOf ( :PrimaryData
@@ -152,7 +192,7 @@ xsd:date rdf:type rdfs:Datatype .
          rdfs:comment "Links data to extracted time signals." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasUnits
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasUnits
 :hasUnits rdf:type owl:ObjectProperty ;
           rdfs:domain :Dimension ,
                       :ExtractedSignal ,
@@ -165,7 +205,7 @@ xsd:date rdf:type rdfs:Datatype .
           rdfs:comment "Links a parameter to its allowable units." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasUser
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasUser
 :hasUser rdf:type owl:ObjectProperty ;
          rdfs:domain :TestingConditions ;
          rdfs:range :User .
@@ -175,7 +215,7 @@ xsd:date rdf:type rdfs:Datatype .
 #    Data properties
 #################################################################
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasAbbreviation
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasAbbreviation
 :hasAbbreviation rdf:type owl:DatatypeProperty ;
                  rdfs:domain [ rdf:type owl:Class ;
                                owl:unionOf ( :Material
@@ -187,7 +227,7 @@ xsd:date rdf:type rdfs:Datatype .
                  rdfs:comment "Abbreviation or initials of the user." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasAffiliation
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasAffiliation
 :hasAffiliation rdf:type owl:DatatypeProperty ;
                 rdfs:domain :Laboratory ,
                             :User ;
@@ -195,58 +235,56 @@ xsd:date rdf:type rdfs:Datatype .
                 rdfs:comment "Specifies the institution or organization the laboratory is affiliated with." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasChemicalComposition
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasChemicalComposition
 :hasChemicalComposition rdf:type owl:DatatypeProperty ;
                         rdfs:domain :Material ;
                         rdfs:range xsd:string ;
                         rdfs:comment "Specifies the chemical composition of the specimen." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasEncoding
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasDescription
+:hasDescription rdf:type owl:DatatypeProperty ;
+                rdfs:range xsd:string .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasEncoding
 :hasEncoding rdf:type owl:DatatypeProperty ;
              rdfs:range xsd:string ;
              rdfs:comment "Specifies the encoding used for storing the data, such as 'Base64'." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasLegendName
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasLegendName
 :hasLegendName rdf:type owl:DatatypeProperty ;
                rdfs:range xsd:string ;
                rdfs:comment "Gives a human-readable name for the series or scalar value." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasLocation
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasLocation
 :hasLocation rdf:type owl:DatatypeProperty ;
              rdfs:domain :Laboratory ;
              rdfs:range xsd:string ;
              rdfs:comment "Specifies the location of the laboratory, e.g., Building A, Room 12." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasMaterialProcessing
-:hasMaterialProcessing rdf:type owl:DatatypeProperty ;
-                       rdfs:domain :Material ;
-                       rdfs:range xsd:string ;
-                       rdfs:comment "Specifies the processing of the specimen material." .
-
-
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasName
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasName
 :hasName rdf:type owl:DatatypeProperty ;
          rdfs:domain :User .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasSize
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSize
 :hasSize rdf:type owl:DatatypeProperty ;
          rdfs:range xsd:integer ;
          rdfs:comment "Indicates the size of the dataset, such as the number of points in a series." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasSupervisor
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSupervisor
 :hasSupervisor rdf:type owl:DatatypeProperty ;
                rdfs:domain :Laboratory ;
                rdfs:range xsd:string ;
                rdfs:comment "Specifies the name of the test supervisor." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasSymbol
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSymbol
 :hasSymbol rdf:type owl:DatatypeProperty ;
            rdfs:domain [ rdf:type owl:Class ;
                          owl:unionOf ( :Material
@@ -258,21 +296,21 @@ xsd:date rdf:type rdfs:Datatype .
            rdfs:comment "Provides the LaTeX symbol for use in plotting or labeling." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasTestDate
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestDate
 :hasTestDate rdf:type owl:DatatypeProperty ;
              rdfs:domain :Metadata ;
              rdfs:range xsd:date ;
              rdfs:comment "Specifies the date the test was performed." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasTestName
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestName
 :hasTestName rdf:type owl:DatatypeProperty ;
              rdfs:domain :Metadata ;
              rdfs:range xsd:string ;
              rdfs:comment "Specifies the name of the test." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#hasValue
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasValue
 :hasValue rdf:type owl:DatatypeProperty ;
           rdfs:range xsd:float ;
           rdfs:comment "Stores the numerical value of a scalar property, such as UTS." .
@@ -282,55 +320,60 @@ xsd:date rdf:type rdfs:Datatype .
 #    Classes
 #################################################################
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AluminiumAlloy
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AluminiumAlloy
 :AluminiumAlloy rdf:type owl:Class ;
                 rdfs:subClassOf :Material .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Bar
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Bar
 :Bar rdf:type owl:Class ;
      rdfs:subClassOf :TestingConditions ;
      rdfs:comment "Defines the generic class for bar properties." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CopperAlloy
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CopperAlloy
 :CopperAlloy rdf:type owl:Class ;
              rdfs:subClassOf :Material .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Dimension
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Dimension
 :Dimension rdf:type owl:Class ;
            rdfs:subClassOf :Bar ,
                            :Specimen .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ExtractedSignal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ExtractedSignal
 :ExtractedSignal rdf:type owl:Class ;
                  rdfs:subClassOf :SecondaryData ;
                  rdfs:comment "Represents the determined particle velocity at a surface of the specimen." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#FEMetadata
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEMetadata
 :FEMetadata rdf:type owl:Class ;
             rdfs:subClassOf :Bar ,
                             :Specimen ;
             rdfs:comment "Metadata specific to finite element-based simulations." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Laboratory
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Laboratory
 :Laboratory rdf:type owl:Class ;
             rdfs:subClassOf :Metadata ;
             rdfs:comment "Describes the Laboratory." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Material
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Material
 :Material rdf:type owl:Class ;
           rdfs:subClassOf :Bar ,
                           :Specimen ;
           rdfs:comment "Represents a material used for testing, including metals, alloys, and composites." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MechanicalProperty
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MaterialProcessing
+:MaterialProcessing rdf:type owl:Class ;
+                    rdfs:subClassOf :Specimen .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MechanicalProperty
 :MechanicalProperty rdf:type owl:Class ;
                     rdfs:subClassOf :Bar ,
                                     :Specimen ;
@@ -338,91 +381,101 @@ xsd:date rdf:type rdfs:Datatype .
                                  "Represents a mechanical property that characterizes the material behavior, such as elastic modulus or density." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Metadata
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Metadata
 :Metadata rdf:type owl:Class ;
           rdfs:comment "Captures general metadata about the test, including conditions and setup." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MomentumTrap
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MomentumTrap
 :MomentumTrap rdf:type owl:Class ;
               rdfs:subClassOf :TestingConditions ;
               rdfs:comment "Striker impact velocity." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Parameter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Parameter
 :Parameter rdf:type owl:Class ;
            rdfs:subClassOf :StrengthModel ;
            rdfs:comment "Represents a parameter within a strength model, including its value and units." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#PrimaryData
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrimaryData
 :PrimaryData rdf:type owl:Class ;
              rdfs:comment "Represents raw data directly collected during the SHPB test, including strain gauge signals." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SecondaryData
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SecondaryData
 :SecondaryData rdf:type owl:Class ;
                rdfs:comment "Represents processed data and determined mechanical properties, including series and single-value properties." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SensorSignal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SensorSignal
 :SensorSignal rdf:type owl:Class ;
               rdfs:subClassOf :PrimaryData ;
               rdfs:comment "Represents a generic signal from a sensor." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SeriesData
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SeriesData
 :SeriesData rdf:type owl:Class ;
             rdfs:subClassOf :SecondaryData ;
             rdfs:comment "Represents a generic data series, such as stress or strain." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Shape
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Shape
 :Shape rdf:type owl:Class ;
        rdfs:subClassOf :Specimen .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Specimen
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Specimen
 :Specimen rdf:type owl:Class ;
           rdfs:subClassOf :Metadata ;
           rdfs:comment "Describes the specimen tested, including its material and geometry." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SteelAlloy
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelAlloy
 :SteelAlloy rdf:type owl:Class ;
             rdfs:subClassOf :Material .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrainGaugeProperties
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGaugeProperties
 :StrainGaugeProperties rdf:type owl:Class ;
                        rdfs:subClassOf :TestingConditions ;
                        rdfs:comment "Captures all properties related to strain gauge calibration." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrengthModel
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrengthModel
 :StrengthModel rdf:type owl:Class ;
                rdfs:subClassOf :FEMetadata ;
                rdfs:comment "Represents the strength model used in finite element analysis." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Structure
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Structure
 :Structure rdf:type owl:Class ;
            rdfs:subClassOf :Specimen .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TestType
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestMode
+:TestMode rdf:type owl:Class ;
+          rdfs:subClassOf :TestingConditions .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestTemperature
+:TestTemperature rdf:type owl:Class ;
+                 rdfs:subClassOf :TestingConditions .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestType
 :TestType rdf:type owl:Class ;
           rdfs:subClassOf :TestingConditions ;
           rdfs:comment "Represents the type of test conducted, such as pulse calibration or specimen testing." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TestingConditions
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestingConditions
 :TestingConditions rdf:type owl:Class ;
                    rdfs:subClassOf :Metadata ;
                    rdfs:comment "Metadata specific to Testing Conditions." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Unit
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unit
 :Unit rdf:type owl:Class ;
       rdfs:subClassOf :Dimension ,
                       :MechanicalProperty ,
@@ -433,9 +486,9 @@ xsd:date rdf:type rdfs:Datatype .
       rdfs:comment "Represents a physical unit of measurement." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#User
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#User
 :User rdf:type owl:Class ;
-      rdfs:subClassOf :TestingConditions ;
+      rdfs:subClassOf :Metadata ;
       rdfs:comment "Represents a user involved in the experiment." .
 
 
@@ -443,40 +496,40 @@ xsd:date rdf:type rdfs:Datatype .
 #    Individuals
 #################################################################
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AL6061
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL6061
 :AL6061 rdf:type owl:NamedIndividual ,
                  :AluminiumAlloy ;
         :hasAbbreviation "AL6061" ;
         :hasLegendName "AL6061 Alloy" ;
-        :hasName "Aluminum 6061 Alloy" ;
-        rdfs:comment "6061 aluminum alloy, a common material for structural applications." .
+        rdfs:comment "6061 aluminum alloy, a common material for structural applications." ;
+        :hasName "Aluminum 6061 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AL7075
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL7075
 :AL7075 rdf:type owl:NamedIndividual ,
                  :AluminiumAlloy ;
         :hasAbbreviation "AL7075" ;
         :hasLegendName "AL7075 Alloy" ;
-        :hasName "Aluminum 7075 Alloy" ;
-        rdfs:comment "7075 aluminum alloy, used in aerospace and high-strength applications." .
+        rdfs:comment "7075 aluminum alloy, used in aerospace and high-strength applications." ;
+        :hasName "Aluminum 7075 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#AbsorbedEnergy
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AbsorbedEnergy
 :AbsorbedEnergy rdf:type owl:NamedIndividual ,
                          :SeriesData ;
                 rdfs:comment "Represents absorbed energy." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Brass414
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Brass414
 :Brass414 rdf:type owl:NamedIndividual ,
                    :CopperAlloy ;
           :hasAbbreviation "CU414" ;
           :hasLegendName "Brass 414 Alloy" ;
-          :hasName "Brass 414 Alloy" ;
-          rdfs:comment "A generic brass alloy tested for mechanical properties." .
+          rdfs:comment "A generic brass alloy tested for mechanical properties." ;
+          :hasName "Brass 414 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#BrianSchuster
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#BrianSchuster
 :BrianSchuster rdf:type owl:NamedIndividual ,
                         :User ;
                :hasAbbreviation "BES" ;
@@ -485,43 +538,43 @@ xsd:date rdf:type rdfs:Datatype .
                :hasName "Brian E. Schuster" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CU101
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CU101
 :CU101 rdf:type owl:NamedIndividual ,
                 :CopperAlloy ;
        :hasAbbreviation "CU101" ;
        :hasLegendName "Cu101 Alloy" ;
-       :hasName "Copper 101 Alloy" ;
-       rdfs:comment "A generic brass alloy tested for mechanical properties." .
+       rdfs:comment "A generic brass alloy tested for mechanical properties." ;
+       :hasName "Copper 101 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CalibrationResistance
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CalibrationResistance
 :CalibrationResistance rdf:type owl:NamedIndividual ,
                                 :StrainGaugeProperties ;
                        :hasUnits :MilliOhms ,
                                  :Ohms ;
-                       :hasName "Strain Gauge Calibration Resistance" ;
-                       rdfs:comment "Represents the calibration resistance of the strain gauge in ohms." .
+                       rdfs:comment "Represents the calibration resistance of the strain gauge in ohms." ;
+                       :hasName "Strain Gauge Calibration Resistance" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CalibrationVoltage
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CalibrationVoltage
 :CalibrationVoltage rdf:type owl:NamedIndividual ,
                              :StrainGaugeProperties ;
                     :hasUnits :MilliVolts ,
                               :Volts ;
-                    :hasName "Strain Gauge Calibration Voltage" ;
-                    rdfs:comment "Represents the calibration voltage of the strain gauge in volts." .
+                    rdfs:comment "Represents the calibration voltage of the strain gauge in volts." ;
+                    :hasName "Strain Gauge Calibration Voltage" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CrossSection
-:CrossSection rdf:type owl:NamedIndividual ,
-                       :Dimension ;
-              :hasUnits :SquareInches ,
-                        :SquareMeters ,
-                        :SquareMilimeters ;
-              :hasName "Cross Sectional Area" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CrossSectionalArea
+:CrossSectionalArea rdf:type owl:NamedIndividual ,
+                             :Dimension ;
+                    :hasUnits :SquareInches ,
+                              :SquareMeters ,
+                              :SquareMilimeters ;
+                    :hasName "Cross Sectional Area" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CubicCentimeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicCentimeter
 :CubicCentimeter rdf:type owl:NamedIndividual ,
                           :Unit ;
                  :hasAbbreviation "$\\text{cm}^3$" ;
@@ -529,7 +582,7 @@ xsd:date rdf:type rdfs:Datatype .
                  rdfs:comment "Cubic centimeter, a unit of volume in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CubicFoot
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicFoot
 :CubicFoot rdf:type owl:NamedIndividual ,
                     :Unit ;
            :hasAbbreviation "\\text{ft}^3" ;
@@ -537,7 +590,7 @@ xsd:date rdf:type rdfs:Datatype .
            rdfs:comment "Cubic foot, a unit of volume in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CubicInch
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicInch
 :CubicInch rdf:type owl:NamedIndividual ,
                     :Unit ;
            :hasAbbreviation "in^3" ;
@@ -545,7 +598,7 @@ xsd:date rdf:type rdfs:Datatype .
            rdfs:comment "Cubic inch, a unit of volume in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CubicMeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicMeter
 :CubicMeter rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "$m^3$" ;
@@ -553,7 +606,7 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:comment "Cubic meter, a unit of volume in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#CubicMillimeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicMillimeter
 :CubicMillimeter rdf:type owl:NamedIndividual ,
                           :Unit ;
                  :hasAbbreviation "mm^3" ;
@@ -561,14 +614,14 @@ xsd:date rdf:type rdfs:Datatype .
                  rdfs:comment "Cubic millimeter, a unit of volume in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Cylindrical
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Cylindrical
 :Cylindrical rdf:type owl:NamedIndividual ,
                       :Shape ;
              :hasAbbreviation "CYL" ;
              :hasName "Cylindrical Shape" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#DataAcquisitionRate
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DataAcquisitionRate
 :DataAcquisitionRate rdf:type owl:NamedIndividual ,
                               :Dimension ;
                      :hasUnits :GigaHertz ,
@@ -579,32 +632,53 @@ xsd:date rdf:type rdfs:Datatype .
                      :hasName "Data Acquisition Rate" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#DavidSantacruz
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DavidSantacruz
 :DavidSantacruz rdf:type owl:NamedIndividual ,
                          :User ;
                 :hasAbbreviation "DKS" ;
                 :hasAffiliation "The University of Texas at El Paso" ;
                 :hasLocation "PHYS Building, Room 412" ;
                 :hasSupervisor "Brian E. Schuster" ;
-                :hasAfilliation "The University of Texas at El Paso" ;
                 :hasName "David K. Santacruz" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#DegreesCelsius
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DeformedCrossSectionalArea
+:DeformedCrossSectionalArea rdf:type owl:NamedIndividual ,
+                                     :Dimension ;
+                            :hasUnits :SquareInches ,
+                                      :SquareMeters ,
+                                      :SquareMilimeters ;
+                            :hasAbbreviation "Deformed Cross Section" ;
+                            :hasName "Deformed Cross Sectional Area" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DeformedLength
+:DeformedLength rdf:type owl:NamedIndividual ,
+                         :Dimension ;
+                :hasUnits :Foot ,
+                          :Inch ,
+                          :Meter ,
+                          :Micrometer ,
+                          :Millimeter ;
+                :hasAbbreviation "Deformed Lentgth" ;
+                :hasName "Deformed Length" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DegreesCelsius
 :DegreesCelsius rdf:type owl:NamedIndividual ,
                          :Unit ;
                 :hasAbbreviation "C" ;
                 :hasSymbol "$\\dot{C}$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#DegressFahrenheit
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DegressFahrenheit
 :DegressFahrenheit rdf:type owl:NamedIndividual ,
                             :Unit ;
                    :hasAbbreviation "F" ;
                    :hasSymbol "$\\dot{F}$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Density
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Density
 :Density rdf:type owl:NamedIndividual ,
                   :MechanicalProperty ,
                   :Parameter ;
@@ -612,12 +686,21 @@ xsd:date rdf:type rdfs:Datatype .
                    :KilogramPerCubicMeter ,
                    :KilogramPerCubicMillimeter ;
          :hasSymbol "$\\rho$" ;
-         :hasName "Density" ;
          rdfs:comment "Density of the material." ,
-                      "The mass per unit volume of the material." .
+                      "The mass per unit volume of the material." ;
+         :hasName "Density" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ElasticModulus
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DynaMatLab
+:DynaMatLab rdf:type owl:NamedIndividual ,
+                     :Laboratory ;
+            :hasAffiliation "University of Texas at El Paso" ;
+            :hasLocation "PHYS Building, Room 412" ;
+            :hasSupervisor "Dr Brian E Schuster" ;
+            :hasName "Dynamic Material's Laboratory" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElasticModulus
 :ElasticModulus rdf:type owl:NamedIndividual ,
                          :MechanicalProperty ,
                          :Parameter ;
@@ -626,12 +709,12 @@ xsd:date rdf:type rdfs:Datatype .
                           :Pascal ,
                           :Psi ;
                 :hasSymbol "$E$" ;
-                :hasName "Elastic Modulus" ;
                 rdfs:comment "Elastic modulus of the material." ,
-                             "Represents the stiffness of the material in the elastic range." .
+                             "Represents the stiffness of the material in the elastic range." ;
+                :hasName "Elastic Modulus" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ElasticStrengthModel
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElasticStrengthModel
 :ElasticStrengthModel rdf:type owl:NamedIndividual ,
                                :StrengthModel ;
                       :hasParameter :Density ,
@@ -641,7 +724,7 @@ xsd:date rdf:type rdfs:Datatype .
                       :hasName "Elastic Strength Model" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ElementSize
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElementSize
 :ElementSize rdf:type owl:NamedIndividual ,
                       :Dimension ;
              :hasUnits :Foot ,
@@ -655,53 +738,77 @@ xsd:date rdf:type rdfs:Datatype .
              :hasName "Finite Element Size" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#EmilioLoera
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EmilioLoera
 :EmilioLoera rdf:type owl:NamedIndividual ,
                       :User ;
              :hasAbbreviation "ESL" ;
              :hasAffiliation "University of Texas at El Paso" ;
              :hasLocation "PHYS Buiding, Room 412" ;
              :hasSupervisor "Brian E. Schuster" ;
-             :hasAfilliation "The University of Texas at El Paso" ;
              :hasName "Emilio S. Loera" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#EngineeringStrain
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EngineeringStrain
 :EngineeringStrain rdf:type owl:NamedIndividual ,
                             :SeriesData ;
                    :hasSymbol "$\\varepsilon$" ;
-                   :hasName "Engineering Strain" ;
-                   rdfs:comment "Represents engineering strain." .
+                   rdfs:comment "Represents engineering strain." ;
+                   :hasName "Engineering Strain" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#EngineeringStrainRate
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EngineeringStrainRate
 :EngineeringStrainRate rdf:type owl:NamedIndividual ,
                                 :SeriesData ;
                        :hasSymbol "$\\dot{\\varepsilon}$" ;
-                       :hasName "Engineering Strain Rate" ;
-                       rdfs:comment "Represents engineering strain rate." .
+                       rdfs:comment "Represents engineering strain rate." ;
+                       :hasName "Engineering Strain Rate" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#EngineeringStress
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EngineeringStress
 :EngineeringStress rdf:type owl:NamedIndividual ,
                             :SeriesData ;
                    :hasSymbol "$\\sigma$" ;
-                   :hasName "Engineering Stress" ;
-                   rdfs:comment "Represents engineering stress." .
+                   rdfs:comment "Represents engineering stress." ;
+                   :hasName "Engineering Stress" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ErwinCazares
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ErwinCazares
 :ErwinCazares rdf:type owl:NamedIndividual ,
                        :User ;
               :hasAbbreviation "ECG" ;
               :hasAffiliation "University of Texas at El Paso" ;
               :hasLocation "PHYS Building, Room 412" ;
               :hasSupervisor "Brian E. Schuster" ;
-              :hasAfilliation "The University of Texas at El Paso" ;
               :hasName "Erwin Cazares" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Foot
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEAMode
+:FEAMode rdf:type owl:NamedIndividual ,
+                  :TestMode ;
+         :hasAbbreviation "FEA" ;
+         :hasName "FEA Testing Conditions" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEASpecimen
+:FEASpecimen rdf:type owl:NamedIndividual ,
+                      :Specimen ;
+             :hasDimension :CrossSectionalArea ,
+                           :DeformedCrossSectionalArea ,
+                           :DeformedLength ,
+                           :ElementSize ,
+                           :Length ;
+             :hasMechanicalProperty :Density ,
+                                    :ElasticModulus ,
+                                    :PoissonsRatio ;
+             :hasShape :Cylindrical ,
+                       :Rectangular ;
+             :hasStructure :GyroidLattice ,
+                           :Monolithic ,
+                           :SimpleCubicLattice ;
+             :hasName "FEA Specimen" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot
 :Foot rdf:type owl:NamedIndividual ,
                :Unit ;
       :hasAbbreviation "ft" ;
@@ -709,7 +816,7 @@ xsd:date rdf:type rdfs:Datatype .
       rdfs:comment "Foot, a unit of length in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#FootPerSecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FootPerSecond
 :FootPerSecond rdf:type owl:NamedIndividual ,
                         :Unit ;
                :hasAbbreviation "ft/s" ;
@@ -717,22 +824,22 @@ xsd:date rdf:type rdfs:Datatype .
                rdfs:comment "Foot per second, a unit of velocity in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#GaugeFactor
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GaugeFactor
 :GaugeFactor rdf:type owl:NamedIndividual ,
                       :StrainGaugeProperties ;
              :hasUnits :Unitless ;
-             :hasName "Strain Gauge Factor" ;
-             rdfs:comment "Represents the gauge factor of the strain gauge." .
+             rdfs:comment "Represents the gauge factor of the strain gauge." ;
+             :hasName "Strain Gauge Factor" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#GigaHertz
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GigaHertz
 :GigaHertz rdf:type owl:NamedIndividual ,
                     :Unit ;
            :hasAbbreviation "GHz" ;
            :hasSymbol "$GHz$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Gigapascal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Gigapascal
 :Gigapascal rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "GPa" ;
@@ -740,7 +847,7 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:comment "Gigapascal, a unit of pressure in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#GramPerCubicMillimeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GramPerCubicMillimeter
 :GramPerCubicMillimeter rdf:type owl:NamedIndividual ,
                                  :Unit ;
                         :hasAbbreviation "g/mm^3" ;
@@ -748,23 +855,22 @@ xsd:date rdf:type rdfs:Datatype .
                         rdfs:comment "Gram per cubic millimeter, a unit of density." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#GyroidLattice
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GyroidLattice
 :GyroidLattice rdf:type owl:NamedIndividual ,
                         :Structure ;
                :hasName "Gyroid Lattice" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#HardeningExponent
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#HardeningExponent
 :HardeningExponent rdf:type owl:NamedIndividual ,
                             :Parameter ;
                    :hasUnits :Unitless ;
                    :hasSymbol "$n$" ;
-                   :hasName "Hardening Exponent" ,
-                            "n (Hardening Exponent)" ;
-                   rdfs:comment "Hardening exponent of the material." .
+                   rdfs:comment "Hardening exponent of the material." ;
+                   :hasName "Hardening Exponent" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#HardeningModulus
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#HardeningModulus
 :HardeningModulus rdf:type owl:NamedIndividual ,
                            :Parameter ;
                   :hasUnits :Gigapascal ,
@@ -772,19 +878,25 @@ xsd:date rdf:type rdfs:Datatype .
                             :Pascal ,
                             :Psi ;
                   :hasSymbol "$B$" ;
-                  :hasName "B (Hardening Modulus)" ,
-                           "Hardening Modulus" ;
-                  rdfs:comment "Hardening modulus of the material." .
+                  rdfs:comment "Hardening modulus of the material." ;
+                  :hasName "Hardening Modulus" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Hertz
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Hertz
 :Hertz rdf:type owl:NamedIndividual ,
                 :Unit ;
        :hasAbbreviation "Hz" ;
        :hasSymbol "$Hz$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Inch
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#HighTemperature
+:HighTemperature rdf:type owl:NamedIndividual ,
+                          :TestTemperature ;
+                 :hasAbbreviation "HT" ;
+                 :hasName "High Temparature Testing" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch
 :Inch rdf:type owl:NamedIndividual ,
                :Unit ;
       :hasAbbreviation "in" ;
@@ -792,7 +904,7 @@ xsd:date rdf:type rdfs:Datatype .
       rdfs:comment "Inch, a unit of length in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#InchPerSecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#InchPerSecond
 :InchPerSecond rdf:type owl:NamedIndividual ,
                         :Unit ;
                :hasAbbreviation "in/s" ;
@@ -800,20 +912,21 @@ xsd:date rdf:type rdfs:Datatype .
                rdfs:comment "Inch per second, a unit of velocity in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Incident
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Incident
 :Incident rdf:type owl:NamedIndividual ,
                    :ExtractedSignal ,
                    :SensorSignal ;
           :hasUnits :MilliVolts ,
                     :Unitless ,
                     :Volts ;
+          :hasLegendName "Incident Signal" ;
           rdfs:comment "Indicates the signal from the incident bar." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#IncidentBar
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentBar
 :IncidentBar rdf:type owl:NamedIndividual ,
                       :Bar ;
-             :hasDimension :CrossSection ,
+             :hasDimension :CrossSectionalArea ,
                            :Length ,
                            :StrainGaugeDistance ;
              :hasMaterial :SteelC350 ;
@@ -824,7 +937,7 @@ xsd:date rdf:type rdfs:Datatype .
              :hasLegendName "Incident Bar" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#JohnsonCookModelSimplified
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#JohnsonCookModelSimplified
 :JohnsonCookModelSimplified rdf:type owl:NamedIndividual ,
                                      :StrengthModel ;
                             :hasParameter :Density ,
@@ -835,18 +948,17 @@ xsd:date rdf:type rdfs:Datatype .
                                           :ThermalSofteningCoefficient ,
                                           :YieldStrength ;
                             :hasAbbreviation "JC Model" ;
-                            :hasName "Johnson Cook Simplified Strength Model" ,
-                                     "Johnson-Cook Simplified Model" .
+                            :hasName "Johnson-Cook Simplified Model" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#KiloHertz
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KiloHertz
 :KiloHertz rdf:type owl:NamedIndividual ,
                     :Unit ;
            :hasAbbreviation "KHz" ;
            :hasSymbol "$KHz$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#KilogramPerCubicMeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter
 :KilogramPerCubicMeter rdf:type owl:NamedIndividual ,
                                 :Unit ;
                        :hasAbbreviation "Kg/m^3" ;
@@ -854,7 +966,7 @@ xsd:date rdf:type rdfs:Datatype .
                        rdfs:comment "Kilogram per cubic meter, a unit of density." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#KilogramPerCubicMillimeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMillimeter
 :KilogramPerCubicMillimeter rdf:type owl:NamedIndividual ,
                                      :Unit ;
                             :hasAbbreviation "Kg/mm^3" ;
@@ -862,7 +974,30 @@ xsd:date rdf:type rdfs:Datatype .
                             rdfs:comment "Kilogram per cubic millimeter, a unit of density." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Length
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LABMode
+:LABMode rdf:type owl:NamedIndividual ,
+                  :TestMode ;
+         :hasAbbreviation "LAB" ;
+         :hasName "LAB Testing Conditions" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LABSpecimen
+:LABSpecimen rdf:type owl:NamedIndividual ,
+                      :Specimen ;
+             :hasDimension :CrossSectionalArea ,
+                           :DeformedCrossSectionalArea ,
+                           :DeformedLength ,
+                           :Length ;
+             :hasMechanicalProperty :WaveSpeed ;
+             :hasShape :Cylindrical ,
+                       :Rectangular ;
+             :hasStructure :GyroidLattice ,
+                           :Monolithic ,
+                           :SimpleCubicLattice ;
+             :hasName "LAB Specimen" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Length
 :Length rdf:type owl:NamedIndividual ,
                  :Dimension ;
         :hasUnits :Foot ,
@@ -873,14 +1008,14 @@ xsd:date rdf:type rdfs:Datatype .
         :hasName "Length" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MegaHertz
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MegaHertz
 :MegaHertz rdf:type owl:NamedIndividual ,
                     :Unit ;
            :hasAbbreviation "MHz" ;
            :hasSymbol "$MHz$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Megapascal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Megapascal
 :Megapascal rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "MPa" ;
@@ -888,7 +1023,7 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:comment "Megapascal, a unit of pressure in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Meter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Meter
 :Meter rdf:type owl:NamedIndividual ,
                 :Unit ;
        :hasAbbreviation "m" ;
@@ -896,7 +1031,7 @@ xsd:date rdf:type rdfs:Datatype .
        rdfs:comment "Meter, a unit of length in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MeterPerSecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MeterPerSecond
 :MeterPerSecond rdf:type owl:NamedIndividual ,
                          :Unit ;
                 :hasAbbreviation "m/s" ;
@@ -904,7 +1039,7 @@ xsd:date rdf:type rdfs:Datatype .
                 rdfs:comment "Meter per second, a unit of velocity in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Micrometer
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Micrometer
 :Micrometer rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "$\\mu m$" ;
@@ -912,29 +1047,29 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:comment "Micrometer, a unit of length in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Microsecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Microsecond
 :Microsecond rdf:type owl:NamedIndividual ,
                       :Unit ;
-             :hasAbbreviation "$\\mu s$" ;
+             :hasAbbreviation "us" ;
              :hasSymbol "$\\mu s$" ;
              rdfs:comment "Microsecond, a unit of time in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MilliOhms
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MilliOhms
 :MilliOhms rdf:type owl:NamedIndividual ,
                     :Unit ;
-           :hasAbbreviation "$m\\Omega$" ;
+           :hasAbbreviation "mOhms" ;
            :hasSymbol "$m\\Omega$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MilliVolts
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MilliVolts
 :MilliVolts rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "mV" ;
             :hasSymbol "$mV$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Millimeter
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Millimeter
 :Millimeter rdf:type owl:NamedIndividual ,
                      :Unit ;
             :hasAbbreviation "mm" ;
@@ -942,7 +1077,7 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:comment "Millimeter, a unit of length in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MillimeterPerSecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MillimeterPerSecond
 :MillimeterPerSecond rdf:type owl:NamedIndividual ,
                               :Unit ;
                      :hasAbbreviation "mm/s" ;
@@ -950,7 +1085,7 @@ xsd:date rdf:type rdfs:Datatype .
                      rdfs:comment "Millimeter per second, a unit of velocity in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Millisecond
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Millisecond
 :Millisecond rdf:type owl:NamedIndividual ,
                       :Unit ;
              :hasAbbreviation "ms" ;
@@ -958,38 +1093,42 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:comment "Millisecond, a unit of time in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MomentumTrapEngaged
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MomentumTrapEngaged
 :MomentumTrapEngaged rdf:type owl:NamedIndividual ,
                               :MomentumTrap ;
-                     rdfs:comment "Indicates that the momentum trap was engaged during the test." .
+                     :hasAbbreviation "Engaged" ;
+                     rdfs:comment "Indicates that the momentum trap was engaged during the test." ;
+                     :hasName "Momentum Trap Engaged" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#MomentumTrapNotEngaged
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MomentumTrapNotEngaged
 :MomentumTrapNotEngaged rdf:type owl:NamedIndividual ,
                                  :MomentumTrap ;
-                        rdfs:comment "Indicates that the momentum trap was not engaged during the test." .
+                        :hasAbbreviation "Not Engaged" ;
+                        rdfs:comment "Indicates that the momentum trap was not engaged during the test." ;
+                        :hasName "Momentum Trap Not Engaged" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Monolithic
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Monolithic
 :Monolithic rdf:type owl:NamedIndividual ,
                      :Structure ;
             :hasName "Monolithic" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Ohms
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Ohms
 :Ohms rdf:type owl:NamedIndividual ,
                :Unit ;
       :hasAbbreviation "Ohms" ;
       :hasSymbol "$\\Omega$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ParticleVelocity
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ParticleVelocity
 :ParticleVelocity rdf:type owl:NamedIndividual ,
                            :SeriesData ;
                   rdfs:comment "Represents particle velocity at specimen surface." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Pascal
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Pascal
 :Pascal rdf:type owl:NamedIndividual ,
                  :Unit ;
         :hasAbbreviation "Pa" ;
@@ -997,18 +1136,18 @@ xsd:date rdf:type rdfs:Datatype .
         rdfs:comment "Pascal, a unit of pressure in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#PoissonsRatio
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PoissonsRatio
 :PoissonsRatio rdf:type owl:NamedIndividual ,
                         :MechanicalProperty ,
                         :Parameter ;
                :hasUnits :Unitless ;
                :hasSymbol "$\\rho$" ;
-               :hasName "Poisson's Ratio" ;
                rdfs:comment "Poisson's ratio of the material." ,
-                            "The ratio of transverse strain to axial strain in the elastic range." .
+                            "The ratio of transverse strain to axial strain in the elastic range." ;
+               :hasName "Poisson's Ratio" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Pressure
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Pressure
 :Pressure rdf:type owl:NamedIndividual ,
                    :Dimension ;
           :hasUnits :Gigapascal ,
@@ -1018,7 +1157,13 @@ xsd:date rdf:type rdfs:Datatype .
           :hasName "Pressure" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Psi
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrintCast
+:PrintCast rdf:type owl:NamedIndividual ,
+                    :MaterialProcessing ;
+           :hasName "Print Casting Method" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Psi
 :Psi rdf:type owl:NamedIndividual ,
               :Unit ;
      :hasAbbreviation "psi" ;
@@ -1026,47 +1171,54 @@ xsd:date rdf:type rdfs:Datatype .
      rdfs:comment "Pounds per square inch, a unit of pressure in the English system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#PulseTest
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseTest
 :PulseTest rdf:type owl:NamedIndividual ,
                     :TestType ;
-           :hasName "Pulse Test" ;
-           rdfs:comment "A calibration test involving pulse evaluation without a specimen." .
+           :hasAbbreviation "Pulse" ;
+           rdfs:comment "A calibration test involving pulse evaluation without a specimen." ;
+           :hasName "Pulse Test" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Rectangular
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Rectangular
 :Rectangular rdf:type owl:NamedIndividual ,
                       :Shape ;
              :hasAbbreviation "REC" ;
              :hasName "Rectangular Shape" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Reflected
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Reflected
 :Reflected rdf:type owl:NamedIndividual ,
                     :ExtractedSignal ;
            :hasUnits :Volts ;
            rdfs:comment "Indicates the signal reflected within the incident bar." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Resistance
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Resistance
 :Resistance rdf:type owl:NamedIndividual ,
                      :StrainGaugeProperties ;
             :hasUnits :MilliOhms ,
                       :Ohms ;
-            :hasName "Resistance" ,
-                     "Strain Gauge Resistance" ;
-            rdfs:comment "Represents the resistance of the strain gauge in ohms." .
+            rdfs:comment "Represents the resistance of the strain gauge in ohms." ;
+            :hasName "Strain Gauge Resistance" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SS316
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#RoomTemperature
+:RoomTemperature rdf:type owl:NamedIndividual ,
+                          :TestTemperature ;
+                 :hasAbbreviation "RT" ;
+                 :hasName "Room Temperature Testing" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SS316
 :SS316 rdf:type owl:NamedIndividual ,
                 :SteelAlloy ;
        :hasAbbreviation "SS316" ;
        :hasLegendName "SS316 Alloy" ;
-       :hasName "Stainless Steel 316 Alloy" ;
-       rdfs:comment "316 stainless steel alloy, commonly used in SHPB testing." .
+       rdfs:comment "316 stainless steel alloy, commonly used in SHPB testing." ;
+       :hasName "Stainless Steel 316 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Second
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Second
 :Second rdf:type owl:NamedIndividual ,
                  :Unit ;
         :hasAbbreviation "s" ;
@@ -1074,66 +1226,73 @@ xsd:date rdf:type rdfs:Datatype .
         rdfs:comment "Second, a unit of time in the SI system." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SimpleCubicLattice
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SimpleCubicLattice
 :SimpleCubicLattice rdf:type owl:NamedIndividual ,
                              :Structure ;
                     :hasAbbreviation "SC" ;
                     :hasName "Simple Cubic Lattice" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SpecimenTest
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SpecimenTest
 :SpecimenTest rdf:type owl:NamedIndividual ,
                        :TestType ;
-              :hasName "Specimen Test" ;
-              rdfs:comment "A test involving a specimen to evaluate its mechanical behavior." .
+              :hasAbbreviation "Specimen" ;
+              rdfs:comment "A test involving a specimen to evaluate its mechanical behavior." ;
+              :hasName "Specimen Test" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SquareInches
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches
 :SquareInches rdf:type owl:NamedIndividual ,
                        :Unit ;
               :hasAbbreviation "in^2" ;
               :hasSymbol "$in^2$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SquareMeters
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareMeters
 :SquareMeters rdf:type owl:NamedIndividual ,
                        :Unit ;
               :hasAbbreviation "m^2" ;
               :hasSymbol "$m^2$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SquareMilimeters
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareMilimeters
 :SquareMilimeters rdf:type owl:NamedIndividual ,
                            :Unit ;
                   :hasAbbreviation "mm^2" ;
                   :hasSymbol "$mm^2$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Steel1018
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Steel1018
 :Steel1018 rdf:type owl:NamedIndividual ,
                     :SteelAlloy ;
            :hasAbbreviation "ST1018" ;
            :hasLegendName "ST1018 Alloy" ;
-           :hasName "Steel 1018 Alloy" ;
-           rdfs:comment "1018 steel alloy, commonly used in SHPB testing." .
+           rdfs:comment "1018 steel alloy, commonly used in SHPB testing." ;
+           :hasName "Steel 1018 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#SteelC350
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350
 :SteelC350 rdf:type owl:NamedIndividual ,
                     :SteelAlloy ;
            :hasAbbreviation "STC350" ;
            :hasLegendName "STC350 Alloy" ;
-           :hasName "Steel C350 Alloy" ;
-           rdfs:comment "C350 maraging steel, a high-strength material often tested in SHPB experiments." .
+           rdfs:comment "C350 maraging steel, a high-strength material often tested in SHPB experiments." ;
+           :hasName "Steel C350 Alloy" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrainEnergy
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StockMaterial
+:StockMaterial rdf:type owl:NamedIndividual ,
+                        :MaterialProcessing ;
+               :hasName "Stock Material" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainEnergy
 :StrainEnergy rdf:type owl:NamedIndividual ,
                        :SeriesData ;
               rdfs:comment "Represents strain energy." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrainGaugeDistance
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGaugeDistance
 :StrainGaugeDistance rdf:type owl:NamedIndividual ,
                               :Dimension ;
                      :hasUnits :Foot ,
@@ -1144,10 +1303,10 @@ xsd:date rdf:type rdfs:Datatype .
                      :hasName "Strain Gauge Distance" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#StrikerBar
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrikerBar
 :StrikerBar rdf:type owl:NamedIndividual ,
                      :Bar ;
-            :hasDimension :CrossSection ,
+            :hasDimension :CrossSectionalArea ,
                           :Length ;
             :hasMaterial :SteelC350 ;
             :hasMechanicalProperty :Density ,
@@ -1157,46 +1316,48 @@ xsd:date rdf:type rdfs:Datatype .
             :hasLegendName "Striker Bar" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Temperature
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Temperature
 :Temperature rdf:type owl:NamedIndividual ,
                       :ExtractedSignal ,
                       :SensorSignal ;
              :hasUnits :DegreesCelsius ,
-                       :DegressFahrenheit .
+                       :DegressFahrenheit ;
+             :hasLegendName "Temperature Signal" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#ThermalSofteningCoefficient
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ThermalSofteningCoefficient
 :ThermalSofteningCoefficient rdf:type owl:NamedIndividual ,
                                       :Parameter ;
                              :hasSymbol "$C$" ;
-                             :hasName "C (Thermal Softening Coefficient)" ,
-                                      "Thermal Softening Coefficient" ;
-                             rdfs:comment "Thermal softening coefficient in the Johnson-Cook model." .
+                             rdfs:comment "Thermal softening coefficient in the Johnson-Cook model." ;
+                             :hasName "Thermal Softening Coefficient" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Time
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Time
 :Time rdf:type owl:NamedIndividual ,
                :ExtractedSignal ,
                :SensorSignal ;
       :hasUnits :Microsecond ,
                 :Millisecond ,
-                :Second .
+                :Second ;
+      :hasLegendName "Time Signal" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Transmitted
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Transmitted
 :Transmitted rdf:type owl:NamedIndividual ,
                       :ExtractedSignal ,
                       :SensorSignal ;
              :hasUnits :MilliVolts ,
                        :Unitless ,
                        :Volts ;
+             :hasLegendName "Transmitted Signal" ;
              rdfs:comment "Indicates the signal from the transmitted bar." .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TransmittedBar
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedBar
 :TransmittedBar rdf:type owl:NamedIndividual ,
                          :Bar ;
-                :hasDimension :CrossSection ,
+                :hasDimension :CrossSectionalArea ,
                               :Length ,
                               :StrainGaugeDistance ;
                 :hasMaterial :SteelC350 ;
@@ -1207,30 +1368,30 @@ xsd:date rdf:type rdfs:Datatype .
                 :hasLegendName "Transmitted Bar" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TrueStrain
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TrueStrain
 :TrueStrain rdf:type owl:NamedIndividual ,
                      :SeriesData ;
             :hasSymbol "$\\varepsilon_T$" ;
-            :hasName "True Strain" ;
-            rdfs:comment "Represents true strain." .
+            rdfs:comment "Represents true strain." ;
+            :hasName "True Strain" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#TrueStress
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TrueStress
 :TrueStress rdf:type owl:NamedIndividual ,
                      :SeriesData ;
             :hasSymbol "$\\sigma_T$" ;
-            :hasName "True Stress" ;
-            rdfs:comment "Represents true stress." .
+            rdfs:comment "Represents true stress." ;
+            :hasName "True Stress" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Unitless
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unitless
 :Unitless rdf:type owl:NamedIndividual ,
                    :Unit ;
           :hasAbbreviation "" ;
           :hasSymbol "" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Velocity
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Velocity
 :Velocity rdf:type owl:NamedIndividual ,
                    :Dimension ;
           :hasUnits :InchPerSecond ,
@@ -1238,23 +1399,23 @@ xsd:date rdf:type rdfs:Datatype .
           :hasName "Velocity" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#Volts
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Volts
 :Volts rdf:type owl:NamedIndividual ,
                 :Unit ;
        :hasAbbreviation "V" ;
        :hasSymbol "$V$" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#WaveSpeed
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#WaveSpeed
 :WaveSpeed rdf:type owl:NamedIndividual ,
                     :MechanicalProperty ;
            :hasUnits :InchPerSecond ,
                      :MeterPerSecond ;
-           :hasName "Wave Speed" ;
-           rdfs:comment "Speed of stress waves through the material during testing." .
+           rdfs:comment "Speed of stress waves through the material during testing." ;
+           :hasName "Wave Speed" .
 
 
-###  http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#YieldStrength
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#YieldStrength
 :YieldStrength rdf:type owl:NamedIndividual ,
                         :Parameter ;
                :hasUnits :Gigapascal ,
@@ -1262,9 +1423,8 @@ xsd:date rdf:type rdfs:Datatype .
                          :Pascal ,
                          :Psi ;
                :hasSymbol "$\\sigma_Y$" ;
-               :hasName "A (Yield Strength)" ,
-                        "Yield Strength" ;
-               rdfs:comment "Initial yield strength of the material." .
+               rdfs:comment "Initial yield strength of the material." ;
+               :hasName "Yield Strength" .
 
 
 #################################################################

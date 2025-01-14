@@ -1,44 +1,46 @@
 from rdflib import Graph, Namespace
 
-# Define the ontology path
-ontology_path = "ontology/DynaMat_SHPB.ttl"
-
-from rdflib import Graph, Namespace
-
-# Define the ontology path
-ontology_path = "ontology/DynaMat_SHPB.ttl"
-
-def test_query_units():
-    """Test querying units and their symbols for all Dimension instances."""
-    # Load the ontology
-    ontology = Graph()
-    ontology.parse(ontology_path, format="turtle")
-    namespace = Namespace("http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#")
-
-    print("Querying units for Dimension instances...")
-
-    query = """
-    PREFIX : <http://www.semanticweb.org/ecazares3/ontologies/DynaMat_SHPB#>
-    SELECT ?dimensionInstance ?unitSymbol WHERE {
-        ?dimensionInstance a :Dimension ;
-                           :hasUnits ?unit .
-        ?unit :hasSymbol ?unitSymbol .
-    }
+def run_query(ontology_path, instance):
     """
-    results = ontology.query(query)
+    Run a SPARQL query to fetch properties for a given instance and add them to the temp file.
+    """
+    try:
+        # Load the ontology
+        ontology = Graph()
+        ontology.parse(ontology_path, format="turtle")
+        namespace = Namespace("https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#")
+        
+        # Define the query
+        query = f"""
+        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
+        SELECT ?property ?value WHERE {{
+            <{instance}> ?property ?value .
+        }}
+        """
 
-    if results:
-        print("Results found:")
-        for row in results:
-            dimension_instance = row.dimensionInstance.split("#")[-1]
-            unit_symbol = row.unitSymbol
-            print(f" - Dimension: {dimension_instance}, Unit Symbol: {unit_symbol}")
-    else:
-        print("No units found for Dimension instances.")
+        # Execute the query
+        results = ontology.query(query)
+
+        # Print the results and add them to the temp file
+        if results:
+            print(f"Properties for instance '{instance}':")
+            for row in results:
+                property_uri = str(row.property)
+                value = str(row.value)
+                print(f" - {property_uri}: {value}")
+                # Add the triple to the temp file
+                
+        else:
+            print(f"No properties found for instance: {instance}")
+
+    except Exception as e:
+        print(f"Error executing query: {e}")
 
 if __name__ == "__main__":
-    test_query_units()
-
-
-if __name__ == "__main__":
-    test_query_units()
+    
+    # Define the ontology path and instance
+    ontology_path = "ontology/DynaMat_SHPB.ttl"  # Update with the correct path to your ontology file
+    instance_uri = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DavidSantacruz"  # Example instance URI
+        
+    # Run the query
+    run_query(ontology_path, instance_uri)

@@ -1,0 +1,47 @@
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+dynamat:BES_20250114_CU414_FEA_HT_005_Metadata a dynamat:Metadata ;
+    dynamat:hasSpecimen dynamat:Test_Specimen ;
+    dynamat:hasTestDate "2025-01-14" ;
+    dynamat:hasTestName "BES_20250114_CU414_FEA_HT_005" ;
+    dynamat:hasTestingConditions dynamat:Testing_Conditions ;
+    dynamat:hasUser dynamat:BrianSchuster .
+
+dynamat:BES_20250114_CU414_FEA_HT_005_Primary_Data a dynamat:PrimaryMetadata .
+
+dynamat:BES_20250114_CU414_FEA_HT_005_Secondary_Data a dynamat:Secondary_Metadata .
+
+dynamat:Brass414 a dynamat:CopperAlloy ;
+    rdfs:comment "A generic brass alloy tested for mechanical properties." ;
+    dynamat:hasAbbreviation "CU414" ;
+    dynamat:hasLegendName "Brass 414 Alloy" ;
+    dynamat:hasName "Brass 414 Alloy" .
+
+dynamat:BrianSchuster a dynamat:User ;
+    dynamat:hasAbbreviation "BES" ;
+    dynamat:hasAffiliation "The University of Texas at El Paso" ;
+    dynamat:hasLocation "PHYS Building, Room 412" ;
+    dynamat:hasName "Brian E. Schuster" .
+
+dynamat:FEAMode a dynamat:TestMode ;
+    dynamat:hasAbbreviation "FEA" ;
+    dynamat:hasName "FEA Testing Conditions" .
+
+dynamat:HighTemperature a dynamat:TestTemperature ;
+    dynamat:hasAbbreviation "HT" ;
+    dynamat:hasName "High Temparature Testing" .
+
+dynamat:SpecimenTest a dynamat:TestType ;
+    rdfs:comment "A test involving a specimen to evaluate its mechanical behavior." ;
+    dynamat:hasAbbreviation "Specimen" ;
+    dynamat:hasName "Specimen Test" .
+
+dynamat:Test_Specimen a dynamat:FEASpecimen ;
+    dynamat:hasMaterial dynamat:Brass414 .
+
+dynamat:Testing_Conditions a dynamat:TestingConditions ;
+    dynamat:hasTestMode dynamat:FEAMode ;
+    dynamat:hasTestTemperature dynamat:HighTemperature ;
+    dynamat:hasTestType dynamat:SpecimenTest .
+
