@@ -7,7 +7,10 @@ from rdflib import Graph, Namespace, URIRef
 from GUI.components.common_widgets import MaterialSelector, ClassInstanceSelection, SetDefaults
 
 class TestDescriptionWidget(QWidget):
-    current_test_mode = pyqtSignal(str)
+    current_test_mode = pyqtSignal(str) # Propagates the FEA/LAB Mode signals to other tabs
+    current_test_type = pyqtSignal(str) # Propagates the Specimen/Pulse Signals to other tabs 
+    current_specimen_material = pyqtSignal(str)
+    current_test_name = pyqtSignal(str)
        
     def __init__(self, ontology_path, test_config, experiment_temp_file):
         super().__init__()
@@ -27,6 +30,7 @@ class TestDescriptionWidget(QWidget):
         self.setLayout(self.layout)
 
         self.init_ui()
+        self.layout.addStretch()
 
     #################################################
     ## WIDGETS INITIALIZATION
@@ -129,19 +133,31 @@ class TestDescriptionWidget(QWidget):
         # Add data to temp file
         if not editable:
             self.experiment.initialize_temp()
-            metadata_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Metadata"]
-            primary_data_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Primary_Data"]
-            secondary_data_uri = self.experiment.DYNAMAT[f"{self.test_name_display.text()}_Secondary_Data"]
+            experiment_name_uri = self.experiment.DYNAMAT[str(self.test_name_display.text())]
+            metadata_uri = self.experiment.DYNAMAT["Experiment_Metadata"]
+            primary_data_uri = self.experiment.DYNAMAT["Experiment_Primary_Data"]
+            secondary_data_uri = self.experiment.DYNAMAT["Experiment_Secondary_Data"]
             specimen_uri = self.experiment.DYNAMAT["Test_Specimen"]
             testing_conditions_uri = self.experiment.DYNAMAT["Testing_Conditions"]
             
-            # Add Metadata Triples
+            # Set Display Name as SHPB Test
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.SHPBExperiment))
+            self.experiment.add_instance_data(self.experiment.DYNAMAT.SHPBExperiment)
+
+            # Set Metdata, Primary and Secondary Data Objects 
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.Metadata))
             self.experiment.set_triple(str(primary_data_uri), str(self.experiment.RDF.type),
-                                       str(self.experiment.DYNAMAT.PrimaryMetadata))
+                                       str(self.experiment.DYNAMAT.PrimaryData))
             self.experiment.set_triple(str(secondary_data_uri), str(self.experiment.RDF.type), 
-                                       str(self.experiment.DYNAMAT.Secondary_Metadata))           
+                                       str(self.experiment.DYNAMAT.SecondaryData))
+
+            # Assign Metdata, Primary and Secondary Data Objects to SHPB Experiment Instance
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasMetadata), str(metadata_uri))
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasPrimaryData), str(primary_data_uri))
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasSecondaryData), str(secondary_data_uri))
             
+            # Set TestName, TestDate and User from selections
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestName), self.test_name_display.text())
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestDate),
                                        self.date_input.date().toString("yyyy-MM-dd"))
@@ -150,6 +166,7 @@ class TestDescriptionWidget(QWidget):
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasUser), user_uri)
             self.experiment.add_instance_data(user_uri)
 
+            # Set TestType, TestMode and TestTemperature from selections
             test_type_uri, test_type_abbreviation = self.test_type_selector.currentData()
             self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.TestingConditions))            
@@ -165,15 +182,11 @@ class TestDescriptionWidget(QWidget):
             temp_mode_uri, temp_mode_abbreviation = self.temp_mode_selector.currentData()
             self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestTemperature), temp_mode_uri)
             self.experiment.add_instance_data(temp_mode_uri)
-            
+
+            # Set Specimen instance and Material when Specimen mode selected            
             if test_type_abbreviation == "Specimen":                
                 material_uri, material_abbreviation = self.material_selector.currentData()
-                if test_mode_abbreviation == "LAB":
-                    self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type),
-                                                   self.experiment.DYNAMAT.LABSpecimen)
-                else:
-                    self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.FEASpecimen)
-                        
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.SHPBSpecimen) 
                 self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen), specimen_uri)
                 self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
                 self.experiment.add_instance_data(material_uri)
@@ -226,6 +239,7 @@ class TestDescriptionWidget(QWidget):
     def update_global_name(self, test_name):
         """Update the global test name for later triplet assignment."""
         self.test_config.test_name = test_name
+        self.current_test_name.emit(test_name)
          
     #################################################
     ## MATERIAL SELECTION FIELD
@@ -237,7 +251,8 @@ class TestDescriptionWidget(QWidget):
         if isinstance(test_type_uri, URIRef) and test_type_uri == self.experiment.DYNAMAT.SpecimenTest:
             material_uri, material_abbreviation = self.material_selector.currentData()
             if material_abbreviation:
-                self.test_config.specimen_material = material_uri  # Update global state          
+                self.test_config.specimen_material = material_uri  # Update global state  
+                self.current_specimen_material.emit(material_abbreviation)
         else: return           
       
 
@@ -258,7 +273,8 @@ class TestDescriptionWidget(QWidget):
         """Update the test configuration and emit the selected user."""
         test_type_uri, _ = self.test_type_selector.currentData()
         self.test_config.test_type = test_type_uri  # Update global state
-        test_type_uri = URIRef(test_type_uri) if isinstance(test_type_uri, str) else test_type_uri  
+        test_type_uri = URIRef(test_type_uri) if isinstance(test_type_uri, str) else test_type_uri 
+        self.current_test_type.emit(test_type_uri)
         
         if isinstance(test_type_uri, URIRef) and test_type_uri == self.experiment.DYNAMAT.PulseTest:
             self.material_selector.setEnabled(False)

@@ -3,13 +3,18 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from rdflib import Graph, Namespace
+from GUI.components.common_widgets import UnitSelector, DoubleSpinBox
 import pandas as pd
+import numpy as np
+import base64
 
 class PrimaryDataWidget(QWidget):
-    def __init__(self, ontology_path, test_config):
+    def __init__(self, ontology_path, test_config, experiment_temp_file):
         super().__init__()
         self.ontology_path = ontology_path
         self.test_config = test_config
+        self.experiment = experiment_temp_file
+        self.test_name = self.test_config.test_name
 
         # Load ontology
         self.ontology = Graph()
@@ -22,6 +27,7 @@ class PrimaryDataWidget(QWidget):
 
         self.signal_spinboxes = {}  # Store spinboxes for signal counts
         self.file_headers = []  # Store file headers
+        self.signal_data = {}
         self.init_ui()
 
     def init_ui(self):
@@ -48,6 +54,13 @@ class PrimaryDataWidget(QWidget):
         self.mapping_layout = QVBoxLayout()
         self.layout.addLayout(self.mapping_layout)
 
+        # Confirm/Edit Button
+        self.confirm_button = QPushButton("Confirm")
+        self.confirm_button.clicked.connect(self.toggle_confirm_edit)
+        self.layout.addWidget(self.confirm_button) 
+
+        self.layout.addStretch()
+
     def add_signal_count_fields(self):
         """Add fields for specifying the number of signals for each sensor."""
         query = """
@@ -59,21 +72,21 @@ class PrimaryDataWidget(QWidget):
         """
         results = self.ontology.query(query)
         for row in results:
-            sensor = str(row.sensor)
+            sensor_uri = str(row.sensor)
             legend_name = str(row.legendName)
 
             # Layout for each sensor
             sensor_layout = QHBoxLayout()
             sensor_label = QLabel(f"{legend_name}:")
             spinbox = QSpinBox()
-            spinbox.setRange(0, 10)  # Adjust range as needed
+            spinbox.setRange(0, 100)  # Adjust range as needed
 
             sensor_layout.addWidget(sensor_label)
             sensor_layout.addWidget(spinbox)
             self.layout.addLayout(sensor_layout)
 
             # Store spinbox reference
-            self.signal_spinboxes[sensor] = spinbox
+            self.signal_spinboxes[sensor_uri] = spinbox
 
     def upload_file(self):
         """Handle file upload and render its contents."""
@@ -129,28 +142,42 @@ class PrimaryDataWidget(QWidget):
                         sub_layout.deleteLater()
 
         # Generate fields for each signal
-        for signal_instance, spinbox in self.signal_spinboxes.items():
+        for signal_instance_uri, spinbox in self.signal_spinboxes.items():
             signal_count = spinbox.value()
             if signal_count > 0:
-                # Label for the signal
-                signal_name = self.signal_name(signal_instance)
-                signal_label = QLabel(f"{signal_name}:")
+                for i in range(0, signal_count):
+                    # Label for the signal
+                    signal_name = self.signal_name(signal_instance_uri)
+                    signal_label = QLabel(f"{signal_name} {i}:")
+                    signal_name_uri = self.experiment.DYNAMAT[f"{signal_instance_uri.split('#')[-1]}_{i}"]
+            
+                    # ComboBox for column mapping
+                    column_combo = QComboBox()
+                    column_combo.addItem("Select a Column", None)  # Add a placeholder item with no associated data
+                    for header in self.file_headers:
+                        column_combo.addItem(header, header)  # Add each column header as both the display text and associated data
+
+                    # ComboBox for units
+                    unit_combo = UnitSelector(self.ontology_path, signal_instance_uri)
+            
+                    # Layout for the signal mapping
+                    field_layout = QHBoxLayout()
+                    field_layout.addWidget(signal_label)
+                    field_layout.addWidget(column_combo)
+                    field_layout.addWidget(unit_combo)
         
-                # ComboBox for column mapping
-                column_combo = QComboBox()
-                column_combo.addItems(["Select a Column"] + self.file_headers)
-        
-                # ComboBox for units
-                unit_combo = QComboBox()
-                self.populate_units(signal_instance, unit_combo)
-        
-                # Layout for the signal mapping
-                field_layout = QHBoxLayout()
-                field_layout.addWidget(signal_label)
-                field_layout.addWidget(column_combo)
-                field_layout.addWidget(unit_combo)
-    
-                self.mapping_layout.addLayout(field_layout)
+                    self.mapping_layout.addLayout(field_layout)
+                
+                    # Store widget references in bar_properties
+                    if signal_name_uri not in self.signal_data:
+                        self.signal_data[signal_name_uri] = []
+                    
+                    self.signal_data[signal_name_uri].append({
+                        "signal_instance_uri": signal_instance_uri,
+                        "column_box": column_combo,
+                        "unit_box": unit_combo
+                    })
+                
 
     def signal_name(self, signal_instance):
         """Retrieve the legend name (hasLegendName) for a given sensor signal instance."""
@@ -170,20 +197,103 @@ class PrimaryDataWidget(QWidget):
             print(f"Error retrieving legend name for {signal_instance}: {e}")
             return None
 
-    def populate_units(self, signal_instance, unit_combo):
-        """Populate unit options for a given signal instance."""
-        query = f"""
-        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
-        SELECT ?unitAbbreviation WHERE {{
-            <{signal_instance}> :hasUnits ?unit .
-            ?unit :hasAbbreviation ?unitAbbreviation .
-        }}
+    def update_test_name(self, test_name):
+        """ Updates the current test name"""
+        self.test_name = test_name
+
+    def toggle_confirm_edit(self):
+        """Toggle between Confirm and Edit modes."""
+        editable = self.confirm_button.text() == "Edit"
+        # Toggle all widgets associated with the bar instance
+        self.upload_button.setEnabled(editable)
+        for signal_name, signal_box in self.signal_spinboxes.items():
+            signal_box.setEnabled(editable)
+        for signal_name in self.signal_data:
+            for boxes in self.signal_data[signal_name]:
+                try: 
+                    boxes["column_box"].setEnabled(editable)
+                    boxes["unit_box"].setEnabled(editable)
+                except Exception as e:
+                    print(e)
+
+        # Update the button text
+        self.confirm_button.setText("Confirm" if editable else "Edit")
+
+        if not editable:
+            primary_data_uri = self.experiment.DYNAMAT["Experiment_Primary_Data"]     
+
+            for signal_name_uri, properties in self.signal_data.items():
+                for prop in properties: 
+                    signal_instance_uri = prop.get("signal_instance_uri")
+                    column_name = prop.get("column_box").currentData()
+                    encoding = "base64"
+                    data_encoded, data_size = self.clean_data(self.file_data, column_name, encoding) 
+                    legend_name = f"{signal_name_uri.split('#')[-1]}"
+                    unit_box = prop.get("unit_box")
+                    units_uri, _ = unit_box.currentData()
+
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.RDF.type),
+                                       str(signal_instance_uri))
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasUnits), units_uri)
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncodedData), data_encoded)
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncoding), encoding)
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasSize), data_size)                    
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasLegendName), legend_name) 
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasDescription),
+                                       f"Data for {signal_name_uri.split('#')[-1]}")
+                    self.experiment.add_instance_data(units_uri) # Add the units description
+                    
+                    self.experiment.add_triple(str(primary_data_uri), str(self.experiment.DYNAMAT.hasSensorSignal),
+                                       str(signal_name_uri))  
+                    
+                self.experiment.save()   
+
+
+    def clean_data(self, file_data, column_name, encoding):
+        """
+        Clean and process data for a specific column, converting the input data to a pandas DataFrame.
+        
+        Parameters:
+        - file_data: Raw file data to be converted to a pandas DataFrame.
+        - column_name: Name of the column to extract.
+        - encoding: Encoding method to use (e.g., base64).
+        
+        Returns:
+        - encoded_data: The encoded data for the specified column.
+        - data_size: The length of the extracted data.
         """
         try:
-            results = self.ontology.query(query)
-            unit_combo.clear()
-            for row in results:
-                unit_abbreviation = str(row.unitAbbreviation)
-                unit_combo.addItem(unit_abbreviation)
+            # Convert the file_data into a pandas DataFrame
+            if isinstance(file_data, pd.DataFrame):
+                data_df = file_data
+            elif isinstance(file_data, np.ndarray):
+                data_df = pd.DataFrame(file_data)
+            elif isinstance(file_data, str):  # Assuming a file path
+                data_df = pd.read_csv(file_data)
+            else:
+                raise TypeError("Unsupported file_data type. Must be a DataFrame, numpy array, or file path.")
+    
+            # Validate the column name
+            if column_name not in data_df.columns:
+                raise KeyError(f"Column '{column_name}' not found in the DataFrame.")
+    
+            # Extract the column as a numpy array
+            column_data = np.array(self.file_data[column_name][5:]).astype(np.float32)
+    
+            # Calculate the length of the data
+            data_size = len(column_data)
+    
+            # Encode the data
+            if encoding == "base64":
+                encoded_data = base64.b64encode(column_data.tobytes()).decode("utf-8")
+            else:
+                raise ValueError("Unsupported encoding type. Currently only 'base64' is supported.")
+    
+            return encoded_data, data_size
+    
+        except KeyError as e:
+            raise KeyError(f"Column error: {e}")
         except Exception as e:
-            print(f"Error populating units for {signal_instance}: {e}")
+            raise RuntimeError(f"Error while processing data: {e}")
+
+       

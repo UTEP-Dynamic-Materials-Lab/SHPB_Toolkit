@@ -14,7 +14,7 @@ class BarMetadataWidget(QWidget):
         self.experiment = experiment_temp_file
         self.bar_config = BarConfiguration()
         self.bar_properties = {} # Tracks properties and dimensions for each bar instance
-        self.current_mode = None
+        self.current_mode = URIRef(self.test_config.test_mode)
 
         self.ontology = Graph()
         self.ontology_path = ontology_path
@@ -33,7 +33,7 @@ class BarMetadataWidget(QWidget):
         self.populate_bar_tabs()
         
         # Add Gauge Properties Tab
-        #self.gauge_tab = GaugePropertiesWidget(self.ontology_path, test_config)
+        self.gauge_tab = GaugePropertiesWidget(self.ontology_path, self.experiment)
 
         # Confirm/Edit Button
         self.confirm_button = QPushButton("Confirm")
@@ -95,14 +95,14 @@ class BarMetadataWidget(QWidget):
         self.add_fields(layout, bar_instance_uri, "MechanicalProperty")        
         
         # FEA Metadata Button (Initially hidden)
-        fea_button = QPushButton("Add FEA Metadata")       
+        fea_button = QPushButton("Add FEA Metadata")  
+        fea_button.setObjectName("fea_button")
         fea_button.clicked.connect(lambda: self.open_fea_metadata(bar_instance_uri))
         layout.addWidget(fea_button)
     
         # Set initial visibility
-        self.update_fea_button_visibility(self.current_mode)
-        
-        #self.current_mode.connect(lambda mode: self.update_fea_visibility(self.curren_mode, fea_button))
+        self.update_fea_button_visibility()
+        layout.addStretch()
 
         # Set the content widget as the scroll area's widget
         scroll_area.setWidget(scroll_area_widget)        
@@ -134,14 +134,19 @@ class BarMetadataWidget(QWidget):
                 label = QLabel(f"{property_name}:")
                 field_layout.addWidget(label)
                 spinbox = DoubleSpinBox()
-                spinbox.setValue(float(self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_value"])) 
-                combo_box = UnitSelector(self.ontology_path, property_instance_uri)                
-                SetDefaults(self.ontology_path, 
-                            self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_units"],
-                            combo_box)
+                combo_box = UnitSelector(self.ontology_path, property_instance_uri)  
+
+                try: 
+                    spinbox.setValue(
+                        float(self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_value"])) 
+                    SetDefaults(self.ontology_path, 
+                                self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_units"],
+                                combo_box)
+                except: 
+                    print(f"Default values not found for: {property_instance_uri.split('#')[-1]}")
+                    
                 field_layout.addWidget(spinbox)
-                field_layout.addWidget(combo_box)
-                                
+                field_layout.addWidget(combo_box)                                
                 layout.addLayout(field_layout)
 
                 # Store widget references in bar_properties
@@ -243,54 +248,41 @@ class BarMetadataWidget(QWidget):
                             self.experiment.add_instance_data(material_uri)
                         except: continue                        
                         
-                self.experiment.save() 
- 
-                
+                self.experiment.save()                 
 
     #################################################
     ## ADD STRAIN GAUGE AND FEA TABS WHEN NEEDED
     #################################################
-    """
-    def update_visibility(self, is_fea):
-        #Update visibility of FEA-specific options.
-        print(f"Updating visibility in BarMetadataWidget. is_fea: {is_fea}")
-        for i in range(self.tabs.count()):
-            tab = self.tabs.widget(i)
-            if hasattr(tab, "toggle_fea_options"):
-                tab.toggle_fea_options(is_fea)    
-                
-        # Handle Gauge Properties Tab
-        print(f"SG Properties tab {'added' if not is_fea else 'removed'}")
-        if hasattr(self, "gauge_tab"):
-            gauge_tab_index = self.tabs.indexOf(self.gauge_tab)
-            if is_fea:
-                # Remove the SG Properties tab if FEA is active
-                if gauge_tab_index != -1:
-                    self.tabs.removeTab(gauge_tab_index)
-            else:
-                # Add the SG Properties tab back if LAB is active
-                if gauge_tab_index == -1:
-                    self.tabs.addTab(self.gauge_tab, "SG Properties")
-    """
+
     def open_fea_metadata(self, bar_instance):
         #Open the FEA metadata window for the given bar instance.
-        self.fea_metadata_window = FEAMetadataWindow(self.ontology_path, self.test_config, bar_instance)
+        self.fea_metadata_window = FEAMetadataWindow(self.ontology_path, self.test_config, self.experiment, bar_instance)
         self.fea_metadata_window.show()
 
     def update_test_mode(self, test_mode):
-        self.current_mode = URIRef(test_mode) if isinstance(test_mode, str) else self.test_config.test_mode
-        print(f"Current Mode = {self.current_mode}")
-        self.update_fea_button_visibility(self.current_mode)
-
+        self.current_mode = URIRef(test_mode) if isinstance(test_mode, str) else self.current_mode
+        #print(f"Current Mode = {self.current_mode}")
+        self.update_fea_button_visibility()
         return 
+
     # Dynamic visibility for FEA button
-    def update_fea_button_visibility(self, current_mode):
+    def update_fea_button_visibility(self):
         """Update the visibility of the FEA Metadata button based on the test mode."""
-        is_fea_mode = URIRef(current_mode) if isinstance(current_mode, str) else self.test_config.test_mode == self.experiment.DYNAMAT.FEAMode
-        for fea_button in self.findChildren(QPushButton, "Add FEA Metadata"):
-            print(f"setting button visible = {is_fea_mode}")
+        is_fea_mode = self.current_mode == self.experiment.DYNAMAT.FEAMode
+        for fea_button in self.findChildren(QPushButton, "fea_button"):
+            #print(f"setting button visible = {is_fea_mode}")
             fea_button.setVisible(is_fea_mode)
-    
+            
+        if hasattr(self, "gauge_tab"):
+            gauge_tab_index = self.tabs.indexOf(self.gauge_tab)
+            if is_fea_mode == False:
+                # Add the SG Properties tab back if LAB is active
+                if gauge_tab_index == -1:
+                    self.tabs.addTab(self.gauge_tab, "SG Properties")   
+            else:
+                # Remove the SG Properties tab if FEA is active
+                self.tabs.removeTab(gauge_tab_index)
+                   
 
       
 

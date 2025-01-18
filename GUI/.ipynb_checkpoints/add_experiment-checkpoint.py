@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QTabWidget
+from PyQt6.QtGui import QFont
 from GUI.tabs.test_description import TestDescriptionWidget
 from GUI.tabs.striker_conditions import StrikerConditionsWidget
 from GUI.tabs.bar_metadata import BarMetadataWidget
@@ -16,6 +17,10 @@ class AddExperimentWindow(QWidget):
         self.setWindowTitle("Add Experiment Metadata")
         self.setGeometry(100, 100, 800, 600)  # Adjust window size if needed
 
+        # Set font for the entire window
+        font = QFont("Calibri", 12)
+        self.setFont(font)        
+
         self.ontology_path = os.path.join("ontology", "DynaMat_SHPB.ttl")
         self.test_config = test_config        
 
@@ -31,28 +36,7 @@ class AddExperimentWindow(QWidget):
 
     def init_tabs(self):
         """Initialize and add tabs to the TabWidget."""
-        # Dynamically handle the pulse test selection
-        def handle_pulse_test_change(is_pulse):
-            # Remove the Laboratory tab first, if it exists
-            lab_tab_index = self.tabs.indexOf(self.laboratory_tab)
-            if lab_tab_index != -1:
-                self.tabs.removeTab(lab_tab_index)
-            
-            if is_pulse:
-                # Remove the Specimen Metadata tab if it exists
-                specimen_tab_index = self.tabs.indexOf(self.specimen_tab)
-                if specimen_tab_index != -1:
-                    self.tabs.removeTab(specimen_tab_index)
-            else:
-                # Add the Specimen Metadata tab if it doesn't exist
-                if self.tabs.indexOf(self.specimen_tab) == -1:
-                    self.tabs.addTab(self.specimen_tab, "Specimen Metadata") 
-                                
-            # Add the Laboratory tab back as the last tab
-            if not hasattr(self, "laboratory_tab"):
-                self.laboratory_tab = LaboratoryWidget(self.ontology_path, self.test_config)
-            self.tabs.addTab(self.laboratory_tab, "Laboratory")
-
+        
         # Tab widget for multiple tabs
         self.tabs = QTabWidget()
         self.layout.addWidget(self.tabs)
@@ -68,24 +52,25 @@ class AddExperimentWindow(QWidget):
         # Bar Metadata Tab
         self.bar_metadata_tab = BarMetadataWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
         self.test_description_tab.current_test_mode.connect(self.bar_metadata_tab.update_test_mode)
-        self.tabs.addTab(self.bar_metadata_tab, "Bar Metadata")
-        """
+        self.tabs.addTab(self.bar_metadata_tab, "Bar Metadata")        
+        
         # Specimen Metadata Tab      
-        self.specimen_tab = SpecimenMetadataWidget(self.ontology_path, self.test_config)
-        self.test_description_tab.test_type_selector.fea_mode_changed.connect(self.specimen_tab.update_visibility)
-
+        self.specimen_tab = SpecimenMetadataWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
+        self.test_description_tab.current_test_mode.connect(self.specimen_tab.update_test_mode)
+        self.test_description_tab.current_test_type.connect(self.specimen_tab.update_test_type)
+        self.test_description_tab.current_specimen_material.connect(self.specimen_tab.update_specimen_material)
+        self.tabs.addTab(self.specimen_tab, "Specimen Metadata")         
+        
         # Laboratory Metadata Tab
-        self.laboratory_tab = LaboratoryWidget(self.ontology_path, self.test_config)
-        self.tabs.addTab(self.laboratory_tab, "Laboratory")      
-                
-        # Initial check for the current state of the pulse test
-        handle_pulse_test_change(self.test_config.is_pulse)
-        self.test_description_tab.test_condition_selector.pulse_test.connect(handle_pulse_test_change)
+        self.laboratory_tab = LaboratoryWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
+        self.test_description_tab.current_test_name.connect(self.laboratory_tab.update_test_name)
+        self.tabs.addTab(self.laboratory_tab, "Laboratory")  
 
         # Add the Primary Data Tab
-        self.primary_data_tab = PrimaryDataWidget(self.ontology_path, self.test_config)
+        self.primary_data_tab = PrimaryDataWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
+        self.test_description_tab.current_test_name.connect(self.primary_data_tab.update_test_name)
         self.tabs.addTab(self.primary_data_tab, "Primary Data")
-        """
+        
 
 
 

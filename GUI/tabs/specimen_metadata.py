@@ -2,15 +2,22 @@ from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QTabWidget, QHBoxLayout, QDoubleSpinBox, QComboBox, QPushButton
 )
 from PyQt6.QtCore import Qt
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace, URIRef
 from GUI.tabs.fea_metadata import FEAMetadataWindow
-#from GUI.components.common_widgets import MaterialSelector
+from GUI.components.common_widgets import MaterialSelector, UnitSelector, DoubleSpinBox, SetDefaults, ClassInstanceSelection
+from config.specimen_config import SpecimenConfiguration
 
 class SpecimenMetadataWidget(QWidget):
-    def __init__(self, ontology_path, test_config):
+    def __init__(self, ontology_path, test_config, experiment_temp_file):
         super().__init__()
         self.ontology_path = ontology_path
         self.test_config = test_config
+        self.experiment = experiment_temp_file
+        self.specimen_config = SpecimenConfiguration()
+        self.current_type = URIRef(self.test_config.test_type)
+        self.current_mode = URIRef(self.test_config.test_mode)
+        self.specimen_properties = {} # Initialize storage of defined values / properties
+        self.specimen_material = self.test_config.specimen_material
 
         # Load ontology
         self.ontology = Graph()
@@ -21,199 +28,248 @@ class SpecimenMetadataWidget(QWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        # Tab Widget
-        self.tabs = QTabWidget()
-        self.layout.addWidget(self.tabs)
+        self.populate_tab()
+        self.layout.addStretch()
 
-        # Populate Specimen Tabs
-        self.lab_specimen_tab = self.create_specimen_tab("LABSpecimen", "LAB Specimen")
-        self.fea_specimen_tab = self.create_specimen_tab("FEASpecimen", "FEA Specimen")
+    def populate_tab(self):
+        # Material Selector        
+        self.material_label = QLabel(f"Specimen Material: {self.specimen_material.split('#')[-1]}")
+        self.layout.addWidget(self.material_label)
 
-        self.tabs.addTab(self.lab_specimen_tab, "LAB Specimen")
-        
-    def create_specimen_tab(self, specimen_instance, legend_name):
-        """Create a tab for a specific specimen."""
-        tab = QWidget()
-        layout = QVBoxLayout()
-
-        # Material Selector
-        material_selector = MaterialSelector(self.ontology_path, self.test_config)
-        layout.addWidget(material_selector)
+        # Add Dimensions Section
+        self.dimensions_label = QLabel("Dimensions:")
+        self.layout.addWidget(self.dimensions_label)
+        self.add_fields(self.layout, self.experiment.DYNAMAT.SHPBSpecimen, "Dimension") 
 
         # Add Material Processing Section
-        if specimen_instance == "LABSpecimen":
-            self.add_property_selector(layout, specimen_instance, "MaterialProcessing", "Material Processing")
-    
-        # Add Dimensions Section
-        dimensions_label = QLabel("Dimensions:")
-        layout.addWidget(dimensions_label)
-        self.add_fields(layout, specimen_instance, "Dimension")  
+        self.processing_label = QLabel("Material Processing:")
+        self.processing_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.MaterialProcessing)
+        SetDefaults(self.ontology_path, self.specimen_config["SHPBSpecimen_MaterialProcessing"],
+                        self.processing_selector)
+        self.layout.addWidget(self.processing_label)
+        self.layout.addWidget(self.processing_selector)
 
         # Add Shape Properties Section
-        self.add_property_selector(layout, specimen_instance, "Shape", "Shape")
+        self.shape_label = QLabel("Specimen Shape:")
+        self.shape_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.Shape)
+        SetDefaults(self.ontology_path, self.specimen_config["SHPBSpecimen_Shape"], self.shape_selector)
+        self.layout.addWidget(self.shape_label)
+        self.layout.addWidget(self.shape_selector)
 
         # Add Structure Properties Section
-        self.add_property_selector(layout, specimen_instance, "Structure", "Structure")
-    
-        # FEA Metadata Button (Initially hidden)
-        fea_button = QPushButton("Add FEA Metadata")
-        fea_button.clicked.connect(lambda: self.open_fea_metadata(specimen_instance))
-        fea_button.setVisible(self.test_config.is_fea)  # Show only if FEA mode is active
-        layout.addWidget(fea_button)
-    
-        # Define toggle_fea_options dynamically for this tab
-        def toggle_fea_options(is_fea):
-            """Toggle the visibility of the FEA button."""
-            fea_button.setVisible(is_fea)
-            print(f"FEA options toggled for {legend_name}: {'Visible' if is_fea else 'Hidden'}")
-    
-        # Attach the toggle method to the tab
-        tab.toggle_fea_options = toggle_fea_options
-    
-        tab.setLayout(layout)
-        return tab
+        self.structure_label = QLabel("Specimen Structure:")
+        self.structure_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.Structure)        
+        SetDefaults(self.ontology_path, self.specimen_config["SHPBSpecimen_Structure"], self.structure_selector)
+        self.layout.addWidget(self.structure_label)
+        self.layout.addWidget(self.structure_selector)
 
+        # Add FEA Metadata Window
+        self.fea_button = QPushButton("Add FEA Metadata")
+        self.fea_button.clicked.connect(lambda: self.open_fea_metadata(self.experiment.DYNAMAT.SHPBSpecimen))
+        self.layout.addWidget(self.fea_button)
+        
+        # Populate Specimen Tabs
+        self.update_visibility()
 
-    def add_fields(self, layout, specimen_instance, property_type):
+        # Confirm/Edit Button
+        self.confirm_button = QPushButton("Confirm")
+        self.confirm_button.clicked.connect(self.toggle_confirm_edit)
+        self.layout.addWidget(self.confirm_button) 
+
+    #################################################
+    ## CREATE SPECIMEN TABS
+    #################################################
+        
+    def add_fields(self, layout, specimen_instance_uri, property_type):
         """Add input fields for dimensions or mechanical properties."""
         query = f"""
         PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
         SELECT ?property ?propertyName WHERE {{
-            <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#{specimen_instance}> :has{property_type} 
-            ?property .
+            <{specimen_instance_uri}> :has{property_type} ?property .
             ?property a :{property_type} ;
                       :hasName ?propertyName .
         }}
         """
         try:
             results = self.ontology.query(query)
-            if not results:
-                print(f"No {property_type} found for {specimen_instance}")
             for row in results:
-                property_instance = str(row.property)
+                property_instance_uri = str(row.property)
                 property_name = str(row.propertyName)
-                layout.addLayout(self.create_input_field(specimen_instance, property_instance, property_name))
-        except Exception as e:
-            print(f"Error querying {property_type} for {specimen_instance}: {e}")
-
-
-    def create_input_field(self, specimen_instance, property_instance, property_name):
-        """Create an input field for a given property."""
-        layout = QHBoxLayout()
-        label = QLabel(f"{property_name}:")
-        spinbox = QDoubleSpinBox()
-        spinbox.setRange(0.0, 1e6)
-        spinbox.setDecimals(4)
-
-        # Set default value from config (optional)
-        #default_value = self.get_default_value(specimen_instance, property_instance)
-        #if default_value is not None:
-        #    spinbox.setValue(default_value)
-
-        combo_box = QComboBox()
-        self.populate_units(property_instance, combo_box)
-        """
-        # Set default unit from config (optional)
-        default_unit_abbreviation = self.get_default_unit(specimen_instance, property_instance)
-        if default_unit_abbreviation:
-            index = combo_box.findText(default_unit_abbreviation)
-            if index >= 0:
-                combo_box.setCurrentIndex(index)
-        """
-        layout.addWidget(label)
-        layout.addWidget(spinbox)
-        layout.addWidget(combo_box)
                 
-        return layout
-
-    def populate_units(self, property_instance, combo_box):
-        """Populate units for a given property."""
-        query = f"""
-        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
-        SELECT ?unit ?unitAbbreviation WHERE {{
-            <{property_instance}> :hasUnits ?unit .
-            ?unit :hasAbbreviation ?unitAbbreviation .
-        }}
-        """
-        try:
-            results = self.ontology.query(query)
-            combo_box.clear()
-            for row in results:
-                unit_abbreviation = str(row.unitAbbreviation)
-                combo_box.addItem(unit_abbreviation)
+                # Create input field
+                field_layout = QHBoxLayout()
+                label = QLabel(f"{property_name}:")
+                field_layout.addWidget(label)
+                spinbox = DoubleSpinBox()
+                combo_box = UnitSelector(self.ontology_path, property_instance_uri)
+                
+                try:                     
+                    spinbox.setValue(float(self.specimen_config[f"{specimen_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_value"])) 
+                    SetDefaults(self.ontology_path, 
+                               self.specimen_config[f"{specimen_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_units"],
+                                combo_box)
+                except: 
+                    print(f"Default Specimen values not found for: {property_instance_uri.split('#')[-1]}")
+                    
+                field_layout.addWidget(spinbox)
+                field_layout.addWidget(combo_box)                                
+                layout.addLayout(field_layout)
+                
+                # Store widget references in bar_properties
+                if property_instance_uri not in self.specimen_properties:
+                    self.specimen_properties[property_instance_uri] = []   
+                    
+                self.specimen_properties[property_instance_uri].append({
+                    "property_type": property_type,
+                    "spinbox": spinbox,
+                    "combo_box": combo_box
+                })
+                
         except Exception as e:
-            print(f"Error populating units for {property_instance}: {e}")
+            print(f"Error querying properties for {property_instance_uri}: {e}")
 
-    def add_property_selector(self, layout, specimen_instance, property_type, property_legend):
-        """
-        Add a single combo box for selecting instances of a property type (e.g., Shape, Structure).
-        """
-        query = f"""
-        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
-        SELECT ?instance ?instanceName WHERE {{
-            ?instance a :{property_type} ;
-                      :hasName ?instanceName .
-        }}
-        """
-        try:
-            results = self.ontology.query(query)
-    
-            if not results:
-                print(f"No instances found for property type {property_type}")
-                return
-    
-            # Create label and combo box
-            label = QLabel(f"Select {property_legend}:")
-            combo_box = QComboBox()
-    
-            # Populate combo box with instance names
-            for row in results:
-                instance_name = str(row.instanceName)
-                instance_uri = str(row.instance)
-                combo_box.addItem(instance_name, instance_uri)
-    
-            # Add label and combo box to the layout
-            layout.addWidget(label)
-            layout.addWidget(combo_box)
-    
-            # Optionally store the combo box for later retrieval of selected values
-            setattr(self, f"{property_type.lower()}_selector", combo_box)
-    
-        except Exception as e:
-            print(f"Error querying instances for property type {property_type}: {e}")
-       
 
-    def update_visibility(self, is_fea):
+    #################################################
+    ## ADD DATA FIELDS TO RDF
+    #################################################
+
+    def toggle_confirm_edit(self):
+        """Toggle between Confirm and Edit modes."""
+        editable = self.confirm_button.text() == "Edit"
+        # Toggle all widgets associated with the bar instance
+        for specimen_uri in self.specimen_properties:
+            for prop in self.specimen_properties[specimen_uri]:
+                # Set spinbox and combo box editable or non-editable
+                    prop["spinbox"].setEnabled(editable)
+                    prop["combo_box"].setEnabled(editable)
+                
+        self.processing_selector.setEnabled(editable)
+        self.shape_selector.setEnabled(editable)
+        self.structure_selector.setEnabled(editable)            
+                    
+                    
+        # Update the button text
+        self.confirm_button.setText("Confirm" if editable else "Edit")
+        
+        if not editable:           
+            specimen_uri = self.experiment.DYNAMAT["Test_Specimen"]
+
+            try: 
+                processing_uri, _ = self.processing_selector.currentData()
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterialProcessing), processing_uri)
+                self.experiment.add_instance_data(processing_uri)
+            except: 
+                None
+
+            try: 
+                shape_uri, _ = self.shape_selector.currentData()
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasShape), shape_uri)
+                self.experiment.add_instance_data(shape_uri)
+            except: 
+                None 
+
+            try: 
+                structure_uri, _ = self.structure_selector.currentData()
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasStructure), structure_uri)
+                self.experiment.add_instance_data(structure_uri)
+            except: 
+                None
+            
+            for specimen_property_uri, properties in self.specimen_properties.items():
+                for prop in properties:
+                    try: 
+                        property_type = prop.get("property_type")
+                        has_property_type_uri = self.experiment.DYNAMAT[f"has{property_type}"]
+                        property_name = self.experiment.DYNAMAT[f"{specimen_uri.split('#')[-1]}_{specimen_property_uri.split('#')[-1]}"]
+                            
+                        spinbox = prop.get("spinbox")
+                        combo_box = prop.get("combo_box") 
+                        units_uri, _ = combo_box.currentData()
+                        value = float(spinbox.value())
+    
+                        self.experiment.set_triple(str(property_name), str(self.experiment.RDF.type), 
+                                        str(specimen_property_uri))
+                        self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasUnits), units_uri)
+                        self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasValue), value)
+                        self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasDescription),
+                                        f"{specimen_property_uri.split('#')[-1]} of the {specimen_uri.split('#')[-1]}")
+                            
+                        self.experiment.add_instance_data(units_uri) # Add the units description                    
+                        self.experiment.add_triple(str(specimen_uri), str(has_property_type_uri), property_name)                          
+                    except Exception as e: 
+                        print(e)
+                        
+                self.experiment.save()  
+    
+    #################################################
+    ## VISIBILITY CONTROL
+    #################################################
+            
+    def update_visibility(self):
         """Update visibility of LAB and FEA specimen tabs."""
-        print(f"Updating visibility in SpecimenMetadataWidget. is_fea: {is_fea}")
+        # Find Current state of variables
+        test_mode = self.current_mode
+        test_type = self.current_type       
         
-        # Remove and re-add tabs as needed
-        fea_tab_index = self.tabs.indexOf(self.fea_specimen_tab)
-        lab_tab_index = self.tabs.indexOf(self.lab_specimen_tab)
-        
-        if is_fea:
-            # Ensure LAB tab is removed and FEA tab is added
-            if lab_tab_index != -1:
-                self.tabs.removeTab(lab_tab_index)
-            if fea_tab_index == -1:
-                self.tabs.addTab(self.fea_specimen_tab, "FEA Specimen")
+        if test_type == self.experiment.DYNAMAT.SpecimenTest:                      
+            if test_mode == self.experiment.DYNAMAT.FEAMode:
+                self.processing_selector.setEnabled(False)
+                self.processing_selector.setCurrentIndex(-1)
+                self.fea_button.setVisible(True)
+            else: 
+                self.processing_selector.setEnabled(True)
+                self.fea_button.setVisible(False)
         else:
-            # Ensure FEA tab is removed and LAB tab is added
-            if fea_tab_index != -1:
-                self.tabs.removeTab(fea_tab_index)
-            if lab_tab_index == -1:
-                self.tabs.addTab(self.lab_specimen_tab, "LAB Specimen")
-
-        # Iterate over all tabs and toggle their visibility based on the `is_fea` flag
-        for i in range(self.tabs.count()):
-            tab = self.tabs.widget(i)
-            if hasattr(tab, "toggle_fea_options"):
-                tab.toggle_fea_options(is_fea)
+            # Clear all widgets in the tab's layout to make it "blank"
+            self.clear_layout(self.layout)
+            print("No Specimen Option shown, because Pulse Test is currently selected")
 
     def open_fea_metadata(self, specimen_instance):
         """Open the FEA metadata window for the given bar instance."""
-        self.fea_metadata_window = FEAMetadataWindow(self.ontology_path, self.test_config, specimen_instance)
+        self.fea_metadata_window = FEAMetadataWindow(self.ontology_path, self.test_config, self.experiment, specimen_instance)
         self.fea_metadata_window.show()
+
+    def update_test_type(self, test_type):
+        self.current_type = URIRef(test_type) if isinstance(test_type, str) else self.current_type
+        print(f"Current Test Type = {self.current_type}")
+        self.populate_tab()
+        self.update_visibility()
+        return 
+
+    def update_test_mode(self, test_mode):
+        self.current_mode = URIRef(test_mode) if isinstance(test_mode, str) else self.current_mode
+        print(f"Current Test Mode = {self.current_mode}")
+        self.update_visibility()
+        return 
+
+    def update_test_mode(self, test_mode):
+        self.current_mode = URIRef(test_mode) if isinstance(test_mode, str) else self.current_mode
+        print(f"Current Test Mode = {self.current_mode}")
+        self.update_visibility()
+        return 
+
+    def update_specimen_material(self, current_specimen_material):
+        self.material_label.setText(f"Specimen Material: {current_specimen_material}")
+        return 
+
+
+    def clear_layout(self, layout):
+        """Recursively clear all widgets and sublayouts from a layout."""
+        while layout.count():
+            item = layout.takeAt(0)
+            # Check for widget
+            if widget := item.widget():
+                widget.deleteLater()
+            # Check for sublayout
+            elif sub_layout := item.layout():
+                self.clear_layout(sub_layout)
+                # Delete the sublayout after clearing it
+                del sub_layout
+
+
+
+        
+        
 
 
 

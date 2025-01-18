@@ -1,24 +1,30 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QComboBox, QHBoxLayout
+    QWidget, QVBoxLayout, QLabel, QComboBox, QHBoxLayout, QPushButton, QScrollArea
 )
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace, URIRef
+from GUI.components.common_widgets import MaterialSelector, ClassInstanceSelection, SetDefaults
 
 class LaboratoryWidget(QWidget):
-    def __init__(self, ontology_path, test_config):
+    def __init__(self, ontology_path, test_config, experiment_temp_file):
         super().__init__()
         self.ontology_path = ontology_path
         self.test_config = test_config
+        self.experiment = experiment_temp_file
+        self.test_name = self.test_config.test_name
+        self.lab_properties = {}
 
         # Load ontology
         self.ontology = Graph()
         self.ontology.parse(self.ontology_path, format="turtle")
         self.namespace = Namespace("https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#")
 
-        # Main Layout
+        # Create a main layout for this widget
         self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-
+        self.setLayout(self.layout)  
+        
+        # Initialize UI elements
         self.init_ui()
+        self.layout.addStretch()
 
     def init_ui(self):
         """Initialize the UI components."""
@@ -26,39 +32,19 @@ class LaboratoryWidget(QWidget):
         label = QLabel("Select Laboratory:")
         self.layout.addWidget(label)
 
-        self.laboratory_combo = QComboBox()
+        self.laboratory_combo = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.Laboratory)
         self.laboratory_combo.currentIndexChanged.connect(self.update_laboratory_details)
         self.layout.addWidget(self.laboratory_combo)
 
         # Add non-editable fields
         self.details_layout = QVBoxLayout()
+        self.update_laboratory_details()
         self.layout.addLayout(self.details_layout)
 
-        self.populate_laboratories()
-
-    def populate_laboratories(self):
-        """Populate the combo box with laboratory instances."""
-        query = """
-        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
-        SELECT ?labInstance ?labName WHERE {
-            ?labInstance rdf:type :Laboratory ;
-                         :hasName ?labName .
-        }
-        """
-        try:
-            results = self.ontology.query(query)
-
-            for row in results:
-                lab_name = str(row.labName)
-                lab_instance = str(row.labInstance)
-                self.laboratory_combo.addItem(lab_name, lab_instance)
-
-            # Auto-select the first item if available
-            if self.laboratory_combo.count() > 0:
-                self.update_laboratory_details()
-
-        except Exception as e:
-            print(f"Error querying laboratories: {e}")
+        # Confirm/Edit Button
+        self.confirm_button = QPushButton("Confirm")
+        self.confirm_button.clicked.connect(self.toggle_confirm_edit)
+        self.layout.addWidget(self.confirm_button)  
 
     def update_laboratory_details(self):
         """Update the displayed details based on the selected laboratory."""
@@ -69,9 +55,7 @@ class LaboratoryWidget(QWidget):
                 item.widget().deleteLater()
 
         # Get selected laboratory instance
-        lab_instance = self.laboratory_combo.currentData()
-        if not lab_instance:
-            return
+        lab_instance, _ = self.laboratory_combo.currentData()
 
         # Query details for the selected laboratory
         query = f"""
@@ -89,6 +73,35 @@ class LaboratoryWidget(QWidget):
                 self.details_layout.addWidget(QLabel(f"Affiliation: {row.affiliation}"))
                 self.details_layout.addWidget(QLabel(f"Location: {row.location}"))
                 self.details_layout.addWidget(QLabel(f"Supervisor: {row.supervisor}"))
+                self.lab_properites = {
+                    "Affiliation" : row.affiliation,
+                    "Location" : row.location, 
+                    "Supervisor": row.supervisor
+                }
+                
 
         except Exception as e:
             print(f"Error querying details for laboratory {lab_instance}: {e}")
+
+    def toggle_confirm_edit(self):
+        """Toggle between Confirm and Edit modes."""
+        editable = self.confirm_button.text() == "Edit"
+        self.laboratory_combo.setEnabled(editable)
+        self.confirm_button.setText("Confirm" if editable else "Edit")
+
+        # Add data to temp file
+        if not editable:
+            metadata_uri = self.experiment.DYNAMAT["Experiment_Metadata"]
+            laboratory_uri , _ = self.laboratory_combo.currentData()
+            
+            # Add Metadata Triples
+            self.experiment.set_triple(str(laboratory_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.Laboratory)) 
+            self.experiment.add_instance_data(laboratory_uri)
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasLaboratory),
+                                       str(laboratory_uri))  
+            self.experiment.save()   
+
+    def update_test_name(self, test_name):
+        """ Updates the current test name"""
+        self.test_name = test_name

@@ -21,6 +21,7 @@ class StrikerConditionsWidget(QWidget):
         self.setLayout(self.layout)
 
         self.init_ui()
+        self.layout.addStretch()
 
     #################################################
     ## WIDGETS INITIALIZATION
@@ -82,17 +83,17 @@ class StrikerConditionsWidget(QWidget):
         
         # Add data to temp file
         if not editable:
-            metadata_uri = self.experiment.DYNAMAT[f"{self.test_name}_Metadata"]
+            metadata_uri = self.experiment.DYNAMAT["Experiment_Metadata"]
             testing_conditions_uri = self.experiment.DYNAMAT["Testing_Conditions"]
             striker_bar_uri = self.experiment.DYNAMAT["Striker_Bar"]
                         
-            # Add Striker Bar
+            # Add Striker Bar Instance to Testing Conditions
             self.experiment.set_triple(str(striker_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.StrikerBar))
             self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        striker_bar_uri)
             
-            # Add Striker Velocity
+            # Add Striker Velocity value, units and description
             striker_bar_velocity_uri = self.experiment.DYNAMAT["Striker_Bar_Velocity"]
             striker_velocity_units_uri, _ = self.striker_velocity_unit_combo.currentData()
             striker_velocity_value = float(self.striker_velocity_spinbox.value())
@@ -106,7 +107,7 @@ class StrikerConditionsWidget(QWidget):
             self.experiment.add_instance_data(striker_velocity_units_uri) # Add the units description
             self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.DYNAMAT.hasDimension), striker_bar_velocity_uri)
 
-            # Add Striker Pressure
+            # Add Striker Pressure value, units and description
             striker_bar_pressure_uri = self.experiment.DYNAMAT["Striker_Bar_Pressure"]
             striker_pressure_units_uri, _ = self.striker_pressure_unit_combo.currentData()
             striker_pressure_value = float(self.striker_pressure_spinbox.value())
@@ -120,7 +121,7 @@ class StrikerConditionsWidget(QWidget):
             self.experiment.add_instance_data(striker_pressure_units_uri) # Add the units description
             self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.DYNAMAT.hasDimension), striker_bar_pressure_uri)
 
-            # Add Momentum Trap Condition            
+            # Add Momentum Trap Condition value, units and description          
             trap_condition_uri, _ = self.trap_condition_selector.currentData()            
             self.experiment.set_triple(str(trap_condition_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.MomentumTrap))

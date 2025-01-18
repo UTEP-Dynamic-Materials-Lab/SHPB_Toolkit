@@ -68,8 +68,8 @@ class DoubleSpinBox(QDoubleSpinBox):
     """ Creates a Double Spin Box for float data entries"""
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setRange(0.0, 10000.0)
-        self.setDecimals(4)
+        self.setRange(0.0, 1e8)
+        self.setDecimals(5)
         
 class ClassInstanceSelection(QComboBox):
     """Returns a selection box with the name of the class instance"""
@@ -98,7 +98,8 @@ class ClassInstanceSelection(QComboBox):
             for row in self.ontology.query(query):
                 instance_uri = str(row.instance)
                 name = str(row.Name)
-                abbreviation = str(row.abbreviation)
+                if row.abbreviation:
+                    abbreviation = str(row.abbreviation)
                 self.addItem(f"{name}", (instance_uri, abbreviation))
         except Exception as e:
             print(f"Error populating units for {self.class_uri}: {e}")
