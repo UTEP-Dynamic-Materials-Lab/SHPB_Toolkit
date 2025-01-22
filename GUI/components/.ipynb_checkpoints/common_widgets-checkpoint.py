@@ -34,6 +34,37 @@ class MaterialSelector(QComboBox):
         except Exception as e:
             print(f"Error populating units for {self.class_uri}: {e}")        
 
+class FiniteElementSelector(QComboBox): 
+    """ Returns a selection box populated with defined material instances"""
+    def __init__(self, ontology_path, class_uri, parent=None):
+        super().__init__(parent)
+        self.ontology = Graph()
+        self.ontology.parse(ontology_path, format="turtle")
+        self.class_uri = class_uri
+
+        self.populate_elements()
+    
+    def populate_elements(self):
+        """Populate the combo box with materials from the ontology."""
+        query = """
+        PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
+        SELECT ?FEElement ?Name ?abbreviation WHERE {
+            ?FEElement rdf:type ?class ;
+                      :hasName ?Name ;
+                      :hasAbbreviation ?abbreviation .
+            ?class rdfs:subClassOf :FiniteElement .
+        }
+        """
+        self.clear()
+        try:
+            for row in self.ontology.query(query):
+                element_uri = str(row.FEElement)
+                element_name = str(row.Name)
+                element_abbreviation = str(row.abbreviation)
+                self.addItem(f"{element_name} ({element_abbreviation})", (element_uri))
+        except Exception as e:
+            print(f"Error populating units for {self.class_uri}: {e}")  
+            
 class UnitSelector(QComboBox):
     """ Returns a selection box populated with the property's assigned units"""
     def __init__(self, ontology_path, property_instance_uri, parent=None):
@@ -46,12 +77,15 @@ class UnitSelector(QComboBox):
         self.populate_units()
 
     def populate_units(self):
-        """Populate units for the given property."""
+        """Populate units for the given property, including their class."""
         query = f"""
         PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
-        SELECT ?unit ?unitAbbreviation WHERE {{
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        SELECT ?unit ?unitAbbreviation ?unitClass WHERE {{
             <{self.property_instance_uri}> :hasUnits ?unit .
             ?unit :hasAbbreviation ?unitAbbreviation .
+            ?unit rdf:type ?unitClass .
+            ?unitClass rdfs:subClassOf :Unit .
         }}
         """
         try:
@@ -60,7 +94,8 @@ class UnitSelector(QComboBox):
             for row in results:
                 unit_uri = str(row.unit)
                 unit_abbreviation = str(row.unitAbbreviation)
-                self.addItem(unit_abbreviation, (unit_uri, unit_abbreviation))
+                unit_class = str(row.unitClass)
+                self.addItem(unit_abbreviation, (unit_uri, unit_abbreviation, unit_class))
         except Exception as e:
             print(f"Error populating units for {self.property_instance_uri}: {e}")
 
@@ -160,4 +195,66 @@ class SetDefaults:
             if item_data == target_tuple:
                 return index
         return -1
+
+class SetUnitDefaults:
+    def __init__(self, ontology_path, instance_uri, combo_box):
+        self.ontology_path = ontology_path
+        self.ontology = Graph()
+        self.ontology.parse(ontology_path, format="turtle")
+        self.namespace = Namespace("https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#")
+        self.instance_uri = instance_uri
+        self.combo_box = combo_box
+
+        self.set_defaults()        
+               
+    def set_defaults(self):        
+        """Set the default material based on the full URI."""
+        try:
+            # Query the ontology to fetch the abbreviation and ensure the type is relevant
+            query = f"""
+            PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            
+            SELECT ?abbreviation ?instance_class WHERE {{
+                <{self.instance_uri}> :hasAbbreviation ?abbreviation .
+                <{self.instance_uri}> rdf:type ?instance_class .
+                ?instance_class rdfs:subClassOf :Unit .  # Ensure the class is a subclass of Unit
+            }}
+            """
+            results = self.ontology.query(query)            
+            abbreviation = None
+            for row in results:
+                abbreviation = str(row.abbreviation)
+                instance_class = str(row.instance_class)
+                break  # There should be only one result
     
+            if abbreviation:
+                target_data = (self.instance_uri, abbreviation, instance_class)
+                index = self.find_matching_index(target_data)
+                
+                if index >= 0:
+                    self.combo_box.setCurrentIndex(index)
+                else:
+                    print(f"Default '{abbreviation}' not found in combo box.")
+            else:
+                print(f"No abbreviation found for URI: {self.instance_uri}")
+        except Exception as e:
+            print(f"Error setting default material for URI {self.instance_uri}: {e}")
+
+    def find_matching_index(self, target_tuple):
+        """
+        Find the index of the item in the combo box that matches the target tuple.
+    
+        Args:
+            combo_box (QComboBox): The combo box to search.
+            target_tuple (tuple): The tuple to match.
+    
+        Returns:
+            int: The index of the matching item, or -1 if not found.
+        """
+        for index in range(self.combo_box.count()):
+            item_data = self.combo_box.itemData(index, role=Qt.ItemDataRole.UserRole)
+            if item_data == target_tuple:
+                return index
+        return -1

@@ -8,6 +8,8 @@ from GUI.tabs.primary_data import PrimaryDataWidget
 from GUI.tabs.laboratory import LaboratoryWidget
 from config.test_config import TestConfiguration
 from GUI.experiment_temp import ExperimentTempFile
+from GUI.tabs.gauge_properties import GaugePropertiesWidget
+from GUI.tabs.secondary_data import SecondaryDataWidget
 import os
 
 
@@ -25,7 +27,8 @@ class AddExperimentWindow(QWidget):
         self.test_config = test_config        
 
         # Initialize Experiment Temp File
-        self.experiment_temp_file = ExperimentTempFile(os.path.join("GUI", "experiment_temp.ttl"), self.ontology_path)        
+        self.temp_file_path = os.path.join("data", "secondary_test.ttl") # EDIT THIS
+        self.experiment_temp_file = ExperimentTempFile(os.path.join("GUI", "experiment_temp.ttl"), self.ontology_path) # EDIT THIS       
 
         # Main layout for the window
         self.layout = QVBoxLayout()
@@ -59,7 +62,12 @@ class AddExperimentWindow(QWidget):
         self.test_description_tab.current_test_mode.connect(self.specimen_tab.update_test_mode)
         self.test_description_tab.current_test_type.connect(self.specimen_tab.update_test_type)
         self.test_description_tab.current_specimen_material.connect(self.specimen_tab.update_specimen_material)
-        self.tabs.addTab(self.specimen_tab, "Specimen Metadata")         
+        self.tabs.addTab(self.specimen_tab, "Specimen")    
+
+        # Strain Gauge Metadata Tab      
+        self.gauge_properties_tab = GaugePropertiesWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
+        self.test_description_tab.current_test_mode.connect(self.gauge_properties_tab.update_test_mode)
+        self.tabs.addTab(self.gauge_properties_tab, "SG Properties") 
         
         # Laboratory Metadata Tab
         self.laboratory_tab = LaboratoryWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
@@ -70,7 +78,10 @@ class AddExperimentWindow(QWidget):
         self.primary_data_tab = PrimaryDataWidget(self.ontology_path, self.test_config, self.experiment_temp_file)
         self.test_description_tab.current_test_name.connect(self.primary_data_tab.update_test_name)
         self.tabs.addTab(self.primary_data_tab, "Primary Data")
-        
+
+        # Add the Secondary Data Tab
+        self.secondary_data_tab = SecondaryDataWidget(self.ontology_path, self.temp_file_path)
+        self.tabs.addTab(self.secondary_data_tab, "Secondary Data")
 
 
 

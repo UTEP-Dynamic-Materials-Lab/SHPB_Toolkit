@@ -1,0 +1,13 @@
+
+    @prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+    dynamat:DynaMatLab a owl:NamedIndividual,
+            dynamat:Laboratory ;
+        dynamat:hasAbbreviation "Dynamic Materials Laboratory"^^xsd:string ;
+        dynamat:hasAffiliation "University of Texas at El Paso"^^xsd:string ;
+        dynamat:hasLocation "PHYS Building, Room 412"^^xsd:string ;
+        dynamat:hasName "Dynamic Material's Laboratory"^^xsd:string ;
+        dynamat:hasSupervisor "Dr Brian E Schuster"^^xsd:string .
+    

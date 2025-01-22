@@ -90,47 +90,54 @@ class StrikerConditionsWidget(QWidget):
             # Add Striker Bar Instance to Testing Conditions
             self.experiment.set_triple(str(striker_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.StrikerBar))
+            self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Bar))
             self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        striker_bar_uri)
             
             # Add Striker Velocity value, units and description
             striker_bar_velocity_uri = self.experiment.DYNAMAT["Striker_Bar_Velocity"]
-            striker_velocity_units_uri, _ = self.striker_velocity_unit_combo.currentData()
+            striker_velocity_units_uri, _, _ = self.striker_velocity_unit_combo.currentData()
             striker_velocity_value = float(self.striker_velocity_spinbox.value())
             
             self.experiment.set_triple(str(striker_bar_velocity_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.Velocity))
             self.experiment.set_triple(str(striker_bar_velocity_uri), str(self.experiment.DYNAMAT.hasUnits), striker_velocity_units_uri)
-            self.experiment.set_triple(str(striker_bar_velocity_uri), str(self.experiment.DYNAMAT.hasValue), striker_velocity_value)
+            self.experiment.set_triple(str(striker_bar_velocity_uri), str(self.experiment.DYNAMAT.hasValue),
+                                       striker_velocity_value, obj_type="float")
             self.experiment.set_triple(str(striker_bar_velocity_uri), str(self.experiment.DYNAMAT.hasDescription),
                                        "Initial velocity of the striker bar during testing")
             self.experiment.add_instance_data(striker_velocity_units_uri) # Add the units description
+            self.experiment.add_triple(str(striker_bar_velocity_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.Dimension))
             self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.DYNAMAT.hasDimension), striker_bar_velocity_uri)
 
             # Add Striker Pressure value, units and description
             striker_bar_pressure_uri = self.experiment.DYNAMAT["Striker_Bar_Pressure"]
-            striker_pressure_units_uri, _ = self.striker_pressure_unit_combo.currentData()
+            striker_pressure_units_uri, _ , _ = self.striker_pressure_unit_combo.currentData()
             striker_pressure_value = float(self.striker_pressure_spinbox.value())
             
             self.experiment.set_triple(str(striker_bar_pressure_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.Pressure))
             self.experiment.set_triple(str(striker_bar_pressure_uri), str(self.experiment.DYNAMAT.hasUnits), striker_pressure_units_uri)
-            self.experiment.set_triple(str(striker_bar_pressure_uri), str(self.experiment.DYNAMAT.hasValue), striker_pressure_value)
+            self.experiment.set_triple(str(striker_bar_pressure_uri), str(self.experiment.DYNAMAT.hasValue),
+                                       striker_pressure_value, obj_type="float")
             self.experiment.set_triple(str(striker_bar_pressure_uri), str(self.experiment.DYNAMAT.hasDescription),
                                        "Initial pressure of the striker bar during testing")
-            self.experiment.add_instance_data(striker_pressure_units_uri) # Add the units description
+            self.experiment.add_triple(str(striker_bar_pressure_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.Dimension))
+            self.experiment.add_instance_data(striker_pressure_units_uri) # Add the units description            
             self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.DYNAMAT.hasDimension), striker_bar_pressure_uri)
 
             # Add Momentum Trap Condition value, units and description          
             trap_condition_uri, _ = self.trap_condition_selector.currentData()            
             self.experiment.set_triple(str(trap_condition_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.MomentumTrap))
-            self.experiment.set_triple(str(self.experiment.DYNAMAT["Momentum_Trap_Condition"]), str(self.experiment.RDF.type),
-                                       str(trap_condition_uri))
             self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasMomentumTrapCondition),
-                                       self.experiment.DYNAMAT["Momentum_Trap_Condition"])
+                                       str(trap_condition_uri))
             self.experiment.add_instance_data(trap_condition_uri)
-                  
+
+            self.experiment.save()
     #################################################
     ## MOMENTUM TRAP CONDITION SELECTOR
     #################################################

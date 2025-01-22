@@ -30,8 +30,9 @@ class TestDescriptionWidget(QWidget):
         self.setLayout(self.layout)
 
         self.init_ui()
+        
         self.layout.addStretch()
-
+        self.update_test_name()
     #################################################
     ## WIDGETS INITIALIZATION
     #################################################
@@ -141,30 +142,36 @@ class TestDescriptionWidget(QWidget):
             testing_conditions_uri = self.experiment.DYNAMAT["Testing_Conditions"]
             
             # Set Display Name as SHPB Test
-            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.RDF.type),
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.SHPBExperiment))
             self.experiment.add_instance_data(self.experiment.DYNAMAT.SHPBExperiment)
 
             # Set Metdata, Primary and Secondary Data Objects 
-            self.experiment.set_triple(str(metadata_uri), str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.Metadata))
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.Metadata))
             self.experiment.set_triple(str(primary_data_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.PrimaryData))
             self.experiment.set_triple(str(secondary_data_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.SecondaryData))
 
             # Assign Metdata, Primary and Secondary Data Objects to SHPB Experiment Instance
-            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasMetadata), str(metadata_uri))
-            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasPrimaryData), str(primary_data_uri))
-            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasSecondaryData), str(secondary_data_uri))
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasMetadata),
+                                       str(metadata_uri))
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasPrimaryData),
+                                       str(primary_data_uri))
+            self.experiment.set_triple(str(experiment_name_uri), str(self.experiment.DYNAMAT.hasSecondaryData),
+                                       str(secondary_data_uri))
             
             # Set TestName, TestDate and User from selections
-            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestName), self.test_name_display.text())
+            self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestName),
+                                       self.test_name_display.text(), obj_type="string")
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestDate),
-                                       self.date_input.date().toString("yyyy-MM-dd"))
+                                       self.date_input.date().toString("yyyy-MM-dd"), obj_type="date")
             
             user_uri, user_abbreviation = self.user_selector.currentData()
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasUser), user_uri)
             self.experiment.add_instance_data(user_uri)
+            self.experiment.add_triple(str(user_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.User)
 
             # Set TestType, TestMode and TestTemperature from selections
             test_type_uri, test_type_abbreviation = self.test_type_selector.currentData()
@@ -172,29 +179,48 @@ class TestDescriptionWidget(QWidget):
                                        str(self.experiment.DYNAMAT.TestingConditions))            
             self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasTestingConditions),
                                        testing_conditions_uri)
-            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestType), test_type_uri)
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestType),
+                                       test_type_uri)
             self.experiment.add_instance_data(test_type_uri)
+            self.experiment.add_triple(str(test_type_uri), str(self.experiment.RDF.type),
+                                       self.experiment.DYNAMAT.TestType)
+
 
             test_mode_uri, test_mode_abbreviation = self.test_mode_selector.currentData()
-            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestMode), test_mode_uri)
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestMode),
+                                       test_mode_uri)
             self.experiment.add_instance_data(test_mode_uri)
+            self.experiment.add_triple(str(test_mode_uri), str(self.experiment.RDF.type),
+                                       self.experiment.DYNAMAT.TestMode)
+
 
             temp_mode_uri, temp_mode_abbreviation = self.temp_mode_selector.currentData()
-            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestTemperature), temp_mode_uri)
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasTestTemperature),
+                                       temp_mode_uri)
             self.experiment.add_instance_data(temp_mode_uri)
+            self.experiment.add_triple(str(temp_mode_uri), str(self.experiment.RDF.type),
+                                       self.experiment.DYNAMAT.TestTemperature)
 
             # Set Specimen instance and Material when Specimen mode selected            
             if test_type_abbreviation == "Specimen":                
                 material_uri, material_abbreviation = self.material_selector.currentData()
-                self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.SHPBSpecimen) 
-                self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen), specimen_uri)
-                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.RDF.type),
+                                           self.experiment.DYNAMAT.SHPBSpecimen) 
+                self.experiment.add_triple(str(specimen_uri), str(self.experiment.RDF.type),
+                                           self.experiment.DYNAMAT.Specimen) 
+                self.experiment.set_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen),
+                                           specimen_uri)
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial),
+                                           material_uri)                
                 self.experiment.add_instance_data(material_uri)
+                self.experiment.add_triple(str(material_uri), str(self.experiment.RDF.type),
+                                           self.experiment.DYNAMAT.Material)
             else: 
                 print("No Specimen Class added to file, because PULSE Test Type Selected")
                 try: 
                     self.experiment.remove_triple(str(metadata_uri), str(self.experiment.DYNAMAT.hasSpecimen), specimen_uri)
                     self.experiment.remove_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
+                    self.experiment.remove_triple(str(material_uri), str(self.experiment.RDF.type), self.experiment.DYNAMAT.Material)
                 except: 
                     None
             self.experiment.save()       

@@ -5,10 +5,10 @@ class BarConfiguration:
 
         # Striker Bar
         self.StrikerBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
-        self.StrikerBar_Length_value = 12
-        self.StrikerBar_Length_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
-        self.StrikerBar_CrossSectionalArea_value = 0.11044
-        self.StrikerBar_CrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
+        self.StrikerBar_OriginalLength_value = 12
+        self.StrikerBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
+        self.StrikerBar_OriginalCrossSectionalArea_value = 0.11044
+        self.StrikerBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.StrikerBar_Density_value = 8082.500
         self.StrikerBar_Density_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter"
         self.StrikerBar_ElasticModulus_value = 199.99
@@ -20,12 +20,10 @@ class BarConfiguration:
 
         # Incident Bar
         self.IncidentBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
-        self.IncidentBar_Length_value = 8
-        self.IncidentBar_Length_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
-        self.IncidentBar_CrossSectionalArea_value = 0.11044
-        self.IncidentBar_CrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
-        self.IncidentBar_StrainGaugeDistance_value = 4
-        self.IncidentBar_StrainGaugeDistance_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.IncidentBar_OriginalLength_value = 8
+        self.IncidentBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.IncidentBar_OriginalCrossSectionalArea_value = 0.11044
+        self.IncidentBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.IncidentBar_Density_value = 8082.500
         self.IncidentBar_Density_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter"
         self.IncidentBar_ElasticModulus_value = 199.99
@@ -37,12 +35,10 @@ class BarConfiguration:
 
         # Transmitted Bar 
         self.TransmittedBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
-        self.TransmittedBar_Length_value = 6
-        self.TransmittedBar_Length_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
-        self.TransmittedBar_CrossSectionalArea_value = 0.11044
-        self.TransmittedBar_CrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
-        self.TransmittedBar_StrainGaugeDistance_value = 4
-        self.TransmittedBar_StrainGaugeDistance_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.TransmittedBar_OriginalLength_value = 6
+        self.TransmittedBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.TransmittedBar_OriginalCrossSectionalArea_value = 0.11044
+        self.TransmittedBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.TransmittedBar_Density_value = 8082.500
         self.TransmittedBar_Density_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter"
         self.TransmittedBar_ElasticModulus_value = 199.99

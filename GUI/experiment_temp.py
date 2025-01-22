@@ -35,41 +35,95 @@ class ExperimentTempFile:
         else:
             self.save()  # Create an empty file
 
-    def set_triple(self, subject, predicate, obj):
-        """Add or update a triple in the graph."""
-        subject_ref = URIRef(subject)
-        predicate_ref = URIRef(predicate)
-        
-        if isinstance(obj, URIRef):
-            object_ref = obj        
-        elif isinstance(obj, (float, int)):
-            # Create a typed literal for numbers
-            object_ref = Literal(obj, datatype=XSD.float if isinstance(obj, float) else XSD.integer)
-        elif isinstance(obj, str) and (obj.startswith("http://") or obj.startswith("https://")):
-            object_ref = URIRef(obj)  # Treat as URIRef
-        else:
-            object_ref = Literal(obj)
-            
-        # Add the triple
-        #print(f"Setting triple: {subject}, {predicate}, {obj}")
-        self.graph.set((subject_ref, predicate_ref, object_ref))
-        #self.save()
+    def set_triple(self, subject, predicate, obj, obj_type=None):
+        """Set a triple in the graph.
 
-    def add_triple(self, subject, predicate, obj):
-        """Add a triple in the graph."""
+        Args:
+            subject (str): The subject of the triple.
+            predicate (str): The predicate of the triple.
+            obj (str|float|int): The object of the triple.
+            obj_type (str, optional): The datatype or format of the object. Use one of:
+            - 'URIRef': Treat the object as a URI reference.
+            - 'xsd:integer': Treat the object as an integer.
+            - 'xsd:float': Treat the object as a float.
+            - 'xsd:string': Treat the object as a string.
+            - 'xsd:base64Binary': Treat the object as base64-encoded binary data.
+            - None: Infer the type automatically based on Python type.
+        """
         subject_ref = URIRef(subject)
         predicate_ref = URIRef(predicate)
-    
-        # Determine if the object is a URI or a Literal
-        if isinstance(obj, (str, URIRef)) and (obj.startswith("http://") or obj.startswith("https://")):
-            object_ref = URIRef(obj)  # Treat as URIRef
-        else:
-            object_ref = Literal(obj)  # Treat as Literal
-    
-        # Add the triple (append, do not overwrite)
-        #print(f"Adding triple: {subject}, {predicate}, {obj}")
+
+        # Determine object type
+        try:         
+            if obj_type == "float":
+                object_ref = Literal(float(obj), datatype=XSD.float)
+            elif obj_type == "int":
+                object_ref = Literal(int(obj), datatype=XSD.int)
+            elif obj_type == "date":
+                object_ref = Literal(obj, datatype=XSD.date)
+            elif obj_type == "base64Binary":
+                # Convert the object to base64 binary if not already in bytes
+                if isinstance(obj, bytes):
+                    base64_data = base64.b64encode(obj).decode("utf-8")
+                elif isinstance(obj, str):  # Assume input is already base64-encoded
+                    base64_data = obj
+                else:
+                    raise ValueError("Object must be bytes or a base64-encoded string for xsd:base64Binary")
+                object_ref = Literal(base64_data, datatype=XSD.base64Binary)
+            elif obj.startswith(("http://", "https://")):
+                object_ref = URIRef(obj) # Treat as URIRef directly
+            elif isinstance(obj, URIRef):
+                object_ref = obj   
+            else:
+                object_ref = Literal(obj, datatype=XSD.string)
+        except Exception as e:
+            print(e)
+            raise ValueError("Object must be assigned a valid xsd:DataType")
+
+        # Add or update the triple
+        self.graph.set((subject_ref, predicate_ref, object_ref))
+
+    def add_triple(self, subject, predicate, obj, obj_type="URIRef"):
+        """Add or update a triple in the graph.
+
+        Args:
+            subject (str): The subject of the triple.
+            predicate (str): The predicate of the triple.
+            obj (str|float|int): The object of the triple.
+            obj_type (str|URIRef|None): The datatype URI, URIRef object, or None.
+        """
+        subject_ref = URIRef(subject)
+        predicate_ref = URIRef(predicate)
+
+        # Determine object type
+        try:         
+            if obj_type == "float":
+                object_ref = Literal(float(obj), datatype=XSD.float)
+            elif obj_type == "int":
+                object_ref = Literal(int(obj), datatype=XSD.int)
+            elif obj_type == "date":
+                object_ref = Literal(obj, datatype=XSD.date)
+            elif obj_type == "base64Binary":
+                # Convert the object to base64 binary if not already in bytes
+                if isinstance(obj, bytes):
+                    base64_data = base64.b64encode(obj).decode("utf-8")
+                elif isinstance(obj, str):  # Assume input is already base64-encoded
+                    base64_data = obj
+                else:
+                    raise ValueError("Object must be bytes or a base64-encoded string for xsd:base64Binary")
+                object_ref = Literal(base64_data, datatype=XSD.base64Binary)
+            elif obj.startswith(("http://", "https://")):
+                object_ref = URIRef(obj) # Treat as URIRef directly
+            elif isinstance(obj, URIRef):
+                object_ref = obj   
+            else:
+                object_ref = Literal(obj, datatype=XSD.string)
+        except Exception as e:
+            print(e)
+            raise ValueError("Object must be assigned a valid xsd:DataType")
+
+        # Add or update the triple
         self.graph.add((subject_ref, predicate_ref, object_ref))
-        #self.save()
 
     def remove_triple(self, subject, predicate=None, obj=None):
         """Remove a triple from the graph."""
@@ -105,16 +159,16 @@ class ExperimentTempFile:
     def add_instance_data(self, instance):
         """
         Recursively fetch and add all data properties for a given instance in the ontology.
-        
+    
         Parameters:
-        - instance_uri (str): The URI of the instance to fetch properties for.
+        - instance (str): The URI of the instance to fetch properties for.
         """
         try:
             # Load the ontology
             ontology = Graph()
             ontology.parse(self.ontology_path, format="turtle")
             namespace = Namespace("https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#")
-                
+            
             # Define the query
             query = f"""
                PREFIX : <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#>
@@ -123,27 +177,28 @@ class ExperimentTempFile:
                    <{instance}> ?property ?value .
                    OPTIONAL {{ <{instance}> rdf:type ?className . }}
                }}
-               """ 
-        
+            """
+            
             # Execute the query
-            results = ontology.query(query)        
-            # Print the results and add them to the temp file
+            results = ontology.query(query)
+            
+            # Add the results to the graph
             if results:
-                #print(f"Properties for instance '{instance}':")
-                for row in results:                    
-                    property_uri = str(row.property)
+                for row in results:
+                    property_uri = URIRef(row.property)
                     value = str(row.value)
-                    #print(f" - {property_uri}: {value}")
-                    self.set_triple(str(instance), str(property_uri), str(value))
                     if row.className:
-                        property_class = str(row.className)
-                        self.set_triple(instance, str(self.RDF.type), str(property_class))                                        
+                        class_uri = URIRef(row.className)
+                        self.add_triple(URIRef(instance), self.RDF.type, class_uri)
+                        
+                    self.add_triple(str(instance), str(property_uri), value)
+                    
+ 
             else:
                 print(f"No properties found for instance: {instance}")
-        
+    
         except Exception as e:
             print(f"Error executing query: {e}")
-
 
     def add_classes(self):
         """

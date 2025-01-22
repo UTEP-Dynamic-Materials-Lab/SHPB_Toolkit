@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import (
 )
 from rdflib import Graph, Namespace, URIRef
 from GUI.components.common_widgets import MaterialSelector, UnitSelector, DoubleSpinBox, SetDefaults
+from GUI.components.common_widgets import SetUnitDefaults
 from GUI.tabs.fea_metadata import FEAMetadataWindow
-from GUI.tabs.gauge_properties import GaugePropertiesWidget
 from config.bar_config import BarConfiguration
 
 class BarMetadataWidget(QWidget):
@@ -32,9 +32,6 @@ class BarMetadataWidget(QWidget):
         # Populate tabs for bar instances
         self.populate_bar_tabs()
         
-        # Add Gauge Properties Tab
-        self.gauge_tab = GaugePropertiesWidget(self.ontology_path, self.experiment)
-
         # Confirm/Edit Button
         self.confirm_button = QPushButton("Confirm")
         self.confirm_button.clicked.connect(self.toggle_confirm_edit)
@@ -139,7 +136,7 @@ class BarMetadataWidget(QWidget):
                 try: 
                     spinbox.setValue(
                         float(self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_value"])) 
-                    SetDefaults(self.ontology_path, 
+                    SetUnitDefaults(self.ontology_path, 
                                 self.bar_config[f"{bar_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_units"],
                                 combo_box)
                 except: 
@@ -207,6 +204,8 @@ class BarMetadataWidget(QWidget):
                 elif bar_name.endswith("IncidentBar"):
                     self.experiment.add_triple(str(incident_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.IncidentBar))
+                    self.experiment.add_triple(str(incident_bar_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Bar))
                     self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        incident_bar_uri)
                     ref_bar_uri = incident_bar_uri
@@ -214,6 +213,8 @@ class BarMetadataWidget(QWidget):
                 elif bar_name.endswith("TransmittedBar"):
                     self.experiment.add_triple(str(transmitted_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.TransmittedBar))
+                    self.experiment.add_triple(str(transmitted_bar_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Bar))
                     self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        transmitted_bar_uri)
                     ref_bar_uri = transmitted_bar_uri
@@ -227,13 +228,15 @@ class BarMetadataWidget(QWidget):
                         
                         spinbox = prop.get("spinbox")
                         combo_box = prop.get("combo_box") 
-                        units_uri, _ = combo_box.currentData()
+                        units_uri, _, _ = combo_box.currentData()
                         value = float(spinbox.value())
 
                         self.experiment.set_triple(str(property_name), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT[f"{property_type}"]))
+                        self.experiment.add_triple(str(property_name), str(self.experiment.RDF.type), 
                                        str(property_instance_uri))
                         self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasUnits), units_uri)
-                        self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasValue), value)
+                        self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasValue), value, obj_type = "float")
                         self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasDescription),
                                        f"{property_instance_uri.split('#')[-1]} of the {ref_bar_uri.split('#')[-1]}")
                         
@@ -246,6 +249,8 @@ class BarMetadataWidget(QWidget):
                             material_uri, _ = material_selector.currentData()
                             self.experiment.set_triple(str(ref_bar_uri), str(self.experiment.DYNAMAT.hasMaterial), material_uri)
                             self.experiment.add_instance_data(material_uri)
+                            self.experiment.add_triple(str(material_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Material))
                         except: continue                        
                         
                 self.experiment.save()                 

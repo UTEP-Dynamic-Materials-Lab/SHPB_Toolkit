@@ -2,7 +2,8 @@ from PyQt6.QtWidgets import  QMainWindow, QWidget, QLabel, QVBoxLayout, QHBoxLay
 from PyQt6.QtWidgets import  QComboBox, QRadioButton, QButtonGroup, QPushButton, QScrollArea
 from PyQt6.QtCore import Qt
 from rdflib import Graph, Namespace, URIRef
-from GUI.components.common_widgets import ClassInstanceSelection, UnitSelector, DoubleSpinBox, SetDefaults
+from GUI.components.common_widgets import ClassInstanceSelection, UnitSelector, DoubleSpinBox, SetDefaults, FiniteElementSelector
+from GUI.components.common_widgets import SetUnitDefaults
 from config.fea_config import FEAConfiguration
 
 class FEAMetadataWindow(QMainWindow):
@@ -33,6 +34,31 @@ class FEAMetadataWindow(QMainWindow):
         # Main Layout
         self.layout = QVBoxLayout()
         self.central_widget.setLayout(self.layout)
+
+        # Finite Element Selection 
+        # Add the finite element label and selector
+        element_label = QLabel("Select Finite Element Type:") 
+        self.layout.addWidget(element_label)
+        self.element_selector = FiniteElementSelector(self.ontology_path, self.experiment.DYNAMAT.FiniteElement)
+        self.layout.addWidget(self.element_selector)
+        
+        # Create a horizontal layout for size and unit selection
+        size_unit_layout = QHBoxLayout()
+        
+        # Add the element size label and spin box
+        size_label = QLabel("Element Size:")
+        size_unit_layout.addWidget(size_label)
+        self.element_size_box = DoubleSpinBox()
+        size_unit_layout.addWidget(self.element_size_box)
+        
+        # Add the element unit label and selector
+        unit_label = QLabel("Units:")
+        size_unit_layout.addWidget(unit_label)
+        self.element_unit_selector = UnitSelector(self.ontology_path, self.experiment.DYNAMAT.ElementSize)
+        size_unit_layout.addWidget(self.element_unit_selector)
+        
+        # Add the horizontal layout to the main layout
+        self.layout.addLayout(size_unit_layout)        
         
         # Model Selection
         model_label = QLabel("Select Strength Model:")
@@ -115,7 +141,7 @@ class FEAMetadataWindow(QMainWindow):
                 # Unit selector (QComboBox)
                 unit_combo = UnitSelector(self.ontology_path, parameter_uri)
                 try:
-                    SetDefaults(self.ontology_path, 
+                    SetUnitDefaults(self.ontology_path, 
                                 self.fea_config[f"{self.object_instance.split('#')[-1]}_{parameter_uri.split('#')[-1]}_units"],
                                 unit_combo)
                 except: 
@@ -162,6 +188,8 @@ class FEAMetadataWindow(QMainWindow):
             if object_instance_ref.endswith("StrikerBar"):
                 self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.RDF.type), 
                                    str(self.experiment.DYNAMAT.StrikerBar))
+                self.experiment.add_triple(str(striker_bar_uri), str(self.experiment.RDF.type), 
+                                   str(self.experiment.DYNAMAT.Bar))
                 self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                    striker_bar_uri)
                 ref_bar_uri = striker_bar_uri
@@ -169,6 +197,8 @@ class FEAMetadataWindow(QMainWindow):
             elif object_instance_ref.endswith("IncidentBar"):
                 self.experiment.add_triple(str(incident_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.IncidentBar))
+                self.experiment.add_triple(str(incident_bar_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Bar))
                 self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        incident_bar_uri)
                 ref_bar_uri = incident_bar_uri
@@ -176,6 +206,8 @@ class FEAMetadataWindow(QMainWindow):
             elif object_instance_ref.endswith("TransmittedBar"):
                 self.experiment.add_triple(str(transmitted_bar_uri), str(self.experiment.RDF.type), 
                                        str(self.experiment.DYNAMAT.TransmittedBar))
+                self.experiment.add_triple(str(transmitted_bar_uri), str(self.experiment.RDF.type), 
+                                       str(self.experiment.DYNAMAT.Bar))
                 self.experiment.add_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasBar),
                                        transmitted_bar_uri)
                 ref_bar_uri = transmitted_bar_uri
@@ -184,13 +216,37 @@ class FEAMetadataWindow(QMainWindow):
                 ref_bar_uri = specimen_uri
 
             # Adds Strength Model to Object Instance
-            model_name_uri = self.experiment.DYNAMAT[f"{ref_bar_uri.split('#')[-1]}_FEA_Strength_Model"]            
+            fea_metadata_uri = self.experiment.DYNAMAT[f"{ref_bar_uri.split('#')[-1]}_FEA_Metadata"]
+            model_name_uri = self.experiment.DYNAMAT[f"{ref_bar_uri.split('#')[-1]}_FEA_Strength_Model"]
+            element_name_uri = self.experiment.DYNAMAT[f"{ref_bar_uri.split('#')[-1]}_FEA_Element"]
+            
+            self.experiment.set_triple(fea_metadata_uri, str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.FEAMetadata))
+            self.experiment.add_triple(ref_bar_uri, self.experiment.DYNAMAT.hasFEAMetadata, fea_metadata_uri)
+            
             self.experiment.set_triple(model_name_uri, str(self.experiment.RDF.type), str(model_instance_uri))
-            self.experiment.add_triple(ref_bar_uri, self.experiment.DYNAMAT.hasStrengthModel, model_name_uri)
+            self.experiment.add_triple(model_name_uri, str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.StrengthModel))
+            self.experiment.set_triple(fea_metadata_uri, str(self.experiment.DYNAMAT.hasStrengthModel), str(model_name_uri))
+
+            element_uri = self.element_selector.currentData()
+            element_size_value = float(self.element_size_box.value())
+            element_size_units, _, _ = self.element_unit_selector.currentData()
+            
+            self.experiment.set_triple(element_name_uri, str(self.experiment.RDF.type), str(element_uri))
+            self.experiment.add_triple(element_name_uri, str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.FiniteElement))
+            self.experiment.set_triple(fea_metadata_uri, str(self.experiment.DYNAMAT.hasFiniteElement), str(element_name_uri))
+            
+            element_size_uri = self.experiment.DYNAMAT[f"{ref_bar_uri.split('#')[-1]}_FEA_Element_Size"]
+            
+            self.experiment.set_triple(element_size_uri, str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.ElementSize))
+            self.experiment.add_triple(element_size_uri, str(self.experiment.RDF.type), str(self.experiment.DYNAMAT.Dimension))
+            self.experiment.set_triple(element_size_uri, str(self.experiment.DYNAMAT.hasValue), element_size_value, obj_type = "float")
+            self.experiment.set_triple(element_size_uri, str(self.experiment.DYNAMAT.hasUnits), element_size_units)
+            self.experiment.add_instance_data(element_size_units)            
+            self.experiment.set_triple(element_name_uri, str(self.experiment.DYNAMAT.hasDimension), str(element_size_uri))
 
             for param in parameters:
                 try: 
-                    property_type = self.experiment.DYNAMAT.Parameter
+                    property_type = self.experiment.DYNAMAT.MechanicalProperty
                     has_property_type_uri = self.experiment.DYNAMAT.hasParameter
                     property_instance_uri = param.get("parameter_instance")
                     print(property_instance_uri)
@@ -198,13 +254,15 @@ class FEAMetadataWindow(QMainWindow):
                         
                     spinbox = param.get("spinbox")
                     combo_box = param.get("combo_box") 
-                    units_uri, _ = combo_box.currentData()
+                    units_uri, _, _ = combo_box.currentData()
                     value = float(spinbox.value())
 
                     self.experiment.set_triple(str(property_name), str(self.experiment.RDF.type), 
                                     str(property_instance_uri))
+                    self.experiment.add_triple(str(property_name), str(self.experiment.RDF.type), 
+                                    str(property_type))
                     self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasUnits), units_uri)
-                    self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasValue), value)
+                    self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasValue), value, obj_type = "float")
                     self.experiment.set_triple(str(property_name), str(self.experiment.DYNAMAT.hasDescription),
                                     f"{property_instance_uri.split('#')[-1]} of the {model_name_uri.split('#')[-1]}")
                         

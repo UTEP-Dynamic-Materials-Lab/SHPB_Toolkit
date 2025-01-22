@@ -58,6 +58,23 @@ xsd:date rdf:type rdfs:Datatype .
                     rdfs:comment "Links secondary data to extracted time-series signals, such as strain." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasFEAMetadata
+:hasFEAMetadata rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain [ rdf:type owl:Class ;
+                              owl:unionOf ( :Bar
+                                            :Specimen
+                                          )
+                            ] ;
+                rdfs:range :FEAMetadata .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasFiniteElement
+:hasFiniteElement rdf:type owl:ObjectProperty ;
+                  rdfs:domain :FEAMetadata ;
+                  rdfs:range :FiniteElement .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasLaboratory
 :hasLaboratory rdf:type owl:ObjectProperty ;
                rdfs:domain :Metadata ;
@@ -114,6 +131,12 @@ xsd:date rdf:type rdfs:Datatype .
                 rdfs:range :PrimaryData .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasPulseProperty
+:hasPulseProperty rdf:type owl:ObjectProperty ;
+                  rdfs:domain :SecondaryData ;
+                  rdfs:range :PulseProperties .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSecondaryData
 :hasSecondaryData rdf:type owl:ObjectProperty ;
                   rdfs:domain :Experiment ;
@@ -140,16 +163,23 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:comment "Links metadata to the specimen details." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrainGauge
+:hasStrainGauge rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain :Bar ;
+                rdfs:range :StrainGauge .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrainGaugeProperty
 :hasStrainGaugeProperty rdf:type owl:ObjectProperty ;
-                        rdfs:domain :TestingConditions ;
+                        rdfs:domain :StrainGauge ;
                         rdfs:range :StrainGaugeProperties ;
                         rdfs:comment "Links laboratory metadata to strain gauge properties." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrengthModel
 :hasStrengthModel rdf:type owl:ObjectProperty ;
-                  rdfs:domain :FEMetadata ;
+                  rdfs:domain :FEAMetadata ;
                   rdfs:range :StrengthModel ;
                   rdfs:comment "Links finite element metadata to the associated strength model used for analysis." .
 
@@ -211,7 +241,10 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasAbbreviation
 :hasAbbreviation rdf:type owl:DatatypeProperty ;
-                 rdfs:range xsd:string ;
+                 rdfs:domain [ rdf:type owl:Restriction ;
+                               owl:onProperty :hasAbbreviation ;
+                               owl:someValuesFrom xsd:string
+                             ] ;
                  rdfs:comment "Abbreviation or initials of the user." .
 
 
@@ -315,6 +348,11 @@ xsd:date rdf:type rdfs:Datatype .
                 rdfs:subClassOf :Material .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AreaUnit
+:AreaUnit rdf:type owl:Class ;
+          rdfs:subClassOf :Unit .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Bar
 :Bar rdf:type owl:Class ;
      rdfs:subClassOf :TestingConditions ;
@@ -326,9 +364,29 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:subClassOf :Material .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DensityUnit
+:DensityUnit rdf:type owl:Class ;
+             rdfs:subClassOf :Unit .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Dimension
 :Dimension rdf:type owl:Class ;
            rdfs:comment "Defines measurable dimensions instances" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElectricPotentialUnit
+:ElectricPotentialUnit rdf:type owl:Class ;
+                       rdfs:subClassOf :Unit .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElectricalResistanceUnit
+:ElectricalResistanceUnit rdf:type owl:Class ;
+                          rdfs:subClassOf :Unit .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EnergyUnit
+:EnergyUnit rdf:type owl:Class ;
+            rdfs:subClassOf :Unit .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Experiment
@@ -342,15 +400,31 @@ xsd:date rdf:type rdfs:Datatype .
                  rdfs:comment "Represents the determined particle velocity at a surface of the specimen." .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEMetadata
-:FEMetadata rdf:type owl:Class ;
-            rdfs:comment "Metadata specific to finite element-based simulations." .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEAMetadata
+:FEAMetadata rdf:type owl:Class ;
+             rdfs:comment "Metadata specific to finite element-based simulations." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FiniteElement
+:FiniteElement rdf:type owl:Class ;
+               rdfs:subClassOf :FEAMetadata ;
+               rdfs:comment "Description of the finite element used" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FrequencyUnit
+:FrequencyUnit rdf:type owl:Class ;
+               rdfs:subClassOf :Unit .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Laboratory
 :Laboratory rdf:type owl:Class ;
             rdfs:subClassOf :Metadata ;
             rdfs:comment "Describes the Laboratory." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LengthUnit
+:LengthUnit rdf:type owl:Class ;
+            rdfs:subClassOf :Unit .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Material
@@ -380,9 +454,19 @@ xsd:date rdf:type rdfs:Datatype .
               rdfs:comment "Striker impact velocity." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PressureUnit
+:PressureUnit rdf:type owl:Class ;
+              rdfs:subClassOf :Unit .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrimaryData
 :PrimaryData rdf:type owl:Class ;
              rdfs:comment "Represents raw data directly collected during the SHPB test, including strain gauge signals." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseProperties
+:PulseProperties rdf:type owl:Class ;
+                 rdfs:subClassOf :SecondaryData .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SecondaryData
@@ -418,21 +502,31 @@ xsd:date rdf:type rdfs:Datatype .
             rdfs:subClassOf :Material .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGauge
+:StrainGauge rdf:type owl:Class ;
+             rdfs:comment "Refers to the strain gauge" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGaugeProperties
 :StrainGaugeProperties rdf:type owl:Class ;
-                       rdfs:subClassOf :TestingConditions ;
+                       rdfs:subClassOf :StrainGauge ;
                        rdfs:comment "Captures all properties related to strain gauge calibration." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrengthModel
 :StrengthModel rdf:type owl:Class ;
-               rdfs:subClassOf :FEMetadata ;
+               rdfs:subClassOf :FEAMetadata ;
                rdfs:comment "Represents the strength model used in finite element analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Structure
 :Structure rdf:type owl:Class ;
            rdfs:subClassOf :Specimen .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureUnit
+:TemperatureUnit rdf:type owl:Class ;
+                 rdfs:subClassOf :Unit .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestMode
@@ -457,15 +551,45 @@ xsd:date rdf:type rdfs:Datatype .
                    rdfs:comment "Metadata specific to Testing Conditions." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeUnit
+:TimeUnit rdf:type owl:Class ;
+          rdfs:subClassOf :Unit .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unit
 :Unit rdf:type owl:Class ;
       rdfs:comment "Represents a physical unit of measurement." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#UnitlessUnit
+:UnitlessUnit rdf:type owl:Class ;
+              rdfs:subClassOf :Unit .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#User
 :User rdf:type owl:Class ;
       rdfs:subClassOf :Metadata ;
       rdfs:comment "Represents a user involved in the experiment." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#VelocityUnit
+:VelocityUnit rdf:type owl:Class ;
+              rdfs:subClassOf :Unit .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#VolumeUnit
+:VolumeUnit rdf:type owl:Class ;
+            rdfs:subClassOf :Unit .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement
+<https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement> rdf:type owl:Class ;
+                                                                                          rdfs:subClassOf :FiniteElement .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement
+<https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement> rdf:type owl:Class ;
+                                                                                          rdfs:subClassOf :FiniteElement .
 
 
 #################################################################
@@ -494,6 +618,14 @@ xsd:date rdf:type rdfs:Datatype .
 :AbsorbedEnergy rdf:type owl:NamedIndividual ,
                          :SeriesData ;
                 rdfs:comment "Represents absorbed energy." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#BelytschkoTsay
+:BelytschkoTsay rdf:type owl:NamedIndividual ,
+                         <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement> ;
+                :hasDimension :ElementSize ;
+                :hasAbbreviation "Belytschko-Tsay Element" ;
+                :hasName "Belytschko Tsay 2D Shell Element" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Brass414
@@ -541,18 +673,9 @@ xsd:date rdf:type rdfs:Datatype .
                     :hasName "Strain Gauge Calibration Voltage" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CrossSectionalArea
-:CrossSectionalArea rdf:type owl:NamedIndividual ,
-                             :Dimension ;
-                    :hasUnits :SquareInches ,
-                              :SquareMeters ,
-                              :SquareMilimeters ;
-                    :hasName "Cross Sectional Area" .
-
-
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicCentimeter
 :CubicCentimeter rdf:type owl:NamedIndividual ,
-                          :Unit ;
+                          :VolumeUnit ;
                  :hasAbbreviation "$\\text{cm}^3$" ;
                  :hasSymbol "$\\text{cm}^3$" ;
                  rdfs:comment "Cubic centimeter, a unit of volume in the SI system." .
@@ -560,7 +683,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicFoot
 :CubicFoot rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :VolumeUnit ;
            :hasAbbreviation "\\text{ft}^3" ;
            :hasSymbol "$\\text{ft}^3$" ;
            rdfs:comment "Cubic foot, a unit of volume in the English system." .
@@ -568,7 +691,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicInch
 :CubicInch rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :VolumeUnit ;
            :hasAbbreviation "in^3" ;
            :hasSymbol "$\\text{in}^3$" ;
            rdfs:comment "Cubic inch, a unit of volume in the English system." .
@@ -576,7 +699,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicMeter
 :CubicMeter rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :VolumeUnit ;
             :hasAbbreviation "$m^3$" ;
             :hasSymbol "$\\text{m}^3$" ;
             rdfs:comment "Cubic meter, a unit of volume in the SI system." .
@@ -584,7 +707,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicMillimeter
 :CubicMillimeter rdf:type owl:NamedIndividual ,
-                          :Unit ;
+                          :VolumeUnit ;
                  :hasAbbreviation "mm^3" ;
                  :hasSymbol "$\\text{mm}^3$" ;
                  rdfs:comment "Cubic millimeter, a unit of volume in the SI system." .
@@ -599,7 +722,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DataAcquisitionRate
 :DataAcquisitionRate rdf:type owl:NamedIndividual ,
-                              :Dimension ;
+                              :StrainGaugeProperties ;
                      :hasUnits :GigaHertz ,
                                :Hertz ,
                                :KiloHertz ,
@@ -642,14 +765,14 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DegreesCelsius
 :DegreesCelsius rdf:type owl:NamedIndividual ,
-                         :Unit ;
+                         :TemperatureUnit ;
                 :hasAbbreviation "C" ;
                 :hasSymbol "$\\dot{C}$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DegressFahrenheit
 :DegressFahrenheit rdf:type owl:NamedIndividual ,
-                            :Unit ;
+                            :TemperatureUnit ;
                    :hasAbbreviation "F" ;
                    :hasSymbol "$\\dot{F}$" .
 
@@ -766,7 +889,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot
 :Foot rdf:type owl:NamedIndividual ,
-               :Unit ;
+               :LengthUnit ;
       :hasAbbreviation "ft" ;
       :hasSymbol "$ft$" ;
       rdfs:comment "Foot, a unit of length in the English system." .
@@ -774,7 +897,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FootPerSecond
 :FootPerSecond rdf:type owl:NamedIndividual ,
-                        :Unit ;
+                        :VelocityUnit ;
                :hasAbbreviation "ft/s" ;
                :hasSymbol "$\\frac{ft}{s}$" ;
                rdfs:comment "Foot per second, a unit of velocity in the English system." .
@@ -790,14 +913,14 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GigaHertz
 :GigaHertz rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :FrequencyUnit ;
            :hasAbbreviation "GHz" ;
            :hasSymbol "$GHz$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Gigapascal
 :Gigapascal rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :PressureUnit ;
             :hasAbbreviation "GPa" ;
             :hasSymbol "$\\text{GPa}$" ;
             rdfs:comment "Gigapascal, a unit of pressure in the SI system." .
@@ -805,7 +928,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#GramPerCubicMillimeter
 :GramPerCubicMillimeter rdf:type owl:NamedIndividual ,
-                                 :Unit ;
+                                 :DensityUnit ;
                         :hasAbbreviation "g/mm^3" ;
                         :hasSymbol "$\\frac{g}{mm^3}$" ;
                         rdfs:comment "Gram per cubic millimeter, a unit of density." .
@@ -841,9 +964,17 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Hertz
 :Hertz rdf:type owl:NamedIndividual ,
-                :Unit ;
+                :FrequencyUnit ;
        :hasAbbreviation "Hz" ;
-       :hasSymbol "$Hz$" .
+       :hasSymbol "$1/s$" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Hexa8
+:Hexa8 rdf:type owl:NamedIndividual ,
+                <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement> ;
+       :hasDimension :ElementSize ;
+       :hasAbbreviation "HEXA 8 Element" ;
+       :hasName "Fully Integrated 8 Point Hexa Element" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#HighTemperature
@@ -855,7 +986,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch
 :Inch rdf:type owl:NamedIndividual ,
-               :Unit ;
+               :LengthUnit ;
       :hasAbbreviation "in" ;
       :hasSymbol "$in$" ;
       rdfs:comment "Inch, a unit of length in the English system." .
@@ -863,35 +994,39 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#InchPerSecond
 :InchPerSecond rdf:type owl:NamedIndividual ,
-                        :Unit ;
+                        :VelocityUnit ;
                :hasAbbreviation "in/s" ;
                :hasSymbol "$\\frac{in}{s}$" ;
                rdfs:comment "Inch per second, a unit of velocity in the English system." .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Incident
-:Incident rdf:type owl:NamedIndividual ,
-                   :ExtractedSignal ,
-                   :SensorSignal ;
-          :hasUnits :MilliVolts ,
-                    :Unitless ,
-                    :Volts ;
-          :hasLegendName "Incident Signal" ;
-          rdfs:comment "Indicates the signal from the incident bar." .
-
-
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentBar
 :IncidentBar rdf:type owl:NamedIndividual ,
                       :Bar ;
-             :hasDimension :CrossSectionalArea ,
-                           :Length ,
-                           :StrainGaugeDistance ;
+             :hasDimension :OriginalCrossSectionalArea ,
+                           :OriginalLength ;
              :hasMaterial :SteelC350 ;
              :hasMechanicalProperty :Density ,
                                     :ElasticModulus ,
                                     :PoissonsRatio ,
                                     :WaveSpeed ;
              :hasLegendName "Incident Bar" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentExtractedSignal
+:IncidentExtractedSignal rdf:type owl:NamedIndividual ,
+                                  :ExtractedSignal ;
+                         :hasUnits :Unitless .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentSensorSignal
+:IncidentSensorSignal rdf:type owl:NamedIndividual ,
+                               :SensorSignal ;
+                      :hasUnits :MilliVolts ,
+                                :Unitless ,
+                                :Volts ;
+                      :hasLegendName "Incident Signal" ;
+                      rdfs:comment "Indicates the signal from the incident bar." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#JohnsonCookModelSimplified
@@ -908,16 +1043,23 @@ xsd:date rdf:type rdfs:Datatype .
                             :hasName "Johnson-Cook Simplified Model" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Joule
+:Joule rdf:type owl:NamedIndividual ,
+                :EnergyUnit ;
+       :hasAbbreviation "J" ;
+       :hasSymbol "\\$J$" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KiloHertz
 :KiloHertz rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :FrequencyUnit ;
            :hasAbbreviation "KHz" ;
            :hasSymbol "$KHz$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter
 :KilogramPerCubicMeter rdf:type owl:NamedIndividual ,
-                                :Unit ;
+                                :DensityUnit ;
                        :hasAbbreviation "Kg/m^3" ;
                        :hasSymbol "$\\frac{Kg}{m^3}$" ;
                        rdfs:comment "Kilogram per cubic meter, a unit of density." .
@@ -925,7 +1067,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMillimeter
 :KilogramPerCubicMillimeter rdf:type owl:NamedIndividual ,
-                                     :Unit ;
+                                     :DensityUnit ;
                             :hasAbbreviation "Kg/mm^3" ;
                             :hasSymbol "$\\frac{Kg}{mm^3}$" ;
                             rdfs:comment "Kilogram per cubic millimeter, a unit of density." .
@@ -938,27 +1080,16 @@ xsd:date rdf:type rdfs:Datatype .
          :hasName "LAB Testing Conditions" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Length
-:Length rdf:type owl:NamedIndividual ,
-                 :Dimension ;
-        :hasUnits :Foot ,
-                  :Inch ,
-                  :Meter ,
-                  :Micrometer ,
-                  :Millimeter ;
-        :hasName "Length" .
-
-
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MegaHertz
 :MegaHertz rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :FrequencyUnit ;
            :hasAbbreviation "MHz" ;
            :hasSymbol "$MHz$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Megapascal
 :Megapascal rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :PressureUnit ;
             :hasAbbreviation "MPa" ;
             :hasSymbol "$\\text{MPa}$" ;
             rdfs:comment "Megapascal, a unit of pressure in the SI system." .
@@ -966,7 +1097,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Meter
 :Meter rdf:type owl:NamedIndividual ,
-                :Unit ;
+                :LengthUnit ;
        :hasAbbreviation "m" ;
        :hasSymbol "$m$" ;
        rdfs:comment "Meter, a unit of length in the SI system." .
@@ -974,7 +1105,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MeterPerSecond
 :MeterPerSecond rdf:type owl:NamedIndividual ,
-                         :Unit ;
+                         :VelocityUnit ;
                 :hasAbbreviation "m/s" ;
                 :hasSymbol "$\\frac{m}{s}$" ;
                 rdfs:comment "Meter per second, a unit of velocity in the SI system." .
@@ -982,7 +1113,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Micrometer
 :Micrometer rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :LengthUnit ;
             :hasAbbreviation "$\\mu m$" ;
             :hasSymbol "$\\mu m$" ;
             rdfs:comment "Micrometer, a unit of length in the SI system." .
@@ -990,7 +1121,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Microsecond
 :Microsecond rdf:type owl:NamedIndividual ,
-                      :Unit ;
+                      :TimeUnit ;
              :hasAbbreviation "us" ;
              :hasSymbol "$\\mu s$" ;
              rdfs:comment "Microsecond, a unit of time in the SI system." .
@@ -998,21 +1129,28 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MilliOhms
 :MilliOhms rdf:type owl:NamedIndividual ,
-                    :Unit ;
+                    :ElectricalResistanceUnit ;
            :hasAbbreviation "mOhms" ;
            :hasSymbol "$m\\Omega$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MilliVolts
 :MilliVolts rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :ElectricPotentialUnit ;
             :hasAbbreviation "mV" ;
             :hasSymbol "$mV$" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Millijoule
+:Millijoule rdf:type owl:NamedIndividual ,
+                     :EnergyUnit ;
+            :hasAbbreviation "mJ" ;
+            :hasSymbol "\\$mJ$" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Millimeter
 :Millimeter rdf:type owl:NamedIndividual ,
-                     :Unit ;
+                     :LengthUnit ;
             :hasAbbreviation "mm" ;
             :hasSymbol "$mm$" ;
             rdfs:comment "Millimeter, a unit of length in the SI system." .
@@ -1020,7 +1158,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MillimeterPerSecond
 :MillimeterPerSecond rdf:type owl:NamedIndividual ,
-                              :Unit ;
+                              :VelocityUnit ;
                      :hasAbbreviation "mm/s" ;
                      :hasSymbol "$\\frac{mm}{s}$" ;
                      rdfs:comment "Millimeter per second, a unit of velocity in the SI system." .
@@ -1028,7 +1166,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Millisecond
 :Millisecond rdf:type owl:NamedIndividual ,
-                      :Unit ;
+                      :TimeUnit ;
              :hasAbbreviation "ms" ;
              :hasSymbol "$ms$" ;
              rdfs:comment "Millisecond, a unit of time in the SI system." .
@@ -1059,20 +1197,41 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Ohms
 :Ohms rdf:type owl:NamedIndividual ,
-               :Unit ;
+               :ElectricalResistanceUnit ;
       :hasAbbreviation "Ohms" ;
       :hasSymbol "$\\Omega$" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#OriginalCrossSectionalArea
+:OriginalCrossSectionalArea rdf:type owl:NamedIndividual ,
+                                     :Dimension ;
+                            :hasUnits :SquareInches ,
+                                      :SquareMeters ,
+                                      :SquareMilimeters ;
+                            :hasName "Original Cross Sectional Area" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#OriginalLength
+:OriginalLength rdf:type owl:NamedIndividual ,
+                         :Dimension ;
+                :hasUnits :Foot ,
+                          :Inch ,
+                          :Meter ,
+                          :Micrometer ,
+                          :Millimeter ;
+                :hasName "Original Length" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ParticleVelocity
 :ParticleVelocity rdf:type owl:NamedIndividual ,
                            :SeriesData ;
+                  :hasUnits :MeterPerSecond ;
                   rdfs:comment "Represents particle velocity at specimen surface." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Pascal
 :Pascal rdf:type owl:NamedIndividual ,
-                 :Unit ;
+                 :PressureUnit ;
         :hasAbbreviation "Pa" ;
         :hasSymbol "$\\text{Pa}$" ;
         rdfs:comment "Pascal, a unit of pressure in the SI system." .
@@ -1107,10 +1266,40 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Psi
 :Psi rdf:type owl:NamedIndividual ,
-              :Unit ;
+              :PressureUnit ;
      :hasAbbreviation "psi" ;
      :hasSymbol "$\\text{psi}$" ;
      rdfs:comment "Pounds per square inch, a unit of pressure in the English system." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseDuration
+:PulseDuration rdf:type owl:NamedIndividual ,
+                        :PulseProperties ;
+               :hasUnits :Millisecond .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseLength
+:PulseLength rdf:type owl:NamedIndividual ,
+                      :PulseProperties ;
+             :hasUnits :Millimeter .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseSpeed
+:PulseSpeed rdf:type owl:NamedIndividual ,
+                     :PulseProperties ;
+            :hasUnits :MeterPerSecond .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseStrainAmplitude
+:PulseStrainAmplitude rdf:type owl:NamedIndividual ,
+                               :PulseProperties ;
+                      :hasUnits :Megapascal .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseStressAmplitude
+:PulseStressAmplitude rdf:type owl:NamedIndividual ,
+                               :PulseProperties ;
+                      :hasUnits :Megapascal .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseTest
@@ -1128,11 +1317,11 @@ xsd:date rdf:type rdfs:Datatype .
              :hasName "Rectangular Shape" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Reflected
-:Reflected rdf:type owl:NamedIndividual ,
-                    :ExtractedSignal ;
-           :hasUnits :Volts ;
-           rdfs:comment "Indicates the signal reflected within the incident bar." .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ReflectedExtractedSignal
+:ReflectedExtractedSignal rdf:type owl:NamedIndividual ,
+                                   :ExtractedSignal ;
+                          :hasUnits :Volts ;
+                          rdfs:comment "Indicates the signal reflected within the incident bar." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Resistance
@@ -1161,11 +1350,10 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SHPBSpecimen
 :SHPBSpecimen rdf:type owl:NamedIndividual ,
                        :Specimen ;
-              :hasDimension :CrossSectionalArea ,
-                            :DeformedCrossSectionalArea ,
+              :hasDimension :DeformedCrossSectionalArea ,
                             :DeformedLength ,
-                            :ElementSize ,
-                            :Length ;
+                            :OriginalCrossSectionalArea ,
+                            :OriginalLength ;
               :hasMechanicalProperty :Density ,
                                      :ElasticModulus ,
                                      :PoissonsRatio ;
@@ -1175,6 +1363,18 @@ xsd:date rdf:type rdfs:Datatype .
                             :Monolithic ,
                             :SimpleCubicLattice ;
               :hasName "FEA Specimen" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SHPBStrainGauge
+:SHPBStrainGauge rdf:type owl:NamedIndividual ,
+                          :StrainGauge ;
+                 :hasDimension :StrainGaugeDistance ;
+                 :hasStrainGaugeProperty :CalibrationResistance ,
+                                         :CalibrationVoltage ,
+                                         :GaugeFactor ,
+                                         :Resistance ;
+                 :hasAbbreviation "SG" ;
+                 :hasName "Strain Guage for Split Hopkinson Pressure Bar Testing" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SS316
@@ -1188,7 +1388,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Second
 :Second rdf:type owl:NamedIndividual ,
-                 :Unit ;
+                 :TimeUnit ;
         :hasAbbreviation "s" ;
         :hasSymbol "$s$" ;
         rdfs:comment "Second, a unit of time in the SI system." .
@@ -1211,21 +1411,21 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches
 :SquareInches rdf:type owl:NamedIndividual ,
-                       :Unit ;
+                       :AreaUnit ;
               :hasAbbreviation "in^2" ;
               :hasSymbol "$in^2$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareMeters
 :SquareMeters rdf:type owl:NamedIndividual ,
-                       :Unit ;
+                       :AreaUnit ;
               :hasAbbreviation "m^2" ;
               :hasSymbol "$m^2$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareMilimeters
 :SquareMilimeters rdf:type owl:NamedIndividual ,
-                           :Unit ;
+                           :AreaUnit ;
                   :hasAbbreviation "mm^2" ;
                   :hasSymbol "$mm^2$" .
 
@@ -1275,8 +1475,8 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrikerBar
 :StrikerBar rdf:type owl:NamedIndividual ,
                      :Bar ;
-            :hasDimension :CrossSectionalArea ,
-                          :Length ;
+            :hasDimension :OriginalCrossSectionalArea ,
+                          :OriginalLength ;
             :hasMaterial :SteelC350 ;
             :hasMechanicalProperty :Density ,
                                    :ElasticModulus ,
@@ -1285,13 +1485,18 @@ xsd:date rdf:type rdfs:Datatype .
             :hasLegendName "Striker Bar" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Temperature
-:Temperature rdf:type owl:NamedIndividual ,
-                      :ExtractedSignal ,
-                      :SensorSignal ;
-             :hasUnits :DegreesCelsius ,
-                       :DegressFahrenheit ;
-             :hasLegendName "Temperature Signal" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureExtractedSignal
+:TemperatureExtractedSignal rdf:type owl:NamedIndividual ,
+                                     :ExtractedSignal ;
+                            :hasUnits :DegreesCelsius .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureSensorSignal
+:TemperatureSensorSignal rdf:type owl:NamedIndividual ,
+                                  :SensorSignal ;
+                         :hasUnits :DegreesCelsius ,
+                                   :DegressFahrenheit ;
+                         :hasLegendName "Temperature Signal" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ThermalSofteningCoefficient
@@ -1302,39 +1507,48 @@ xsd:date rdf:type rdfs:Datatype .
                              :hasName "Thermal Softening Coefficient" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Time
-:Time rdf:type owl:NamedIndividual ,
-               :ExtractedSignal ,
-               :SensorSignal ;
-      :hasUnits :Microsecond ,
-                :Millisecond ,
-                :Second ;
-      :hasLegendName "Time Signal" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeExtractedSignal
+:TimeExtractedSignal rdf:type owl:NamedIndividual ,
+                              :ExtractedSignal ;
+                     :hasUnits :Millisecond .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Transmitted
-:Transmitted rdf:type owl:NamedIndividual ,
-                      :ExtractedSignal ,
-                      :SensorSignal ;
-             :hasUnits :MilliVolts ,
-                       :Unitless ,
-                       :Volts ;
-             :hasLegendName "Transmitted Signal" ;
-             rdfs:comment "Indicates the signal from the transmitted bar." .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeSensorSignal
+:TimeSensorSignal rdf:type owl:NamedIndividual ,
+                           :SensorSignal ;
+                  :hasUnits :Microsecond ,
+                            :Millisecond ,
+                            :Second ;
+                  :hasLegendName "Time Signal" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedBar
 :TransmittedBar rdf:type owl:NamedIndividual ,
                          :Bar ;
-                :hasDimension :CrossSectionalArea ,
-                              :Length ,
-                              :StrainGaugeDistance ;
+                :hasDimension :OriginalCrossSectionalArea ,
+                              :OriginalLength ;
                 :hasMaterial :SteelC350 ;
                 :hasMechanicalProperty :Density ,
                                        :ElasticModulus ,
                                        :PoissonsRatio ,
                                        :WaveSpeed ;
                 :hasLegendName "Transmitted Bar" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedExtractedSignal
+:TransmittedExtractedSignal rdf:type owl:NamedIndividual ,
+                                     :ExtractedSignal ;
+                            :hasUnits :Unitless .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedSensorSignal
+:TransmittedSensorSignal rdf:type owl:NamedIndividual ,
+                                  :SensorSignal ;
+                         :hasUnits :MilliVolts ,
+                                   :Unitless ,
+                                   :Volts ;
+                         :hasLegendName "Transmitted Signal" ;
+                         rdfs:comment "Indicates the signal from the transmitted bar." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TrueStrain
@@ -1355,8 +1569,8 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unitless
 :Unitless rdf:type owl:NamedIndividual ,
-                   :Unit ;
-          :hasAbbreviation "" ;
+                   :UnitlessUnit ;
+          :hasAbbreviation "Unitless" ;
           :hasSymbol "" .
 
 
@@ -1370,7 +1584,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Volts
 :Volts rdf:type owl:NamedIndividual ,
-                :Unit ;
+                :ElectricPotentialUnit ;
        :hasAbbreviation "V" ;
        :hasSymbol "$V$" .
 

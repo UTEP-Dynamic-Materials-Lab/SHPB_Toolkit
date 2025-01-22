@@ -1,0 +1,848 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+######################################
+### EXPERIMENT INSTANCE SHAPE
+######################################
+
+dynamat:Experiment_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SHPBExperiment ;
+
+    # Requires Metadata
+    sh:property [
+        sh:path dynamat:hasMetadata ;
+        sh:class dynamat:Metadata ;                
+        sh:node dynamat:Metadata_Shape; # Calls the Laboratory Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each experiment entry must have a valid metadata assignment." ;
+    ] ;
+
+    # Requires Primary Data
+    sh:property [
+        sh:path dynamat:hasPrimaryData ;
+        sh:class dynamat:PrimaryData ;                
+        sh:node dynamat:Primary_Data_Shape; # Calls the Laboratory Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each experiment entry must have a valid primary data assignment." ;
+    ] ;
+
+    # Requires Secondary Data
+    sh:property [
+        sh:path dynamat:hasSecondaryData ;
+        sh:class dynamat:SecondaryData ;                
+        #sh:node dynamat:Metadata_Shape; # Calls the Laboratory Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each experiment entry must have a valid secondary data assignment." ;
+    ] .
+
+######################################
+### METADATA CONSTRAINT SHAPE
+######################################
+
+dynamat:Metadata_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Metadata ;
+
+    # Requires Laboratory Assignment
+    sh:property [
+        sh:path dynamat:hasLaboratory ;
+        sh:class dynamat:Laboratory ;                
+        sh:node dynamat:Laboratory_Shape; # Calls the Laboratory Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each test must have a valid laboratory assignment." ;
+    ] ;
+
+    # Requires Specimen Instance
+    sh:property [
+        sh:path dynamat:hasSpecimen ;
+        sh:class dynamat:SHPBSpecimen ;                                
+        sh:node dynamat:Specimen_Shape; # Calls the Specimen Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each test must specify a specimen of type SHPBSpecimen." ;
+    ] ;
+
+    # Requires Test Date 
+    sh:property [
+        sh:path dynamat:hasTestDate ;
+        sh:datatype xsd:date ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each test must include a valid test date in the format YYYY-MM-DD." ;
+    ] ;
+
+    # Requires Test Name 
+    sh:property [
+        sh:path dynamat:hasTestName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each test must have a unique name as a string." ;
+    ] ;
+
+    # Requires Testing Conditions
+    sh:property [
+        sh:path dynamat:hasTestingConditions ;
+        sh:class dynamat:TestingConditions ;
+        sh:node dynamat:Testing_Conditions_Shape; # Calls the Testing Conditions Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must be specified and of type TestingConditions." ;
+    ] ;
+
+    # Requires User
+    sh:property [
+        sh:path dynamat:hasUser ;
+        sh:class dynamat:User ;
+        sh:node dynamat:User_Shape; # Calls the User Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A valid user must be assigned to the test." ;
+    ] .
+
+######################################
+### Laboratory Shape
+######################################
+
+dynamat:Laboratory_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Laboratory ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The laboratory must have an abbreviation as a single string value." ;
+    ] ;
+
+    # Validate Affiliation
+    sh:property [
+        sh:path dynamat:hasAffiliation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The laboratory must have an affiliation as a single string value." ;
+    ] ;
+
+    # Validate Location
+    sh:property [
+        sh:path dynamat:hasLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The laboratory must have a location as a single string value." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The laboratory must have a name as a single string value." ;
+    ] ;
+
+    # Validate Supervisor
+    sh:property [
+        sh:path dynamat:hasSupervisor ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The laboratory must have a supervisor as a single string value." ;
+    ] .
+
+######################################
+### USER SHAPE
+######################################
+
+dynamat:User_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:User ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each user must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Affiliation
+    sh:property [
+        sh:path dynamat:hasAffiliation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each user must have a single affiliation as a string." ;
+    ] ;
+
+    # Validate Location
+    sh:property [
+        sh:path dynamat:hasLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each user must have a single location as a string." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each user must have a single name as a string." ;
+    ] ;
+
+    # Validate Supervisor
+    sh:property [
+        sh:path dynamat:hasSupervisor ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If specified, Each user must have a single supervisor as a string." ;
+    ] .
+
+######################################
+### SPECIMEN SHAPE
+######################################
+
+dynamat:SHPBSpecimen_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SHPBSpecimen ;
+
+    # Validate Dimensions
+    sh:property [
+        sh:path dynamat:hasDimension ;
+        sh:class dynamat:Dimension ;
+        sh:node dynamat:Dimension_Property_Shape ; # Calls the Dimension / Mechanical Property Shape to be applied
+        sh:minCount 4 ;
+        sh:message "The specimen must have at least four dimensions: original and deformed cross sections and lengths." ;
+    ] ;
+
+    # Validate Material
+    sh:property [
+        sh:path dynamat:hasMaterial ;
+        sh:class dynamat:Material ;
+        sh:node dynamat:Material_Shape ; # Calls the Material Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one material assigned." ;
+    ] ;
+
+    # Validate Material Processing
+    sh:property [
+        sh:path dynamat:hasMaterialProcessing ;
+        sh:class dynamat:MaterialProcessing ;
+        sh:node dynamat:Class_instance_shape ;  # Calls the Class Intance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one material processing method defined." ;
+    ] ;
+
+    # Validate Shape
+    sh:property [
+        sh:path dynamat:hasShape ;
+        sh:class dynamat:Shape ;
+        sh:node dynamat:Class_instance_shape ;  # Calls the Class Intance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one shape defined." ;
+    ] ;
+
+    # Validate Structure
+    sh:property [
+        sh:path dynamat:hasStructure ;
+        sh:class dynamat:Structure ;
+        sh:node dynamat:Class_instance_shape ; # Calls the Class Intance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one structure defined." ;
+    ] .
+
+######################################
+### PULSE TEST SHAPE
+######################################
+
+dynamat:Pulse_Test_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    sh:not [
+        sh:path dynamat:hasSpecimen ;
+        sh:message "Pulse tests must not have a specimen defined." ;
+    ] .
+
+######################################
+### MATERIAL SHAPE
+######################################
+
+dynamat:Material_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Material ;
+
+    # Validate Comment
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;                
+        sh:optional true ;
+        sh:message "If specified, each material must have a descriptive comment as a string." ;
+    ] ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Legend Name
+    sh:property [
+        sh:path dynamat:hasLegendName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single legend name as a string." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single name as a string." ;
+    ] .
+
+##############################################
+### TESTING CONDITIONS (SPECIMEN / LAB) SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Incident Bar is defined
+    sh:property [
+        sh:path dynamat:hasBar ;
+        sh:class dynamat:IncidentBar ;
+        sh:node dynamat:Bar_Instance_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must include exactly one Incident Bar." ;
+    ] ;
+
+    # Ensure Striker Bar is defined
+    sh:property [
+        sh:path dynamat:hasBar ;
+        sh:class dynamat:StrikerBar ;
+        sh:node dynamat:Bar_Instance_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must include exactly one Striker Bar." ;
+    ] ;
+
+    # Ensure Transmitted Bar is defined
+    sh:property [
+        sh:path dynamat:hasBar ;
+        sh:class dynamat:TransmittedBar ;
+        sh:node dynamat:Bar_Instance_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must include exactly one Transmitted Bar." ;
+    ] ;
+
+    # Ensure Momentum Trap Condition is defined
+    sh:property [
+        sh:path dynamat:hasMomentumTrapCondition ;
+        sh:class dynamat:MomentumTrap ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify a momentum trap condition." ;
+    ] ;
+
+    # Ensure Test Mode is defined
+    sh:property [
+        sh:path dynamat:hasTestMode ;
+        sh:or ( 
+            [  sh:hasValue dynamat:LABMode ; sh:node dynamat:LAB_Mode_Shape ;]  # Calls the LAB Shape to be applied
+            [  sh:hasValue dynamat:FEAMode ; sh:node dynamat:FEA_Mode_Shape ;] # Calls the FEA Shape to be applied
+        ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test mode (e.g., LABMode)." ;
+    ] ;
+
+    # Ensure Test Temperature is defined
+    sh:property [
+        sh:path dynamat:hasTestTemperature ;
+        sh:or ( 
+            [  sh:hasValue dynamat:RoomTemperature ; ]  
+            [  sh:hasValue dynamat:HighTemperature ; sh:node dynamat:High_Temperature_Shape ;] # Calls the High Temperature Shape
+        ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test temperature (e.g., RoomTemperature)." ;
+    ] ;
+
+    # Ensure Test Type is defined
+    sh:property [
+        sh:path dynamat:hasTestType ;
+        sh:or ( 
+            [   sh:hasValue dynamat:SpecimenTest ; sh:node dynamat:Specimen_Shape ;]  # Calls the Specimen Shape to be applied
+            [   sh:hasValue dynamat:PulseTest ; sh:node dynamat:Pulse_Test_Shape ;] # Calls the Pulse Shape to be applied
+        ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify a valid test type (e.g., SpecimenTest or PulseTest) and satisfy the corresponding shape." ;
+    ] .
+
+##############################################
+### BAR INSTANCE SHAPE 
+##############################################
+
+dynamat:Bar_Instance_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Bar ;
+
+    # Ensure Cross Section, Lenght and Strain Gauge Distance were defined.
+    sh:property [
+        sh:path dynamat:hasDimension ;
+        sh:class dynamat:Dimension ;
+        sh:node dynamat:Dimension_Property_Shape ; # Calls the Dimension / Mechanical Property Shape to be applied
+        sh:minCount 3 ;
+        sh:message "The bar must have three dimensions: CrossSectionalArea, Length." ;
+    ] ;
+
+    sh:property [
+        sh:path dynamat:hasMaterial ;
+        sh:class dynamat:Material ;
+        sh:node dynamat:Material_Shape ; # Calls the Material Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The bar must have an assigned valid material." ;
+    ] ;
+    
+    sh:property [
+        sh:path dynamat:hasMechanicalProperty ;
+        sh:node dynamat:Dimension_Property_Shape ; # Calls the Dimension / Mechanical Property Shape to be applied
+        sh:minCount 4 ;
+        sh:message "The bar must have at least four mechanical properties including: Density, Elastic Modulus, Poisson's Ratio, and WaveSpeed." ;
+    ] ;
+
+    sh:property [
+        sh:path dynamat:hasStrainGauge ;
+        sh:node dynamat:StrainGauge_Shape ;
+        sh:minCount 1 ;
+        sh:optional true ;
+        sh:message "If specified, the bar must have at least one strain gauge." ;
+    ] .
+
+##############################################
+### DIMENSION / PROPERTY SHAPE 
+##############################################
+
+dynamat:Dimension_Property_Shape a sh:NodeShape ;
+    sh:or (
+        [ sh:targetClass dynamat:Dimension ]
+        [ sh:targetClass dynamat:MechanicalProperty ]
+        [ sh:targetClass dynamat:StrainGaugeProperty ]
+        
+    ) ;
+
+    # Validate Description
+    sh:property [
+        sh:path dynamat:hasDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If specified, each dimension must have a description as a single string." ;
+    ] ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:class dynamat:Unit ;
+        sh:node dynamat:Unit_Shape ; # Calls the Unit Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must have a valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must have a value as a single float." ;
+    ] .
+
+##############################################
+### UNITS SHAPE 
+##############################################
+
+dynamat:Unit_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Unit ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Symbol
+    sh:property [
+        sh:path dynamat:hasSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single symbol as a string." ;
+    ] .
+
+##############################################
+### CLASS INSTANCE SHAPE
+##############################################
+dynamat:Class_instance_Shape a sh:NodeShape ;
+    sh:or (
+        [ sh:targetClass dynamat:MaterialProcessing]
+        [ sh:targetClass dynamat:Shape ]
+        [ sh:targetClass dynamat:Structure ]
+    ) ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each structure must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each structure must have a single name as a string." ;
+    ] .
+
+##############################################
+### STRAIN GAUGE SHAPE
+##############################################
+
+dynamat:StrainGauge_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:StrainGauge ;
+
+    # Ensure the strain gauge has a valid abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If defined, the strain gauge must have a valid abbreviation (e.g., 'SG')." ;
+    ] ;
+
+    # Ensure the strain gauge has a valid name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If defined, the strain gauge must have a valid name (e.g., 'Strain Gauge for Split Hopkinson Pressure Bar Testing')." ;
+    ] ;
+
+    # Ensure the strain gauge has at least one dimension
+    sh:property [
+        sh:path dynamat:hasDimension ;
+        sh:node dynamat:Dimension_Shape ;
+        sh:minCount 1 ;
+        sh:message "The strain gauge must have the dimension StrainGaugeDistance)." ;
+    ] .
+
+##############################################
+### LAB Mode Shape
+##############################################
+
+dynamat:LAB_Mode_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:StrainGauge ;
+
+    # Ensure the strain gauge has strain gauge properties
+    sh:property [
+        sh:path dynamat:hasStrainGaugeProperty ;
+        sh:class dynamat:StrainGaugeProperty ;
+        sh:node dynamat:Dimension_Property_Shape ;
+        sh:minCount 4 ;
+        sh:message "The strain gauge must have the following properties: CalibrationResistance, CalibrationVoltage, GaugeFactor, and Resistance." ;
+    ] .
+
+##############################################
+### FEA Mode Shape
+##############################################
+
+dynamat:FEA_Mode_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Metadata ;
+
+    # Ensure Specimen contains FEMetadata
+    sh:property [
+        sh:path dynamat:hasSpecimen ;
+        sh:node [
+            sh:property [
+                sh:path dynamat:hasFEMetadata ;
+                sh:class dynamat:FEMetadata ;
+                sh:node dynamat:FEMetadata_Shape ;
+                sh:minCount 1 ;
+                sh:maxCount 1 ;
+                sh:message "The specimen must include FEMetadata for FEA mode." ;
+            ] ;
+        ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Metadata must include a valid specimen with FEMetadata for FEA mode." ;
+    ] ;
+
+    # Ensure Testing Conditions contain Bars with FEMetadata
+    sh:property [
+        sh:path dynamat:hasTestingConditions ;
+        sh:node [
+            sh:property [
+                sh:path dynamat:hasBar ;
+                sh:or (
+                    [ 
+                        sh:class dynamat:StrikerBar ; 
+                        sh:node [
+                            sh:property [ 
+                                sh:path dynamat:hasFEMetadata ; 
+                                sh:class dynamat:FEMetadata ; 
+                                sh:node dynamat:FEMetadata_Shape ;
+                                sh:minCount 1 ;
+                                sh:maxCount 1 ;
+                                sh:message "Striker bar must include FEMetadata for FEA mode." ;
+                            ] ;
+                        ] 
+                    ]
+                    [ 
+                        sh:class dynamat:IncidentBar ; 
+                        sh:node [
+                            sh:property [ 
+                                sh:path dynamat:hasFEMetadata ; 
+                                sh:class dynamat:FEMetadata ; 
+                                sh:node dynamat:FEMetadata_Shape ; 
+                                sh:minCount 1 ;
+                                sh:maxCount 1 ;
+                                sh:message "Incident bar must include FEMetadata for FEA mode." ;
+                            ] ;
+                        ] 
+                    ]
+                    [ 
+                        sh:class dynamat:TransmittedBar ; 
+                        sh:node [
+                            sh:property [ 
+                                sh:path dynamat:hasFEMetadata ; 
+                                sh:class dynamat:FEMetadata ; 
+                                sh:node dynamat:FEMetadata_Shape ;
+                                sh:minCount 1 ;
+                                sh:maxCount 1 ;
+                                sh:message "Transmitted bar must include FEMetadata for FEA mode." ;
+                            ] ;
+                        ] 
+                    ]
+                ) ;
+                sh:minCount 3 ;
+                sh:maxCount 3 ;
+                sh:message "Testing conditions must include exactly three bars (Incident, Striker, Transmitted), each with FEMetadata." ;
+            ] ;
+        ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Metadata must include valid testing conditions with bars containing FEMetadata for FEA mode." ;
+    ] .
+
+
+##############################################
+### FEA METADATA SHAPE
+##############################################
+
+dynamat:FEMetadata_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:FEMetadata ;
+
+    # Ensure at least one StrengthModel is defined
+    sh:property [
+        sh:path dynamat:hasStrengthModel ;
+        sh:class dynamat:StrengthModel ;
+        sh:node dynamat:StrengthModel_Shape ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "FEMetadata entry must only include one StrengthModel." ;
+    ] .
+
+##############################################
+### STRENGTH MODEL SHAPE
+##############################################
+
+dynamat:StrengthModel_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:StrengthModel ;
+
+    # Ensure the strength model has a valid name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If defined, the strenght model must have a valid name (e.g., 'Johnson-Cook Simplified Model')." ;
+    ] ;
+
+    # Ensure the strength model has a valid abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If defined, the strenght model must have a valid abbreviation (e.g., 'JC Model')." ;
+    ] ;
+
+    # Ensure Strength Model parameters are defined
+    sh:property [
+        sh:path dynamat:hasParameter ;
+        sh:class dynamat:MechanicalProperty ;
+        sh:node dynamat:Dimension_Property_Shape ;     
+        sh:minCount 1 ;
+        sh:message "FEA Strength Model must include at least one mechanical parameter." ;
+    ] .
+
+##############################################
+### PRIMARY DATA SHAPE
+##############################################
+
+dynamat:PrimaryData_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:PrimaryData ;
+
+    # Ensure at least one Incident Signal
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;
+        sh:class dynamat:Incident ;
+        sh:node dynamat:Signal_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:message "PrimaryData must include at least one Incident signal." ;
+    ] ;
+
+    # Ensure at least one Time Signal
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;
+        sh:class dynamat:Time ;
+        sh:node dynamat:Signal_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:message "PrimaryData must include at least one Time signal." ;
+    ] ;
+
+    # Ensure at least one Transmitted Signal
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;
+        sh:class dynamat:Transmitted ;
+        sh:node dynamat:Signal_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:message "PrimaryData must include at least one Transmitted signal." ;
+    ] ;
+
+    # Ensure at least one Temperature Signal, when specified
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;
+        sh:class dynamat:Temperature ;
+        sh:node dynamat:Signal_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:optional true ;
+        sh:message "If specifiedm, PrimaryData must include at least one Transmitted signal." ;
+    ] .
+
+##############################################
+### SIGNAL SHAPE
+##############################################
+
+dynamat:Signal_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SensorSignal ;
+
+    # Ensure Description is defined
+    sh:property [
+        sh:path dynamat:hasDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:optional true ;
+        sh:message "If specified, each signal must have a description." ;
+    ] ;
+
+    # Ensure Encoded Data is defined
+    sh:property [
+        sh:path dynamat:hasEncodedData ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must include encoded data." ;
+    ] ;
+
+    # Ensure Encoding is defined
+    sh:property [
+        sh:path dynamat:hasEncoding ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify its encoding format (e.g., base64)." ;
+    ] ;
+
+    # Ensure Legend Name is defined
+    sh:property [
+        sh:path dynamat:hasLegendName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must have a legend name for plotting purposes." ;
+    ] ;
+
+    # Ensure Size is defined
+    sh:property [
+        sh:path dynamat:hasSize ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify its size (e.g., number of data points)." ;
+    ] ;
+
+    # Ensure Units are defined
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:node dynamat:Unit_Shape ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify valid units." ;
+    ] .
+
+##############################################
+### HIGH TEMPERATURE SHAPE
+##############################################
+
+dynamat:Signal_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SensorSignal ;
+
+    # Ensure at least one Temperature Signal, when specified
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;
+        sh:class dynamat:Temperature ;
+        sh:node dynamat:Signal_Shape ; # Calls the Bar Instance Shape to be applied
+        sh:minCount 1 ;
+        sh:message "If specifiedm, PrimaryData must include at least one Transmitted signal." ;
+    ] .

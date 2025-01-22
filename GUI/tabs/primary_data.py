@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QComboBox, QTableWidget, QTableWidgetItem, QPushButton, QFileDialog
 )
 from PyQt6.QtCore import Qt
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace, URIRef
 from GUI.components.common_widgets import UnitSelector, DoubleSpinBox
 import pandas as pd
 import numpy as np
@@ -223,28 +223,39 @@ class PrimaryDataWidget(QWidget):
             primary_data_uri = self.experiment.DYNAMAT["Experiment_Primary_Data"]     
 
             for signal_name_uri, properties in self.signal_data.items():
+                i = 0
                 for prop in properties: 
                     signal_instance_uri = prop.get("signal_instance_uri")
                     column_name = prop.get("column_box").currentData()
-                    encoding = "base64"
+                    encoding = "base64Binary"
                     data_encoded, data_size = self.clean_data(self.file_data, column_name, encoding) 
                     legend_name = f"{signal_name_uri.split('#')[-1]}"
                     unit_box = prop.get("unit_box")
-                    units_uri, _ = unit_box.currentData()
+                    units_uri, _, _ = unit_box.currentData()
 
                     self.experiment.set_triple(str(signal_name_uri), str(self.experiment.RDF.type),
                                        str(signal_instance_uri))
+                    self.experiment.add_triple(str(signal_name_uri), str(self.experiment.RDF.type),
+                                       str(self.experiment.DYNAMAT.SensorSignal))
                     self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasUnits), units_uri)
-                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncodedData), data_encoded)
-                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncoding), encoding)
-                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasSize), data_size)                    
-                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasLegendName), legend_name) 
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncodedData),
+                                               data_encoded, obj_type="base64Binary")
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasEncoding),
+                                               encoding)
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasSize),
+                                               data_size, obj_type="int")                    
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasLegendName),
+                                               legend_name) 
                     self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasDescription),
                                        f"Data for {signal_name_uri.split('#')[-1]}")
+                    
+                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasStrainGauge),
+                                       self.experiment.DYNAMAT[f"{signal_name_uri.split('#')[-1][:-14]}StrainGauge_{i}"])
                     self.experiment.add_instance_data(units_uri) # Add the units description
                     
                     self.experiment.add_triple(str(primary_data_uri), str(self.experiment.DYNAMAT.hasSensorSignal),
                                        str(signal_name_uri))  
+                    i += 1
                     
                 self.experiment.save()   
 
@@ -284,7 +295,7 @@ class PrimaryDataWidget(QWidget):
             data_size = len(column_data)
     
             # Encode the data
-            if encoding == "base64":
+            if encoding == "base64Binary":
                 encoded_data = base64.b64encode(column_data.tobytes()).decode("utf-8")
             else:
                 raise ValueError("Unsupported encoding type. Currently only 'base64' is supported.")
