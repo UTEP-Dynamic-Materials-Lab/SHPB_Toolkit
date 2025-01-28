@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (
 )
 from rdflib import Graph, Namespace
 from PyQt6.QtCore import pyqtSignal, Qt
-from GUI.components.common_widgets import UnitSelector, DoubleSpinBox, ClassInstanceSelection
+from GUI.components.common_widgets import UnitSelector, DoubleSpinBox, ClassInstanceSelection, SetUnitDefaults
 
 class StrikerConditionsWidget(QWidget):
     def __init__(self, ontology_path, test_config, experiment_temp_file):
@@ -36,6 +36,7 @@ class StrikerConditionsWidget(QWidget):
         self.velocity_uri = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Velocity"
         self.striker_velocity_spinbox = DoubleSpinBox()
         self.striker_velocity_unit_combo = UnitSelector(self.ontology_path, self.velocity_uri)
+        SetUnitDefaults(self.ontology_path, self.test_config.striker_velocity_units, self.striker_velocity_unit_combo )
         striker_velocity_layout.addWidget(self.striker_velocity_spinbox)
         striker_velocity_layout.addWidget(self.striker_velocity_unit_combo)
         self.layout.addWidget(striker_velocity_label)
@@ -47,6 +48,7 @@ class StrikerConditionsWidget(QWidget):
         self.pressure_uri = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Pressure" 
         self.striker_pressure_spinbox = DoubleSpinBox()        
         self.striker_pressure_unit_combo = UnitSelector(self.ontology_path, self.pressure_uri)
+        SetUnitDefaults(self.ontology_path, self.test_config.striker_pressure_units, self.striker_pressure_unit_combo )
         striker_pressure_layout.addWidget(self.striker_pressure_spinbox)
         striker_pressure_layout.addWidget(self.striker_pressure_unit_combo)
         self.layout.addWidget(striker_pressure_label)
@@ -133,7 +135,7 @@ class StrikerConditionsWidget(QWidget):
             trap_condition_uri, _ = self.trap_condition_selector.currentData()            
             self.experiment.set_triple(str(trap_condition_uri), str(self.experiment.RDF.type),
                                        str(self.experiment.DYNAMAT.MomentumTrap))
-            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasMomentumTrapCondition),
+            self.experiment.set_triple(str(testing_conditions_uri), str(self.experiment.DYNAMAT.hasMomentumTrap),
                                        str(trap_condition_uri))
             self.experiment.add_instance_data(trap_condition_uri)
 

@@ -1,0 +1,19 @@
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Test_Specimen ;
+            sh:resultMessage "The specimen must have exactly one material processing method defined." ;
+            sh:resultPath dynamat:hasSpecimenProcessing ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:class dynamat:SpecimenProcessing ;
+                    sh:maxCount 1 ;
+                    sh:message "The specimen must have exactly one material processing method defined." ;
+                    sh:minCount 1 ;
+                    sh:node dynamat:Class_instance_shape ;
+                    sh:path dynamat:hasSpecimenProcessing ] ] .
+

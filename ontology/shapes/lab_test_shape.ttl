@@ -1,0 +1,166 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdfs-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+##############################################
+### TESTING CONDITIONS SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Test Type is defined
+    sh:property [
+        sh:path dynamat:hasTestMode ;
+        sh:hasValue dynamat:LABMode ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test mode == LAB Mode." ;
+    ] .
+
+##############################################
+### STRAIN GAUGE SHAPE
+##############################################
+
+dynamat:StrainGauge_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SHPBStrainGauge ;
+
+    # Ensure the strain gauge has at least one dimension
+    sh:property [
+        sh:path dynamat:hasStrainGaugeProperty ;
+        sh:node [ sh:or ( [sh:class dynamat:CalibrationResistance ; sh:node dynamat:ElectricalResistanceUnit_Shape] 
+                          [sh:class dynamat:CalibrationVoltage ; sh:node dynamat:ElectricPotentialUnit_Shape]
+                          [sh:class dynamat:GaugeFactor ; sh:node dynamat:Unitless_Shape]
+                          [sh:class dynamat:Resistance ; sh:node dynamat:ElectricalResistanceUnit_Shape]
+                          [sh:class dynamat:DataAcquisitionRate ; sh:node dynamat:FrequencyUnit_Shape] 
+                        )];
+        sh:minCount 5 ;
+        sh:maxCount 5 ;
+        sh:message "The strain gauge must have the dimension StrainGaugeDistance)." ;
+    ] .
+
+
+##############################################
+### UNITLESS SHAPE
+##############################################
+
+dynamat:Unitless_shape a sh:NodeShape ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:hasValue dynamat:Unitless ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### FrequencyUnit SHAPE
+##############################################
+
+dynamat:FrequencyUnit_shape a sh:NodeShape ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### ElectricalResistanceUnit SHAPE
+##############################################
+
+dynamat:ElectricalResistanceUnit_shape a sh:NodeShape ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:hasValue dynamat:Ohms ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### ElectricPotentialUnit SHAPE
+##############################################
+
+dynamat:ElectricPotentialUnit_shape a sh:NodeShape ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:hasValue dynamat:Volts ; 
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### UNITS SHAPE 
+##############################################
+
+dynamat:Unit_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Unit ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Symbol
+    sh:property [
+        sh:path dynamat:hasSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single symbol as a string." ;
+    ] .

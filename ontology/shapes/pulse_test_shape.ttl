@@ -1,0 +1,36 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdfs-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+######################################
+### METADATA CONSTRAINT SHAPE
+######################################
+
+dynamat:Metadata_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Metadata ;
+
+    # Ensure that the `dynamat:hasSpecimen` property is not present
+    sh:property [
+        sh:path dynamat:hasSpecimen ;
+        sh:maxCount 0 ;  # Ensure the property is not present
+        sh:message "Testing conditions must not have a specimen associated with this test type." ;
+    ] .
+
+
+##############################################
+### TESTING CONDITIONS SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Test Type is defined
+    sh:property [
+        sh:path dynamat:hasTestType ;
+        sh:hasValue dynamat:PulseTest ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test type == Pulse Test." ;
+    ] .
+

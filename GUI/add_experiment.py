@@ -27,8 +27,8 @@ class AddExperimentWindow(QWidget):
         self.test_config = test_config        
 
         # Initialize Experiment Temp File
-        self.temp_file_path = os.path.join("data", "secondary_test.ttl") # EDIT THIS
-        self.experiment_temp_file = ExperimentTempFile(os.path.join("GUI", "experiment_temp.ttl"), self.ontology_path) # EDIT THIS       
+        self.temp_file_path = os.path.join("GUI", "experiment_temp.ttl") 
+        self.experiment_temp_file = ExperimentTempFile(self.temp_file_path, self.ontology_path)    
 
         # Main layout for the window
         self.layout = QVBoxLayout()

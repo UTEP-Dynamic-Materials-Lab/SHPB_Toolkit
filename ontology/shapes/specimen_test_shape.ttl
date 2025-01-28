@@ -1,0 +1,227 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdfs-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+######################################
+### METADATA CONSTRAINT SHAPE
+######################################
+
+dynamat:Metadata_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Metadata ;
+
+    # Ensure Test Type is defined
+    sh:property [
+        sh:path dynamat:hasSpecimen ;
+        sh:class dynamat:SHPBSpecimen ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Metadata entries must contain a Test Specimen of type: SHPBSpecimen." ;
+    ] .
+
+##############################################
+### TESTING CONDITIONS SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Test Type is defined
+    sh:property [
+        sh:path dynamat:hasTestType ;
+        sh:hasValue dynamat:SpecimenTest ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test type == Specimen Test." ;
+    ] .
+
+######################################
+### SPECIMEN SHAPE
+######################################
+
+dynamat:SHPBSpecimen_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SHPBSpecimen ;
+
+    # Validate that bar has dimensions
+    sh:property [
+        sh:path dynamat:hasDimension ; 
+        sh:node [sh:or ([sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape]
+                        [sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_shape]
+                        [sh:class dynamat:DeformedLength ; sh:node dynamat:Length_shape]
+                        [sh:class dynamat:DeformedCrossSectionalArea ; sh:node dynamat:Area_shape]
+                       )];
+        sh:minCount 4 ;
+        sh:maxCount 4 ;
+        sh:message "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
+    ] ;
+
+    # Validate Material
+    sh:property [
+        sh:path dynamat:hasMaterial ;
+        sh:class dynamat:Material ; 
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one material assigned." ;
+    ] ;
+
+    # Validate Material Processing
+    sh:property [
+        sh:path dynamat:hasSpecimenProcessing ;
+        sh:class dynamat:SpecimenProcessing ; 
+        sh:node dynamat:Class_instance_shape ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one material processing method defined." ;
+    ] ;
+
+    # Validate Shape
+    sh:property [
+        sh:path dynamat:hasShape ;
+        sh:class dynamat:Shape ; 
+        sh:node dynamat:Class_instance_shape ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one shape defined." ;
+    ] ;
+
+    # Validate Structure
+    sh:property [
+        sh:path dynamat:hasStructure ;
+        sh:class dynamat:Structure ;
+        sh:node dynamat:Class_instance_shape ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The specimen must have exactly one structure defined." ;
+    ] .
+
+######################################
+### MATERIAL SHAPE
+######################################
+
+dynamat:Material_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Material ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Legend Name
+    sh:property [
+        sh:path dynamat:hasLegendName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single legend name as a string." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each material must have a single name as a string." ;
+    ] .
+
+##############################################
+### CLASS INSTANCE SHAPE
+##############################################
+
+dynamat:Class_instance_Shape a sh:NodeShape ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each structure must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Name
+    sh:property [
+        sh:path dynamat:hasName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each structure must have a single name as a string." ;
+    ] .
+
+##############################################
+### LENGTH SHAPE
+##############################################
+
+dynamat:Length_shape a sh:NodeShape ;
+
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:hasValue dynamat:Millimeter ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### AREA SHAPE
+##############################################
+
+dynamat:Area_shape a sh:NodeShape ;
+    # Validate Units
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:hasValue dynamat:SquareMilimeters ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each dimension must meters as the valid unit assigned." ;
+    ] ;
+
+    # Validate Value
+    sh:property [
+        sh:path dynamat:hasValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;  # Ensure non-negative
+        sh:message "Each length dimension must have a value as a single positive float." ;
+    ] .
+
+##############################################
+### UNITS SHAPE 
+##############################################
+
+dynamat:Unit_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Unit ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Symbol
+    sh:property [
+        sh:path dynamat:hasSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single symbol as a string." ;
+    ] .

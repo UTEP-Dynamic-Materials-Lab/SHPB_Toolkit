@@ -16,8 +16,7 @@ class SpecimenMetadataWidget(QWidget):
         self.experiment = experiment_temp_file
         self.specimen_config = SpecimenConfiguration()
         self.current_type = URIRef(self.test_config.test_type)
-        self.current_mode = URIRef(self.test_config.test_mode)
-        self.specimen_properties = {} # Initialize storage of defined values / properties
+        self.current_mode = URIRef(self.test_config.test_mode)        
         self.specimen_material = self.test_config.specimen_material
 
         # Load ontology
@@ -29,7 +28,7 @@ class SpecimenMetadataWidget(QWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        self.populate_tab()
+        self.update_visibility()
         self.layout.addStretch()
 
     def populate_tab(self):
@@ -44,8 +43,8 @@ class SpecimenMetadataWidget(QWidget):
 
         # Add Material Processing Section
         self.processing_label = QLabel("Material Processing:")
-        self.processing_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.MaterialProcessing)
-        SetDefaults(self.ontology_path, self.specimen_config["SHPBSpecimen_MaterialProcessing"],
+        self.processing_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.SpecimenProcessing)
+        SetDefaults(self.ontology_path, self.specimen_config["SHPBSpecimen_SpecimenProcessing"],
                         self.processing_selector)
         self.layout.addWidget(self.processing_label)
         self.layout.addWidget(self.processing_selector)
@@ -68,9 +67,6 @@ class SpecimenMetadataWidget(QWidget):
         self.fea_button = QPushButton("Add FEA Metadata")
         self.fea_button.clicked.connect(lambda: self.open_fea_metadata(self.experiment.DYNAMAT.SHPBSpecimen))
         self.layout.addWidget(self.fea_button)
-        
-        # Populate Specimen Tabs
-        self.update_visibility()
 
         # Confirm/Edit Button
         self.confirm_button = QPushButton("Confirm")
@@ -105,7 +101,6 @@ class SpecimenMetadataWidget(QWidget):
                 combo_box = UnitSelector(self.ontology_path, property_instance_uri)
                 
                 try:                     
-                    spinbox.setValue(float(self.specimen_config[f"{specimen_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_value"])) 
                     SetUnitDefaults(self.ontology_path, 
                                self.specimen_config[f"{specimen_instance_uri.split('#')[-1]}_{property_instance_uri.split('#')[-1]}_units"],
                                 combo_box)
@@ -157,7 +152,7 @@ class SpecimenMetadataWidget(QWidget):
 
             try: 
                 processing_uri, _ = self.processing_selector.currentData()
-                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasMaterialProcessing), processing_uri)
+                self.experiment.set_triple(str(specimen_uri), str(self.experiment.DYNAMAT.hasSpecimenProcessing), processing_uri)
                 self.experiment.add_instance_data(processing_uri)
             except: 
                 None
@@ -214,10 +209,11 @@ class SpecimenMetadataWidget(QWidget):
         test_mode = self.current_mode
         test_type = self.current_type       
         
-        if test_type == self.experiment.DYNAMAT.SpecimenTest:                      
+        if test_type == self.experiment.DYNAMAT.SpecimenTest:
+            self.clear_layout(self.layout)
+            self.specimen_properties = {}
+            self.populate_tab()
             if test_mode == self.experiment.DYNAMAT.FEAMode:
-                self.processing_selector.setEnabled(False)
-                self.processing_selector.setCurrentIndex(-1)
                 self.fea_button.setVisible(True)
             else: 
                 self.processing_selector.setEnabled(True)
@@ -235,13 +231,6 @@ class SpecimenMetadataWidget(QWidget):
     def update_test_type(self, test_type):
         self.current_type = URIRef(test_type) if isinstance(test_type, str) else self.current_type
         print(f"Current Test Type = {self.current_type}")
-        self.populate_tab()
-        self.update_visibility()
-        return 
-
-    def update_test_mode(self, test_mode):
-        self.current_mode = URIRef(test_mode) if isinstance(test_mode, str) else self.current_mode
-        print(f"Current Test Mode = {self.current_mode}")
         self.update_visibility()
         return 
 
@@ -254,8 +243,7 @@ class SpecimenMetadataWidget(QWidget):
     def update_specimen_material(self, current_specimen_material):
         self.material_label.setText(f"Specimen Material: {current_specimen_material}")
         return 
-
-
+        
     def clear_layout(self, layout):
         """Recursively clear all widgets and sublayouts from a layout."""
         while layout.count():
@@ -268,7 +256,6 @@ class SpecimenMetadataWidget(QWidget):
                 self.clear_layout(sub_layout)
                 # Delete the sublayout after clearing it
                 del sub_layout
-
 
 
         

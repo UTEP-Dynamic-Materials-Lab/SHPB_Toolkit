@@ -108,7 +108,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Engineering Strain Rate", datatype = self.experiment.XSD.string)))
+                                    Literal("Strain Rate", datatype = self.experiment.XSD.string)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Engineering Strain Rate determined from pulse strains",
                                             datatype = self.experiment.XSD.string)))               
@@ -140,7 +140,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Engineering Strain", datatype = self.experiment.XSD.string))) #
+                                    Literal("Eng Strain", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Engineering Strain determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -209,7 +209,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Engineering Stress Front", datatype = self.experiment.XSD.string))) #
+                                    Literal("Front Surface", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Engineering Stress at the incident / specimen determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -240,7 +240,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Engineering Stress Back", datatype = self.experiment.XSD.string))) #
+                                    Literal("Back Surface", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Engineering Stress at the transmitted / specimen determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -275,7 +275,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("True Stress Front", datatype = self.experiment.XSD.string))) #
+                                    Literal("Front Surface", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("True Stress at the incident / specimen determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -306,7 +306,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("True Stress Back", datatype = self.experiment.XSD.string))) #
+                                    Literal("Back Surface", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("True Stress at the transmitted / specimen determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -354,7 +354,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Incident Pulse Strain Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Incident", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Incident Pulse Strain Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -385,7 +385,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Reflected Pulse Strain Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Reflected", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Reflected Pulse Strain Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -416,7 +416,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Transmitted Pulse Strain Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Transmitted", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Transmitted Pulse Strain Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -451,7 +451,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Absorbed Elastic Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Elastic Energy", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Absorbed Elastic Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -483,7 +483,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Absorbed Kinetic Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Kinetic Energy", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Absorbed Kinetic Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -514,7 +514,7 @@ class SeriesData:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Total Absorbed Energy", datatype = self.experiment.XSD.string))) #
+                                    Literal("Total Energy", datatype = self.experiment.XSD.string))) #
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Total Absorbed Energy determined from pulse strains", #
                                             datatype = self.experiment.XSD.string)))               
@@ -523,7 +523,7 @@ class SeriesData:
 
         print("Saving graph to file...")
         print(f"Graph contains: {self.experiment.len()} triples.")
-        with open("data/data_out_converter_003.ttl", "w") as f:
+        with open(self.file_path, "w") as f:
             f.write(self.experiment.serialize("turtle"))
     
     def fetch_extracted_signals(self, extracted_signal_class):

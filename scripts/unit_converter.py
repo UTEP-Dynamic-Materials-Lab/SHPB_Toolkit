@@ -44,7 +44,7 @@ class SIConverter:
 
         print("Saving graph to file...")
         print(f"Graph contains: {len(self.experiment)} triples.")
-        with open("data/data_out_converter.ttl", "w") as f:
+        with open(experiment_graph_path, "w") as f:
             f.write(self.experiment.serialize(format="turtle"))
 
     def add_instance_data(self, instance):
@@ -460,8 +460,7 @@ class SIConverter:
         SELECT ?instance ?unit ?value ?encodedData ?encoding WHERE {{
             ?instance :hasUnits ?unit .
             OPTIONAL {{ ?instance :hasValue ?value . }}
-            OPTIONAL {{ ?instance :hasEncodedData ?encodedData ;
-                        :hasEncoding ?encoding . }}
+            OPTIONAL {{ ?instance :hasEncodedData ?encodedData }}
             ?unit rdf:type :ElectricPotentialUnit .
         }}
         """
@@ -471,9 +470,9 @@ class SIConverter:
             for row in results:
                 instance_uri = str(row.instance)
                 unit_uri = str(row.unit)
-                value = row.value
-                encoded_data = row.encodedData
-                encoding = row.encoding
+                value = getattr(row, "value", None)
+                encoded_data = getattr(row, "encodedData", None)
+
     
                 if value is not None:
                     # Handle direct numeric values
@@ -496,7 +495,7 @@ class SIConverter:
                     self.experiment.set((URIRef(instance_uri), self.DYNAMAT.hasValue, Literal(converted_value, datatype=self.XSD.float)))
                     self.experiment.set((URIRef(instance_uri), self.DYNAMAT.hasUnits, self.DYNAMAT.Volts))
     
-                elif encoded_data is not None and encoding == "base64Binary":
+                elif encoded_data is not None:
                     # Handle base64-encoded data
                     decoded_data = base64.b64decode(encoded_data)
                     signal_data = np.frombuffer(decoded_data, dtype=np.float32)

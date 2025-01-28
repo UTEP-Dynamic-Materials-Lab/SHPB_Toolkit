@@ -1,0 +1,133 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdfs-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+######################################
+### EXPERIMENT INSTANCE SHAPE
+######################################
+
+dynamat:Specimen_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SHPBSpecimen ;
+
+    # Requires Metadata
+    sh:property [
+        sh:path dynamat:hasFEAMetadata ;            
+        sh:class dynamat:FEAMetadata ; # Calls the Metadata_Shape to be applied
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each specimen entry must have a valid FEA metadata assignment for FEA Mode." ;
+    ] .
+
+##############################################
+### TESTING CONDITIONS SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Test Temperature is defined
+    sh:property [
+        sh:path dynamat:hasTestMode ;
+        sh:hasValue dynamat:FEAMode ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test mode == FEA Mode." ;
+    ] .
+
+##############################################
+### BAR INSTANCE SHAPE 
+##############################################
+
+dynamat:Bar_Instance_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Bar ;
+
+    # Validate the strain gauge properties
+    sh:property [
+        sh:path dynamat:hasFEAMetadata ;
+        sh:class dynamat:FEAMetadata ; 
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "The bar must contain at least one entry for FEA Metadata." ;
+    ] .
+
+
+##############################################
+### FEA METADATA SHAPE
+##############################################
+
+dynamat:FEAMetadata_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:FEAMetadata ;
+
+    # Ensure at least one StrengthModel is defined
+    sh:property [
+        sh:path dynamat:hasStrengthModel ;
+        sh:class dynamat:StrengthModel ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "FEMetadata entry must only include one Strength Model Definition." ;
+    ] ;
+
+    # Ensure at least one StrengthModel is defined
+    sh:property [
+        sh:path dynamat:hasFiniteElement ;
+        sh:class dynamat:FiniteElement ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "FEMetadata entry must only include one Fininte Element Model Definition." ;
+    ] .
+
+##############################################
+### STRENGTH MODEL SHAPE
+##############################################
+
+dynamat:StrengthModel_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:StrengthModel ;
+
+    # Ensure Strength Model parameters are defined
+    sh:property [
+        sh:path dynamat:hasParameter ;
+        sh:class dynamat:MechanicalProperty ;    
+        sh:minCount 3 ;
+        sh:message "FEA Strength Model must include at least one mechanical parameter." ;
+    ] .
+
+##############################################
+### FINITE ElEMENT SHAPE
+##############################################
+
+dynamat:FiniteElement_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:FiniteElement ;
+
+    # Ensure Strength Model parameters are defined
+    sh:property [
+        sh:path dynamat:hasDimension ;
+        sh:class dynamat:Dimension ;    
+        sh:minCount 1 ;
+        sh:message "FEA Elements must include at least one dimensional paramater." ;
+    ] .
+
+##############################################
+### UNITS SHAPE 
+##############################################
+
+dynamat:Unit_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Unit ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Symbol
+    sh:property [
+        sh:path dynamat:hasSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single symbol as a string." ;
+    ] .

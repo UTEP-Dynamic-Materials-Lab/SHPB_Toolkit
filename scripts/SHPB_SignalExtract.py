@@ -178,7 +178,7 @@ class SignalExtractor:
         incident_strain_pulse_uri = str(self.experiment.DYNAMAT["Pulse_Strain_Amplitude"])
         self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.RDF.type, self.experiment.DYNAMAT.PulseProperties))
         self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.RDF.type, self.experiment.DYNAMAT.PulseStrainAmplitude))
-        self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.DYNAMAT.hasUnits, self.experiment.DYNAMAT.Megapascal))
+        self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.DYNAMAT.hasUnits, self.experiment.DYNAMAT.Unitless))
         self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.DYNAMAT.hasValue,
                              Literal(self.incident_strain_pulse, datatype = self.experiment.XSD.float )))
         self.experiment.add((URIRef(incident_strain_pulse_uri), self.experiment.DYNAMAT.hasDescription, 
@@ -218,7 +218,7 @@ class SignalExtractor:
                 self.experiment.add((URIRef(incident_name_uri), self.experiment.DYNAMAT.hasSize,
                                      Literal(data_size, datatype = self.experiment.XSD.int)))
                 self.experiment.add((URIRef(incident_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                     Literal("Extracted Incident Signal", datatype = self.experiment.XSD.string)))
+                                     Literal("Incident", datatype = self.experiment.XSD.string)))
                 self.experiment.add((URIRef(incident_name_uri), self.experiment.DYNAMAT.hasDescription,
                                      Literal("Extracted Incident Signal from SG", datatype = self.experiment.XSD.string)))                
                 self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
@@ -235,7 +235,7 @@ class SignalExtractor:
                 self.experiment.add((URIRef(reflected_name_uri), self.experiment.DYNAMAT.hasSize,
                                      Literal(data_size, datatype = self.experiment.XSD.int)))
                 self.experiment.add((URIRef(reflected_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                     Literal("Extracted Reflected Signal", datatype = self.experiment.XSD.string)))
+                                     Literal("Reflected", datatype = self.experiment.XSD.string)))
                 self.experiment.add((URIRef(reflected_name_uri), self.experiment.DYNAMAT.hasDescription,
                                      Literal("Extracted Reflected Signal from SG", datatype = self.experiment.XSD.string)))               
                 self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
@@ -271,7 +271,7 @@ class SignalExtractor:
                 self.experiment.add((URIRef(transmitted_name_uri), self.experiment.DYNAMAT.hasSize,
                                      Literal(data_size, datatype = self.experiment.XSD.int)))
                 self.experiment.add((URIRef(transmitted_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                     Literal("Extracted Transmitted Signal", datatype = self.experiment.XSD.string)))
+                                     Literal("Transmitted", datatype = self.experiment.XSD.string)))
                 self.experiment.add((URIRef(transmitted_name_uri), self.experiment.DYNAMAT.hasDescription,
                                      Literal("Extracted Transmitted Signal from SG", datatype = self.experiment.XSD.string)))               
                 self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
@@ -305,7 +305,7 @@ class SignalExtractor:
         self.experiment.add((URIRef(time_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(time_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Extracted Time Signal", datatype = self.experiment.XSD.string)))
+                                    Literal("Time", datatype = self.experiment.XSD.string)))
         self.experiment.add((URIRef(time_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Extracted Time Signal from SG", datatype = self.experiment.XSD.string)))               
         self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
@@ -346,7 +346,7 @@ class SignalExtractor:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Front Particle Velocity", datatype = self.experiment.XSD.string)))
+                                    Literal("Front Surface", datatype = self.experiment.XSD.string)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Incident - Specimen Particle Velocity determined from pulse strains",
                                             datatype = self.experiment.XSD.string)))               
@@ -378,7 +378,7 @@ class SignalExtractor:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasSize,
                                     Literal(data_size, datatype = self.experiment.XSD.int)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasLegendName,
-                                    Literal("Back Particle Velocity", datatype = self.experiment.XSD.string)))
+                                    Literal("Back Surface", datatype = self.experiment.XSD.string)))
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Transmitted - Specimen Particle Velocity determined from pulse strains",
                                             datatype = self.experiment.XSD.string)))               
@@ -388,7 +388,7 @@ class SignalExtractor:
         
         print("Saving graph to file...")
         print(f"Graph contains: {self.experiment.len()} triples.")
-        with open("data/data_out_converter_002.ttl", "w") as f:
+        with open(self.file_path, "w") as f:
             f.write(self.experiment.serialize("turtle"))
 
     
@@ -647,10 +647,10 @@ class SignalExtractor:
                     bars_gauge_distances[1],
                     0
                     )
-                pulse_speed = self.wave_speed
-                print(f'Bar Wave Speed: {self.wave_speed:.3e} mm/ms')
+                pulse_speed = wave_speed
+                print(f'Bar Wave Speed: {wave_speed:.3e} mm/ms')
                 print(f'No Specimen, therefore the Test Wave Speed is the same') 
-                print(f'Test Wave Speed: {self.pulse_speed:.3e} mm/ms') 
+                print(f'Test Wave Speed: {pulse_speed:.3e} mm/ms') 
     
                 self.save_wave_speed(wave_speed)
                 return wave_speed, pulse_speed

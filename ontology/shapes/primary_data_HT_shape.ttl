@@ -1,0 +1,138 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdfs-schema#> .
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+
+##############################################
+### TESTING CONDITIONS SHAPE
+##############################################
+
+dynamat:Testing_Conditions_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:TestingConditions ;
+
+    # Ensure Test Temperature is defined
+    sh:property [
+        sh:path dynamat:hasTestTemperature ;
+        sh:hasValue dynamat:HighTemperature ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Testing conditions must specify the test temperature == High Temperature." ;
+    ] .
+
+##############################################
+### PRIMARY DATA SHAPE
+##############################################
+
+dynamat:PrimaryData_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:PrimaryData ;
+
+    # Validate the presence of an IncidentBar
+    sh:property [
+        sh:path dynamat:hasSensorSignal ;  # Points to the bar node
+        sh:node [sh:or ( [sh:class dynamat:IncidentSensorSignal] 
+                         [sh:class dynamat:TransmittedSensorSignal] 
+                         [sh:class dynamat:TimeSensorSignal] 
+                         [sh:class dynamat:TemperatureSensorSignal] 
+                       )];          
+        sh:minCount 4 ;  
+        sh:message "Each Primary Data entry must have at least 1 signal of Time, Temperature, Incident and Transmitted Sensors. " ;
+    ] .
+
+##############################################
+### SIGNAL SHAPE
+##############################################
+
+dynamat:Signal_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:SensorSignal ;
+
+    # Ensure Description is defined
+    sh:property [
+        sh:path dynamat:hasDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;        
+        sh:message "If specified, each signal must have a description." ;
+    ] ;
+
+    # Ensure Encoded Data is defined
+    sh:property [
+        sh:path dynamat:hasEncodedData ;
+        sh:datatype xsd:base64Binary ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must include encoded data." ;
+    ] ;
+
+    # Ensure Encoding is defined
+    sh:property [
+        sh:path dynamat:hasEncoding ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify its encoding format (e.g., base64)." ;
+    ] ;
+
+    # Ensure Legend Name is defined
+    sh:property [
+        sh:path dynamat:hasLegendName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must have a legend name for plotting purposes." ;
+    ] ;
+
+    # Ensure Size is defined
+    sh:property [
+        sh:path dynamat:hasSize ;
+        sh:datatype xsd:int ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify its size (e.g., number of data points)." ;
+    ] ;
+
+    # Optional, Check for strain gauge definitions # Need to update with TemperatureSensor signal.
+    sh:property [
+        sh:path dynamat:hasStrainGauge ;
+        sh:class dynamat:SHPBStrainGauge ; 
+        sh:minCount 0 ;
+        sh:message "The sensor signal must have at least one strain gauge." ;
+    ] ;
+
+    # Ensure Units are defined
+    sh:property [
+        sh:path dynamat:hasUnits ;
+        sh:or ( [sh:hasValue dynamat:Unitless ]
+                [sh:hasValue dynamat:Volts ]
+                [sh:hasValue dynamat:Millisecond ]
+                [sh:hasValue dynamat:DegreesCelsius ]
+                        ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each signal must specify valid units." ;
+    ] .
+
+
+##############################################
+### UNITS SHAPE 
+##############################################
+
+dynamat:Unit_Shape a sh:NodeShape ;
+    sh:targetClass dynamat:Unit ;
+
+    # Validate Abbreviation
+    sh:property [
+        sh:path dynamat:hasAbbreviation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single abbreviation as a string." ;
+    ] ;
+
+    # Validate Symbol
+    sh:property [
+        sh:path dynamat:hasSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each unit must have a single symbol as a string." ;
+    ] .

@@ -3,10 +3,12 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from rdflib import Graph, Namespace, URIRef
-from GUI.components.common_widgets import UnitSelector, DoubleSpinBox
+from GUI.components.common_widgets import UnitSelector, DoubleSpinBox, SetUnitDefaults
+from config.primary_data_config import PrimaryDataConfiguration
 import pandas as pd
 import numpy as np
 import base64
+import re
 
 class PrimaryDataWidget(QWidget):
     def __init__(self, ontology_path, test_config, experiment_temp_file):
@@ -15,6 +17,7 @@ class PrimaryDataWidget(QWidget):
         self.test_config = test_config
         self.experiment = experiment_temp_file
         self.test_name = self.test_config.test_name
+        self.config = PrimaryDataConfiguration()
 
         # Load ontology
         self.ontology = Graph()
@@ -128,19 +131,15 @@ class PrimaryDataWidget(QWidget):
 
     def generate_mapping_fields(self):
         """Create dropdowns for mapping file columns to signals."""
-        # Clear previous mappings
+        # Clear previous mappings from layout
         while self.mapping_layout.count():
             item = self.mapping_layout.takeAt(0)
             if widget := item.widget():
                 widget.deleteLater()
-            if layout := item.layout():
-                while layout.count():
-                    sub_item = layout.takeAt(0)
-                    if sub_widget := sub_item.widget():
-                        sub_widget.deleteLater()
-                    if sub_layout := sub_item.layout():
-                        sub_layout.deleteLater()
-
+    
+        # Clear the previous signal data dictionary
+        self.signal_data.clear()
+        
         # Generate fields for each signal
         for signal_instance_uri, spinbox in self.signal_spinboxes.items():
             signal_count = spinbox.value()
@@ -150,16 +149,22 @@ class PrimaryDataWidget(QWidget):
                     signal_name = self.signal_name(signal_instance_uri)
                     signal_label = QLabel(f"{signal_name} {i}:")
                     signal_name_uri = self.experiment.DYNAMAT[f"{signal_instance_uri.split('#')[-1]}_{i}"]
-            
+                
                     # ComboBox for column mapping
                     column_combo = QComboBox()
                     column_combo.addItem("Select a Column", None)  # Add a placeholder item with no associated data
                     for header in self.file_headers:
-                        column_combo.addItem(header, header)  # Add each column header as both the display text and associated data
-
+                        column_combo.addItem(header, header)  # Add each column header as both display text and data
+        
                     # ComboBox for units
                     unit_combo = UnitSelector(self.ontology_path, signal_instance_uri)
-            
+                    try:
+                        SetUnitDefaults(self.ontology_path, 
+                                        self.config[f"{signal_instance_uri.split('#')[-1]}_{i}_units"],
+                                        unit_combo)
+                    except:
+                        print(f"Default units not found for {signal_instance_uri}")
+                
                     # Layout for the signal mapping
                     field_layout = QHBoxLayout()
                     field_layout.addWidget(signal_label)
@@ -167,18 +172,17 @@ class PrimaryDataWidget(QWidget):
                     field_layout.addWidget(unit_combo)
         
                     self.mapping_layout.addLayout(field_layout)
-                
-                    # Store widget references in bar_properties
+        
+                    # Store widget references in signal_data
                     if signal_name_uri not in self.signal_data:
                         self.signal_data[signal_name_uri] = []
-                    
+        
                     self.signal_data[signal_name_uri].append({
                         "signal_instance_uri": signal_instance_uri,
                         "column_box": column_combo,
                         "unit_box": unit_combo
                     })
-                
-
+                    
     def signal_name(self, signal_instance):
         """Retrieve the legend name (hasLegendName) for a given sensor signal instance."""
         query = f"""
@@ -208,13 +212,15 @@ class PrimaryDataWidget(QWidget):
         self.upload_button.setEnabled(editable)
         for signal_name, signal_box in self.signal_spinboxes.items():
             signal_box.setEnabled(editable)
-        for signal_name in self.signal_data:
-            for boxes in self.signal_data[signal_name]:
-                try: 
-                    boxes["column_box"].setEnabled(editable)
-                    boxes["unit_box"].setEnabled(editable)
-                except Exception as e:
-                    print(e)
+        for signal_name in list(self.signal_data.keys()):  # Iterate over keys explicitly
+            for prop in self.signal_data[signal_name]:
+                try:
+                    if "column_box" in prop and prop["column_box"]:
+                        prop["column_box"].setEnabled(editable)
+                    if "unit_box" in prop and prop["unit_box"]:
+                        prop["unit_box"].setEnabled(editable)
+                except RuntimeError as e:
+                    print(f"Error toggling widget state: {e}")
 
         # Update the button text
         self.confirm_button.setText("Confirm" if editable else "Edit")
@@ -230,6 +236,7 @@ class PrimaryDataWidget(QWidget):
                     encoding = "base64Binary"
                     data_encoded, data_size = self.clean_data(self.file_data, column_name, encoding) 
                     legend_name = f"{signal_name_uri.split('#')[-1]}"
+                    legend_name = re.split(r'(?=[A-Z])', legend_name)[1] # Formats for a better legend name
                     unit_box = prop.get("unit_box")
                     units_uri, _, _ = unit_box.currentData()
 
@@ -248,9 +255,10 @@ class PrimaryDataWidget(QWidget):
                                                legend_name) 
                     self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasDescription),
                                        f"Data for {signal_name_uri.split('#')[-1]}")
-                    
-                    self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasStrainGauge),
-                                       self.experiment.DYNAMAT[f"{signal_name_uri.split('#')[-1][:-14]}StrainGauge_{i}"])
+                    if "Time" not in legend_name:
+                        self.experiment.set_triple(str(signal_name_uri), str(self.experiment.DYNAMAT.hasStrainGauge),
+                                           self.experiment.DYNAMAT[f"{signal_name_uri.split('#')[-1][:-14]}StrainGauge_{i}"])
+                        
                     self.experiment.add_instance_data(units_uri) # Add the units description
                     
                     self.experiment.add_triple(str(primary_data_uri), str(self.experiment.DYNAMAT.hasSensorSignal),

@@ -40,7 +40,8 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasBar
 :hasBar rdf:type owl:ObjectProperty ;
         rdfs:domain :TestingConditions ;
-        rdfs:range :Bar .
+        rdfs:range :Bar ;
+        rdfs:comment "Used to relate SHPB testing conditions to a defined instance of the Bar Class" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasDimension
@@ -48,14 +49,15 @@ xsd:date rdf:type rdfs:Datatype .
               rdfs:subPropertyOf owl:topObjectProperty ;
               rdfs:domain :Bar ,
                           :Specimen ;
-              rdfs:range :Dimension .
+              rdfs:range :Dimension ;
+              rdfs:comment "Relates a Specimen or Bar to their measurable physical Dimension" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasExtractedSignal
 :hasExtractedSignal rdf:type owl:ObjectProperty ;
                     rdfs:domain :SecondaryData ;
                     rdfs:range :ExtractedSignal ;
-                    rdfs:comment "Links secondary data to extracted time-series signals, such as strain." .
+                    rdfs:comment "Assigns Secondary Data extracted SHPB signals used later in post-process analysis" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasFEAMetadata
@@ -66,19 +68,23 @@ xsd:date rdf:type rdfs:Datatype .
                                             :Specimen
                                           )
                             ] ;
-                rdfs:range :FEAMetadata .
+                rdfs:range :FEAMetadata ;
+                rdfs:comment "Relates a Bar or Specimen instance to its FEA metadata, which describes the object in a FE model." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasFiniteElement
 :hasFiniteElement rdf:type owl:ObjectProperty ;
-                  rdfs:domain :FEAMetadata ;
-                  rdfs:range :FiniteElement .
+                  rdfs:domain :FEAMetadata ,
+                              :FiniteElement ;
+                  rdfs:range :FiniteElement ;
+                  rdfs:comment "Relates the FEA Metadata to a instance of a Finite Element that describes the object in a FEA Model" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasLaboratory
 :hasLaboratory rdf:type owl:ObjectProperty ;
                rdfs:domain :Metadata ;
-               rdfs:range :Laboratory .
+               rdfs:range :Laboratory ;
+               rdfs:comment "Relates Metadata to the Laboratory where experiments took place." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterial
@@ -86,14 +92,13 @@ xsd:date rdf:type rdfs:Datatype .
              rdfs:subPropertyOf owl:topObjectProperty ;
              rdfs:domain :Bar ,
                          :Specimen ;
-             rdfs:range :Material .
+             rdfs:range :Material ;
+             rdfs:comment "Relates test specimens and testing conditions objects to their respective engineering Material" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterialProcessing
-:hasMaterialProcessing rdf:type owl:ObjectProperty ;
-                       rdfs:subPropertyOf owl:topObjectProperty ;
-                       rdfs:domain :Material ;
-                       rdfs:range :MaterialProcessing .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMaterialHeatTreatment
+:hasMaterialHeatTreatment rdf:type owl:ObjectProperty ;
+                          rdfs:domain :Material .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMechanicalProperty
@@ -108,113 +113,138 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMetadata
 :hasMetadata rdf:type owl:ObjectProperty ;
              rdfs:domain :Experiment ;
-             rdfs:range :Metadata .
+             rdfs:range :Metadata ;
+             rdfs:comment "Links the Experiment instance to their Metadata entries" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMomentumTrapCondition
-:hasMomentumTrapCondition rdf:type owl:ObjectProperty ;
-                          rdfs:domain :TestingConditions ;
-                          rdfs:range :MomentumTrap ;
-                          rdfs:comment "Links metadata to test configurations, such as momentum trap engagement." .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasMomentumTrap
+:hasMomentumTrap rdf:type owl:ObjectProperty ;
+                 rdfs:domain :TestingConditions ;
+                 rdfs:range :MomentumTrap ;
+                 rdfs:comment "Links metadata to test configurations of momentum trap engagement. Used in SHPB analysis" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasParameter
 :hasParameter rdf:type owl:ObjectProperty ;
               rdfs:domain :StrengthModel ;
               rdfs:range :MechanicalProperty ;
-              rdfs:comment "Links a strength model to its parameters." .
+              rdfs:comment "Links a strength model to its parameters. Which are also Mechanical Properties." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasPrimaryData
 :hasPrimaryData rdf:type owl:ObjectProperty ;
                 rdfs:domain :Experiment ;
-                rdfs:range :PrimaryData .
+                rdfs:range :PrimaryData ;
+                rdfs:comment "Links the Experiment to its Primary Data entries" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasPulseProperty
 :hasPulseProperty rdf:type owl:ObjectProperty ;
                   rdfs:domain :SecondaryData ;
-                  rdfs:range :PulseProperties .
+                  rdfs:range :PulseProperties ;
+                  rdfs:comment "Links determined Pulse Properties of a SHPB experiment under Secondary Data" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSecondaryData
 :hasSecondaryData rdf:type owl:ObjectProperty ;
                   rdfs:domain :Experiment ;
-                  rdfs:range :SecondaryData .
+                  rdfs:range :SecondaryData ;
+                  rdfs:comment "Links Experiments to their Secondary Data entries" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSensorSignal
 :hasSensorSignal rdf:type owl:ObjectProperty ;
                  rdfs:domain :PrimaryData ;
                  rdfs:range :SensorSignal ;
-                 rdfs:comment "Links primary data to specific time-series signals, such as strain." .
+                 rdfs:comment "Links primary data to specific sensor signals obtained during testing procedures." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSeriesData
+:hasSeriesData rdf:type owl:ObjectProperty ;
+               rdfs:domain :SecondaryData ;
+               rdfs:range :SeriesData ;
+               rdfs:comment "Links determined data Series Data, like stress and strain to the experiment's Secondary Data" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasShape
 :hasShape rdf:type owl:ObjectProperty ;
           rdfs:domain :Specimen ;
-          rdfs:range :Shape .
+          rdfs:range :Shape ;
+          rdfs:comment "Links the Specimen to their respective Shape" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSpecimen
 :hasSpecimen rdf:type owl:ObjectProperty ;
              rdfs:domain :Metadata ;
              rdfs:range :Specimen ;
-             rdfs:comment "Links metadata to the specimen details." .
+             rdfs:comment "Links Metadata to the Specimen details." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasSpecimenProcessing
+:hasSpecimenProcessing rdf:type owl:ObjectProperty ;
+                       rdfs:subPropertyOf owl:topObjectProperty ;
+                       rdfs:domain :Specimen ;
+                       rdfs:range :SpecimenProcessing ;
+                       rdfs:comment "Relates a Material to its Material Processing description" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrainGauge
 :hasStrainGauge rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf owl:topObjectProperty ;
-                rdfs:domain :Bar ;
-                rdfs:range :StrainGauge .
+                rdfs:domain :Bar ,
+                            :SensorSignal ;
+                rdfs:range :StrainGauge ;
+                rdfs:comment "Links raw sensor signals to the respective gauge that captured that data. In SHPB analysis this is also included in the bars for post-process operations" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrainGaugeProperty
 :hasStrainGaugeProperty rdf:type owl:ObjectProperty ;
                         rdfs:domain :StrainGauge ;
                         rdfs:range :StrainGaugeProperties ;
-                        rdfs:comment "Links laboratory metadata to strain gauge properties." .
+                        rdfs:comment "Links laboratory strain gauges to strain gauge properties. Utilized in SHPB analysis to transform voltage to strain readings" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStrengthModel
 :hasStrengthModel rdf:type owl:ObjectProperty ;
                   rdfs:domain :FEAMetadata ;
                   rdfs:range :StrengthModel ;
-                  rdfs:comment "Links finite element metadata to the associated strength model used for analysis." .
+                  rdfs:comment "Links FEA Metadata to the associated Strength Model used for analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasStructure
 :hasStructure rdf:type owl:ObjectProperty ;
               rdfs:subPropertyOf owl:topObjectProperty ;
               rdfs:domain :Specimen ;
-              rdfs:range :Structure .
+              rdfs:range :Structure ;
+              rdfs:comment "Links the Specimen to its defined Structure" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestMode
 :hasTestMode rdf:type owl:ObjectProperty ;
              rdfs:domain :TestingConditions ;
-             rdfs:range :TestMode .
+             rdfs:range :TestMode ;
+             rdfs:comment "Links Testing Conditions to the Test Mode, which describes the physical or virtual conditions of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestTemperature
 :hasTestTemperature rdf:type owl:ObjectProperty ;
                     rdfs:domain :TestingConditions ;
-                    rdfs:range :TestTemperature .
+                    rdfs:range :TestTemperature ;
+                    rdfs:comment "Links Testing Conditions with the Test Temperature used in the experiment" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestType
 :hasTestType rdf:type owl:ObjectProperty ;
              rdfs:domain :TestingConditions ;
              rdfs:range :TestType ;
-             rdfs:comment "Links test metadata to its associated test type, such as pulse or specimen testing." .
+             rdfs:comment "Links Testing Conditions to their test Type. Used to identify calibration from actual specimen experiments. Defines post-process analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasTestingConditions
 :hasTestingConditions rdf:type owl:ObjectProperty ;
                       rdfs:domain :Metadata ;
                       rdfs:range :TestingConditions ;
-                      rdfs:comment "Specifies the type of setup used, such as lab-based or simulation-based." .
+                      rdfs:comment "Links Metadata to the Testing Conditions used to perform an experiment, such as lab-based or simulation-based." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasUnits
@@ -226,13 +256,14 @@ xsd:date rdf:type rdfs:Datatype .
                       :SeriesData ,
                       :StrainGaugeProperties ;
           rdfs:range :Unit ;
-          rdfs:comment "Links a parameter to its allowable units." .
+          rdfs:comment "Links a Dimension or Mechanical Property to its allowable units." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#hasUser
 :hasUser rdf:type owl:ObjectProperty ;
          rdfs:domain :TestingConditions ;
-         rdfs:range :User .
+         rdfs:range :User ;
+         rdfs:comment "Links Metadata to a User instance in charge of performing the experiment" .
 
 
 #################################################################
@@ -345,128 +376,133 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AluminiumAlloy
 :AluminiumAlloy rdf:type owl:Class ;
-                rdfs:subClassOf :Material .
+                rdfs:subClassOf :Material ;
+                rdfs:comment "The general class thats hosts Aluminium engineering alloys." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AreaUnit
 :AreaUnit rdf:type owl:Class ;
-          rdfs:subClassOf :Unit .
+          rdfs:subClassOf :Unit ;
+          rdfs:comment "Represents units of area" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Bar
 :Bar rdf:type owl:Class ;
      rdfs:subClassOf :TestingConditions ;
-     rdfs:comment "Defines the generic class for bar properties." .
+     rdfs:comment "Describes the bar utilized in SHPB testing. Includes instances for Incident, Striker and Transmitted Bars" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CopperAlloy
 :CopperAlloy rdf:type owl:Class ;
-             rdfs:subClassOf :Material .
+             rdfs:subClassOf :Material ;
+             rdfs:comment "The general class thats hosts Copper engineering alloys" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DensityUnit
 :DensityUnit rdf:type owl:Class ;
-             rdfs:subClassOf :Unit .
+             rdfs:subClassOf :Unit ;
+             rdfs:comment "Represents units of density" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Dimension
 :Dimension rdf:type owl:Class ;
-           rdfs:comment "Defines measurable dimensions instances" .
+           rdfs:comment "Represents numerical values that defines the geometric characteristics or measurable extents of an object or system. Typically described in terms of length, width, height, and time." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElectricPotentialUnit
 :ElectricPotentialUnit rdf:type owl:Class ;
-                       rdfs:subClassOf :Unit .
+                       rdfs:subClassOf :Unit ;
+                       rdfs:comment "Represents units of electric potential" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ElectricalResistanceUnit
 :ElectricalResistanceUnit rdf:type owl:Class ;
-                          rdfs:subClassOf :Unit .
+                          rdfs:subClassOf :Unit ;
+                          rdfs:comment "Represents units of electrical resistance" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#EnergyUnit
 :EnergyUnit rdf:type owl:Class ;
-            rdfs:subClassOf :Unit .
+            rdfs:subClassOf :Unit ;
+            rdfs:comment "Represents units of energy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Experiment
 :Experiment rdf:type owl:Class ;
-            rdfs:comment "Refers to the multiple instance of experiments" .
+            rdfs:comment "A systematic method to determine the mechanical response of materials. Each instance of the class represents a different experimental method." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ExtractedSignal
 :ExtractedSignal rdf:type owl:Class ;
                  rdfs:subClassOf :SecondaryData ;
-                 rdfs:comment "Represents the determined particle velocity at a surface of the specimen." .
+                 rdfs:comment "Represents the extracted signals that relates to the pulse duration during SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FEAMetadata
 :FEAMetadata rdf:type owl:Class ;
-             rdfs:comment "Metadata specific to finite element-based simulations." .
+             rdfs:comment "Description of the attributes and processes used to describe the objects / forces in a finite element (FE) analysis. Including structured reference to strenght models and element definitions" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FiniteElement
 :FiniteElement rdf:type owl:Class ;
                rdfs:subClassOf :FEAMetadata ;
-               rdfs:comment "Description of the finite element used" .
+               rdfs:comment "Describes the type of element used in FE analysis. Includes definitions for 2D and 3D elements with respective documentation." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FrequencyUnit
 :FrequencyUnit rdf:type owl:Class ;
-               rdfs:subClassOf :Unit .
+               rdfs:subClassOf :Unit ;
+               rdfs:comment "Represents time dependent units" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Laboratory
 :Laboratory rdf:type owl:Class ;
             rdfs:subClassOf :Metadata ;
-            rdfs:comment "Describes the Laboratory." .
+            rdfs:comment "Describes the laboratories where experiments takes place." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LengthUnit
 :LengthUnit rdf:type owl:Class ;
-            rdfs:subClassOf :Unit .
+            rdfs:subClassOf :Unit ;
+            rdfs:comment "Represents units of length" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Material
 :Material rdf:type owl:Class ;
-          rdfs:comment "Represents a material used for testing, including metals, alloys, and composites." .
-
-
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MaterialProcessing
-:MaterialProcessing rdf:type owl:Class ;
-                    rdfs:comment "Represents the material processing methods" .
+          rdfs:comment "Represents the engineering materials used for testing. Includes a sub-level alloy categories followed by individual instances of those alloys." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MechanicalProperty
 :MechanicalProperty rdf:type owl:Class ;
-                    rdfs:comment "Describes the density property of a component." ,
-                                 "Represents a mechanical property that characterizes the material behavior, such as elastic modulus or density." .
+                    rdfs:comment "Represents a mechanical property that characterizes the material behavior, such as elastic modulus or density. Properties are either defined or calculated during experiments. Also doubles as the paramaters for strength models." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Metadata
 :Metadata rdf:type owl:Class ;
-          rdfs:comment "Captures general metadata about the test, including conditions and setup." .
+          rdfs:comment "Captures general values of testing conditions, test specimen, user and laboratory used during an experiment. Used as the main context to perform queries." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MomentumTrap
 :MomentumTrap rdf:type owl:Class ;
               rdfs:subClassOf :TestingConditions ;
-              rdfs:comment "Striker impact velocity." .
+              rdfs:comment "Describes the condition of the Momentum Trap in a SHPB experiment. Guides post-process analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PressureUnit
 :PressureUnit rdf:type owl:Class ;
-              rdfs:subClassOf :Unit .
+              rdfs:subClassOf :Unit ;
+              rdfs:comment "Represents units of pressure" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrimaryData
 :PrimaryData rdf:type owl:Class ;
-             rdfs:comment "Represents raw data directly collected during the SHPB test, including strain gauge signals." .
+             rdfs:comment "Represents raw data directly collected during the experiment from sensors, including strain gauges, time and temperature." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseProperties
 :PulseProperties rdf:type owl:Class ;
-                 rdfs:subClassOf :SecondaryData .
+                 rdfs:subClassOf :SecondaryData ;
+                 rdfs:comment "Represents determined pulse properties as a result of testing conditions in a SHPB experiment" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SecondaryData
@@ -488,7 +524,8 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Shape
 :Shape rdf:type owl:Class ;
-       rdfs:subClassOf :Specimen .
+       rdfs:subClassOf :Specimen ;
+       rdfs:comment "Describes the shape of the tested specimen." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Specimen
@@ -497,14 +534,21 @@ xsd:date rdf:type rdfs:Datatype .
           rdfs:comment "Describes the specimen tested, including its material and geometry." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SpecimenProcessing
+:SpecimenProcessing rdf:type owl:Class ;
+                    rdfs:subClassOf :Specimen ;
+                    rdfs:comment "Represents the engineering processing methods utilized on materials. In general, describe the manufacturing and heat treatment state of materials used in the experiments." .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelAlloy
 :SteelAlloy rdf:type owl:Class ;
-            rdfs:subClassOf :Material .
+            rdfs:subClassOf :Material ;
+            rdfs:comment "The general class thats hosts Steel engineering alloys." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGauge
 :StrainGauge rdf:type owl:Class ;
-             rdfs:comment "Refers to the strain gauge" .
+             rdfs:comment "Refers to the strain gauge used in experiments" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGaugeProperties
@@ -516,108 +560,122 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrengthModel
 :StrengthModel rdf:type owl:Class ;
                rdfs:subClassOf :FEAMetadata ;
-               rdfs:comment "Represents the strength model used in finite element analysis." .
+               rdfs:comment "Represents the strength model used in FE analysis. Includes the definition of the required parameters." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Structure
 :Structure rdf:type owl:Class ;
-           rdfs:subClassOf :Specimen .
+           rdfs:subClassOf :Specimen ;
+           rdfs:comment "Describes the macro-scale ( > 10^-1) or meso-scale (10^-5 - 10^-1) physical structure of the specimen. Intended to evaluate the material's reponse under different pyshical representations" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureUnit
 :TemperatureUnit rdf:type owl:Class ;
-                 rdfs:subClassOf :Unit .
+                 rdfs:subClassOf :Unit ;
+                 rdfs:comment "Represents units of temperature" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestMode
 :TestMode rdf:type owl:Class ;
-          rdfs:subClassOf :TestingConditions .
+          rdfs:subClassOf :TestingConditions ;
+          rdfs:comment "Describes the mode in which a experiment takes place, including FEA and Lab analysis modes." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestTemperature
 :TestTemperature rdf:type owl:Class ;
-                 rdfs:subClassOf :TestingConditions .
+                 rdfs:subClassOf :TestingConditions ;
+                 rdfs:comment "Describes the test temperature used in experiments" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestType
 :TestType rdf:type owl:Class ;
           rdfs:subClassOf :TestingConditions ;
-          rdfs:comment "Represents the type of test conducted, such as pulse calibration or specimen testing." .
+          rdfs:comment "Represents the type of test conducted, such as pulse, calibration or specimen testing." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TestingConditions
 :TestingConditions rdf:type owl:Class ;
                    rdfs:subClassOf :Metadata ;
-                   rdfs:comment "Metadata specific to Testing Conditions." .
+                   rdfs:comment "Describes the test components used to make an experiment happen. Such as descriptors for the test equipments, FEA / Lab analysis, test temperature and calibration procedures" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeUnit
 :TimeUnit rdf:type owl:Class ;
-          rdfs:subClassOf :Unit .
+          rdfs:subClassOf :Unit ;
+          rdfs:comment "Represents units of time" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unit
 :Unit rdf:type owl:Class ;
-      rdfs:comment "Represents a physical unit of measurement." .
+      rdfs:comment "Represents the general class of a physical unit of measurement." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#UnitlessUnit
 :UnitlessUnit rdf:type owl:Class ;
-              rdfs:subClassOf :Unit .
+              rdfs:subClassOf :Unit ;
+              rdfs:comment "Represents rational (unitless) units" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#User
 :User rdf:type owl:Class ;
       rdfs:subClassOf :Metadata ;
-      rdfs:comment "Represents a user involved in the experiment." .
+      rdfs:comment "Represents a user involved in the experiment. Also refers to the person which validates the entry of the data." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#VelocityUnit
 :VelocityUnit rdf:type owl:Class ;
-              rdfs:subClassOf :Unit .
+              rdfs:subClassOf :Unit ;
+              rdfs:comment "Represents units of velocity or speed" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#VolumeUnit
 :VolumeUnit rdf:type owl:Class ;
-            rdfs:subClassOf :Unit .
+            rdfs:subClassOf :Unit ;
+            rdfs:comment "Represents units of volume" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement
 <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement> rdf:type owl:Class ;
-                                                                                          rdfs:subClassOf :FiniteElement .
+                                                                                          rdfs:subClassOf :FiniteElement ;
+                                                                                          rdfs:comment "Represents 2D Finite Element types in comercially availbale softwares" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement
 <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement> rdf:type owl:Class ;
-                                                                                          rdfs:subClassOf :FiniteElement .
+                                                                                          rdfs:subClassOf :FiniteElement ;
+                                                                                          rdfs:comment "Represents 3D Finite Element types in comercially availbale softwares" .
 
 
 #################################################################
 #    Individuals
 #################################################################
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL6061
-:AL6061 rdf:type owl:NamedIndividual ,
-                 :AluminiumAlloy ;
-        :hasAbbreviation "AL6061" ;
-        :hasLegendName "AL6061 Alloy" ;
-        rdfs:comment "6061 aluminum alloy, a common material for structural applications." ;
-        :hasName "Aluminum 6061 Alloy" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL6061T6
+:AL6061T6 rdf:type owl:NamedIndividual ,
+                   :AluminiumAlloy ;
+          :hasAbbreviation "AL6061T6" ;
+          :hasLegendName "AL6061-T6 Alloy" ;
+          :hasName "Aluminum 6061-T6 Alloy" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL7075
-:AL7075 rdf:type owl:NamedIndividual ,
-                 :AluminiumAlloy ;
-        :hasAbbreviation "AL7075" ;
-        :hasLegendName "AL7075 Alloy" ;
-        rdfs:comment "7075 aluminum alloy, used in aerospace and high-strength applications." ;
-        :hasName "Aluminum 7075 Alloy" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL7075T6
+:AL7075T6 rdf:type owl:NamedIndividual ,
+                   :AluminiumAlloy ;
+          :hasAbbreviation "AL7075T6" ;
+          :hasLegendName "AL7075-T6 Alloy" ;
+          :hasName "Aluminum 7075-T6 Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AbsorbedEnergy
 :AbsorbedEnergy rdf:type owl:NamedIndividual ,
                          :SeriesData ;
-                rdfs:comment "Represents absorbed energy." .
+                rdfs:comment "Represents absorbed energy series data." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AnnealingHT
+:AnnealingHT rdf:type owl:NamedIndividual ;
+             :hasAbbreviation "Annealed Alloy" ;
+             :hasName "Annealed Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#BelytschkoTsay
@@ -625,6 +683,7 @@ xsd:date rdf:type rdfs:Datatype .
                          <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#2DElement> ;
                 :hasDimension :ElementSize ;
                 :hasAbbreviation "Belytschko-Tsay Element" ;
+                rdfs:comment "Represents the Belytschko Tsay shell element in LS-Dyna" ;
                 :hasName "Belytschko Tsay 2D Shell Element" .
 
 
@@ -633,7 +692,6 @@ xsd:date rdf:type rdfs:Datatype .
                    :CopperAlloy ;
           :hasAbbreviation "CU414" ;
           :hasLegendName "Brass 414 Alloy" ;
-          rdfs:comment "A generic brass alloy tested for mechanical properties." ;
           :hasName "Brass 414 Alloy" .
 
 
@@ -651,7 +709,6 @@ xsd:date rdf:type rdfs:Datatype .
                 :CopperAlloy ;
        :hasAbbreviation "CU101" ;
        :hasLegendName "Cu101 Alloy" ;
-       rdfs:comment "A generic brass alloy tested for mechanical properties." ;
        :hasName "Copper 101 Alloy" .
 
 
@@ -671,6 +728,22 @@ xsd:date rdf:type rdfs:Datatype .
                               :Volts ;
                     rdfs:comment "Represents the calibration voltage of the strain gauge in volts." ;
                     :hasName "Strain Gauge Calibration Voltage" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CastingProcess
+:CastingProcess rdf:type owl:NamedIndividual ,
+                         :SpecimenProcessing ;
+                :hasAbbreviation "Casted Specimen" ;
+                rdfs:comment "Refers to a specimen that was casted. Commonly used in SHPB testing." ;
+                :hasName "Casted Material" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Cubic
+:Cubic rdf:type owl:NamedIndividual ,
+                :Shape ;
+       :hasAbbreviation "CUB" ;
+       rdfs:comment "Cubic shaped specimens, not commonly used in SHPB testing." ;
+       :hasName "Cubic Shape" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CubicCentimeter
@@ -717,6 +790,7 @@ xsd:date rdf:type rdfs:Datatype .
 :Cylindrical rdf:type owl:NamedIndividual ,
                       :Shape ;
              :hasAbbreviation "CYL" ;
+             rdfs:comment "Cylindrical shaped test specimens, commonly used in SHPB testing." ;
              :hasName "Cylindrical Shape" .
 
 
@@ -728,6 +802,7 @@ xsd:date rdf:type rdfs:Datatype .
                                :KiloHertz ,
                                :MegaHertz ;
                      :hasLegendName "DAQ" ;
+                     rdfs:comment "Represents the data acquisition rate for the sensors" ;
                      :hasName "Data Acquisition Rate" .
 
 
@@ -784,8 +859,8 @@ xsd:date rdf:type rdfs:Datatype .
                    :KilogramPerCubicMeter ,
                    :KilogramPerCubicMillimeter ;
          :hasSymbol "$\\rho$" ;
-         rdfs:comment "Density of the material." ,
-                      "The mass per unit volume of the material." ;
+         rdfs:comment "The mass per unit volume of the material." ,
+                      "This dimension was moved to the Mechanical Property because most strength models use density as a parameter. And hasParameter points to a Mechcanical Property" ;
          :hasName "Density" .
 
 
@@ -807,8 +882,7 @@ xsd:date rdf:type rdfs:Datatype .
                           :Pascal ,
                           :Psi ;
                 :hasSymbol "$E$" ;
-                rdfs:comment "Elastic modulus of the material." ,
-                             "Represents the stiffness of the material in the elastic range." ;
+                rdfs:comment "Represents the stiffness of the material in the elastic range. Measured as the linear portion of a stress-strain graph" ;
                 :hasName "Elastic Modulus" .
 
 
@@ -819,6 +893,7 @@ xsd:date rdf:type rdfs:Datatype .
                                     :ElasticModulus ,
                                     :PoissonsRatio ;
                       :hasAbbreviation "Elastic Model" ;
+                      rdfs:comment "Represents the Elastic Model, MAT 001, from LS Dyna" ;
                       :hasName "Elastic Strength Model" .
 
 
@@ -833,6 +908,7 @@ xsd:date rdf:type rdfs:Datatype .
                        :SquareInches ,
                        :SquareMeters ,
                        :SquareMilimeters ;
+             :hasAbbreviation "FE Size" ;
              :hasName "Finite Element Size" .
 
 
@@ -850,7 +926,7 @@ xsd:date rdf:type rdfs:Datatype .
 :EngineeringStrain rdf:type owl:NamedIndividual ,
                             :SeriesData ;
                    :hasSymbol "$\\varepsilon$" ;
-                   rdfs:comment "Represents engineering strain." ;
+                   rdfs:comment "Represents engineering strain series data." ;
                    :hasName "Engineering Strain" .
 
 
@@ -858,7 +934,7 @@ xsd:date rdf:type rdfs:Datatype .
 :EngineeringStrainRate rdf:type owl:NamedIndividual ,
                                 :SeriesData ;
                        :hasSymbol "$\\dot{\\varepsilon}$" ;
-                       rdfs:comment "Represents engineering strain rate." ;
+                       rdfs:comment "Represents engineering strain rate series data." ;
                        :hasName "Engineering Strain Rate" .
 
 
@@ -866,7 +942,7 @@ xsd:date rdf:type rdfs:Datatype .
 :EngineeringStress rdf:type owl:NamedIndividual ,
                             :SeriesData ;
                    :hasSymbol "$\\sigma$" ;
-                   rdfs:comment "Represents engineering stress." ;
+                   rdfs:comment "Represents engineering stress series data." ;
                    :hasName "Engineering Stress" .
 
 
@@ -884,6 +960,7 @@ xsd:date rdf:type rdfs:Datatype .
 :FEAMode rdf:type owl:NamedIndividual ,
                   :TestMode ;
          :hasAbbreviation "FEA" ;
+         rdfs:comment "Indicates that the experiment was done using simulated testing conditions." ;
          :hasName "FEA Testing Conditions" .
 
 
@@ -938,6 +1015,8 @@ xsd:date rdf:type rdfs:Datatype .
 :GyroidLattice rdf:type owl:NamedIndividual ,
                         :Structure ;
                :hasAbbreviation "GYR" ;
+               rdfs:comment "A gyroid structure is a 3D structure of triply periodic minimal surface (TPMS), which means it has a zero mean curvature and locally minimizes area, also characterized to only present one continous surface." ,
+                            "Defined by the formula: > f(x, y, z) = sin(x)cos(y) + sin(y)cos(z) + sin(z)cos(x)" ;
                :hasName "Gyroid Lattice" .
 
 
@@ -946,7 +1025,8 @@ xsd:date rdf:type rdfs:Datatype .
                             :MechanicalProperty ;
                    :hasUnits :Unitless ;
                    :hasSymbol "$n$" ;
-                   rdfs:comment "Hardening exponent of the material." ;
+                   rdfs:comment "Hardening exponent of the material. Characterizes the strain hardening of a material during the forming process. Defined by the gradient of the flow curve in a double-logarithmic form." ,
+                                "Represents the parameter \"n\" in LS-Dyna JC Simplified model" ;
                    :hasName "Hardening Exponent" .
 
 
@@ -958,7 +1038,8 @@ xsd:date rdf:type rdfs:Datatype .
                             :Pascal ,
                             :Psi ;
                   :hasSymbol "$B$" ;
-                  rdfs:comment "Hardening modulus of the material." ;
+                  rdfs:comment "Hardening modulus of the material. Determined as the slope of the stress vs plastic strain curve. Represents the resistance of a material to continue plastic deformation. Commonly used in constitutive elastoplastic equations." ,
+                               "Represents the parameter \"b\" in LS Dyna JC Simplified Model" ;
                   :hasName "Hardening Modulus" .
 
 
@@ -974,6 +1055,7 @@ xsd:date rdf:type rdfs:Datatype .
                 <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DElement> ;
        :hasDimension :ElementSize ;
        :hasAbbreviation "HEXA 8 Element" ;
+       rdfs:comment "Represents the 8-node hexahedral solid element in LS-Dyna" ;
        :hasName "Fully Integrated 8 Point Hexa Element" .
 
 
@@ -981,6 +1063,7 @@ xsd:date rdf:type rdfs:Datatype .
 :HighTemperature rdf:type owl:NamedIndividual ,
                           :TestTemperature ;
                  :hasAbbreviation "HT" ;
+                 rdfs:comment "Indicates that the experiment was done using high temperature testing conditions." ;
                  :hasName "High Temparature Testing" .
 
 
@@ -1010,13 +1093,15 @@ xsd:date rdf:type rdfs:Datatype .
                                     :ElasticModulus ,
                                     :PoissonsRatio ,
                                     :WaveSpeed ;
-             :hasLegendName "Incident Bar" .
+             :hasLegendName "Incident Bar" ;
+             rdfs:comment "Represents the Incident bar of a SHPB experimental setup. Each instance of this class must contain the assigned properties." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentExtractedSignal
 :IncidentExtractedSignal rdf:type owl:NamedIndividual ,
                                   :ExtractedSignal ;
-                         :hasUnits :Unitless .
+                         :hasUnits :Unitless ;
+                         rdfs:comment "Indicates the extracted signal from the incident bar, based on pulse duration. Used for SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#IncidentSensorSignal
@@ -1037,9 +1122,9 @@ xsd:date rdf:type rdfs:Datatype .
                                           :HardeningExponent ,
                                           :HardeningModulus ,
                                           :PoissonsRatio ,
-                                          :ThermalSofteningCoefficient ,
                                           :YieldStrength ;
                             :hasAbbreviation "JC Model" ;
+                            rdfs:comment "Represents the Simplified JC Model, MAT 098, from LS-Dyna" ;
                             :hasName "Johnson-Cook Simplified Model" .
 
 
@@ -1077,7 +1162,16 @@ xsd:date rdf:type rdfs:Datatype .
 :LABMode rdf:type owl:NamedIndividual ,
                   :TestMode ;
          :hasAbbreviation "LAB" ;
+         rdfs:comment "Indicates that the experiment was done using physical testing conditions." ;
          :hasName "LAB Testing Conditions" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MachiningProcess
+:MachiningProcess rdf:type owl:NamedIndividual ,
+                           :SpecimenProcessing ;
+                  :hasAbbreviation "Machined Specimen" ;
+                  rdfs:comment "Refers to a specimen that was machined. Commonly used in SHPB testing." ;
+                  :hasName "Machined Material" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MegaHertz
@@ -1192,7 +1286,14 @@ xsd:date rdf:type rdfs:Datatype .
 :Monolithic rdf:type owl:NamedIndividual ,
                      :Structure ;
             :hasAbbreviation "Mono" ;
+            rdfs:comment "A monolithic structure is made from a single piece of material. In this context refered as fully dense structures of a single material alloy." ;
             :hasName "Monolithic" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#NormalizingHT
+:NormalizingHT rdf:type owl:NamedIndividual ;
+               :hasAbbreviation "Normalized Alloy" ;
+               rdfs:comment "Normalized Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Ohms
@@ -1208,6 +1309,7 @@ xsd:date rdf:type rdfs:Datatype .
                             :hasUnits :SquareInches ,
                                       :SquareMeters ,
                                       :SquareMilimeters ;
+                            :hasAbbreviation "Original Cross Section" ;
                             :hasName "Original Cross Sectional Area" .
 
 
@@ -1219,6 +1321,7 @@ xsd:date rdf:type rdfs:Datatype .
                           :Meter ,
                           :Micrometer ,
                           :Millimeter ;
+                :hasAbbreviation "Original Length" ;
                 :hasName "Original Length" .
 
 
@@ -1226,7 +1329,7 @@ xsd:date rdf:type rdfs:Datatype .
 :ParticleVelocity rdf:type owl:NamedIndividual ,
                            :SeriesData ;
                   :hasUnits :MeterPerSecond ;
-                  rdfs:comment "Represents particle velocity at specimen surface." .
+                  rdfs:comment "Represents particle velocity at specimen surface series data." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Pascal
@@ -1242,8 +1345,7 @@ xsd:date rdf:type rdfs:Datatype .
                         :MechanicalProperty ;
                :hasUnits :Unitless ;
                :hasSymbol "$\\rho$" ;
-               rdfs:comment "Poisson's ratio of the material." ,
-                            "The ratio of transverse strain to axial strain in the elastic range." ;
+               rdfs:comment "The ratio of transverse strain to axial strain in the elastic range." ;
                :hasName "Poisson's Ratio" .
 
 
@@ -1254,14 +1356,16 @@ xsd:date rdf:type rdfs:Datatype .
                     :Megapascal ,
                     :Pascal ,
                     :Psi ;
+          :hasAbbreviation "Pressure" ;
           :hasName "Pressure" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrintCast
-:PrintCast rdf:type owl:NamedIndividual ,
-                    :MaterialProcessing ;
-           :hasAbbreviation "Print Cast Method" ;
-           :hasName "Print Casting Method" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PrintCastProcess
+:PrintCastProcess rdf:type owl:NamedIndividual ,
+                           :SpecimenProcessing ;
+                  :hasAbbreviation "Print Casted Specimen" ;
+                  rdfs:comment "Refers to a specimen that was Print Casted. Commonly used in DynaMat Lab." ;
+                  :hasName "Print Casting Composite" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Psi
@@ -1275,53 +1379,57 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseDuration
 :PulseDuration rdf:type owl:NamedIndividual ,
                         :PulseProperties ;
-               :hasUnits :Millisecond .
+               :hasUnits :Millisecond ;
+               rdfs:comment "Indicates the determined pulse duration of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseLength
 :PulseLength rdf:type owl:NamedIndividual ,
                       :PulseProperties ;
-             :hasUnits :Millimeter .
+             :hasUnits :Millimeter ;
+             rdfs:comment "Indicates the determined pulse length of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseSpeed
 :PulseSpeed rdf:type owl:NamedIndividual ,
                      :PulseProperties ;
-            :hasUnits :MeterPerSecond .
+            :hasUnits :MeterPerSecond ;
+            rdfs:comment "Indicates the determined pulse speed of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseStrainAmplitude
 :PulseStrainAmplitude rdf:type owl:NamedIndividual ,
                                :PulseProperties ;
-                      :hasUnits :Megapascal .
+                      :hasUnits :Megapascal ;
+                      rdfs:comment "Indicates the determined pulse strain amplitude of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseStressAmplitude
 :PulseStressAmplitude rdf:type owl:NamedIndividual ,
                                :PulseProperties ;
-                      :hasUnits :Megapascal .
+                      :hasUnits :Megapascal ;
+                      rdfs:comment "Indicates the determined pulse stress amplitude of the test." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PulseTest
 :PulseTest rdf:type owl:NamedIndividual ,
                     :TestType ;
            :hasAbbreviation "Pulse" ;
-           rdfs:comment "A calibration test involving pulse evaluation without a specimen." ;
+           rdfs:comment "A calibration SHPB test involving pulse evaluation without a specimen." ;
            :hasName "Pulse Test" .
 
 
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Rectangular
-:Rectangular rdf:type owl:NamedIndividual ,
-                      :Shape ;
-             :hasAbbreviation "REC" ;
-             :hasName "Rectangular Shape" .
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#QuenchingHT
+:QuenchingHT rdf:type owl:NamedIndividual ;
+             :hasAbbreviation "Quenched Alloy" ;
+             rdfs:comment "Quenched Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ReflectedExtractedSignal
 :ReflectedExtractedSignal rdf:type owl:NamedIndividual ,
                                    :ExtractedSignal ;
                           :hasUnits :Volts ;
-                          rdfs:comment "Indicates the signal reflected within the incident bar." .
+                          rdfs:comment "Indicates the reflected signal from the incident bar, based on pulse duration. Used for SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Resistance
@@ -1337,6 +1445,7 @@ xsd:date rdf:type rdfs:Datatype .
 :RoomTemperature rdf:type owl:NamedIndividual ,
                           :TestTemperature ;
                  :hasAbbreviation "RT" ;
+                 rdfs:comment "Indicates that the experiment was done using room temperature testing conditions." ;
                  :hasName "Room Temperature Testing" .
 
 
@@ -1344,7 +1453,7 @@ xsd:date rdf:type rdfs:Datatype .
 :SHPBExperiment rdf:type owl:NamedIndividual ,
                          :Experiment ;
                 :hasAbbreviation "SHPB Test" ;
-                :hasName "Split Hopkinson Pressure Bar Test" .
+                :hasName "Split Hopkinson Pressure Bar Experiment" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SHPBSpecimen
@@ -1357,11 +1466,12 @@ xsd:date rdf:type rdfs:Datatype .
               :hasMechanicalProperty :Density ,
                                      :ElasticModulus ,
                                      :PoissonsRatio ;
-              :hasShape :Cylindrical ,
-                        :Rectangular ;
+              :hasShape :Cubic ,
+                        :Cylindrical ;
               :hasStructure :GyroidLattice ,
                             :Monolithic ,
                             :SimpleCubicLattice ;
+              rdfs:comment "Represents the instance of SHPB Experiments. Each test must have the following values for each specimen" ;
               :hasName "FEA Specimen" .
 
 
@@ -1382,7 +1492,6 @@ xsd:date rdf:type rdfs:Datatype .
                 :SteelAlloy ;
        :hasAbbreviation "SS316" ;
        :hasLegendName "SS316 Alloy" ;
-       rdfs:comment "316 stainless steel alloy, commonly used in SHPB testing." ;
        :hasName "Stainless Steel 316 Alloy" .
 
 
@@ -1398,7 +1507,14 @@ xsd:date rdf:type rdfs:Datatype .
 :SimpleCubicLattice rdf:type owl:NamedIndividual ,
                              :Structure ;
                     :hasAbbreviation "SC" ;
+                    rdfs:comment "A simple cubic structure is a crystal structure with a cube-shaped unit cell. Represents the simple cubic bravais lattice used in material science." ;
                     :hasName "Simple Cubic Lattice" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SolutionHT
+:SolutionHT rdf:type owl:NamedIndividual ;
+            :hasAbbreviation "Solution Hardened Alloy" ;
+            rdfs:comment "Solution Hardened Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SpecimenTest
@@ -1435,7 +1551,6 @@ xsd:date rdf:type rdfs:Datatype .
                     :SteelAlloy ;
            :hasAbbreviation "ST1018" ;
            :hasLegendName "ST1018 Alloy" ;
-           rdfs:comment "1018 steel alloy, commonly used in SHPB testing." ;
            :hasName "Steel 1018 Alloy" .
 
 
@@ -1444,21 +1559,13 @@ xsd:date rdf:type rdfs:Datatype .
                     :SteelAlloy ;
            :hasAbbreviation "STC350" ;
            :hasLegendName "STC350 Alloy" ;
-           rdfs:comment "C350 maraging steel, a high-strength material often tested in SHPB experiments." ;
            :hasName "Steel C350 Alloy" .
-
-
-###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StockMaterial
-:StockMaterial rdf:type owl:NamedIndividual ,
-                        :MaterialProcessing ;
-               :hasAbbreviation "Stock" ;
-               :hasName "Stock Material" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainEnergy
 :StrainEnergy rdf:type owl:NamedIndividual ,
                        :SeriesData ;
-              rdfs:comment "Represents strain energy." .
+              rdfs:comment "Represents strain energy series data." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainGaugeDistance
@@ -1469,7 +1576,17 @@ xsd:date rdf:type rdfs:Datatype .
                                :Meter ,
                                :Micrometer ,
                                :Millimeter ;
+                     :hasAbbreviation "Strain Gauge Dist" ;
                      :hasName "Strain Gauge Distance" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrainRateCoefficient
+:StrainRateCoefficient rdf:type owl:NamedIndividual ,
+                                :MechanicalProperty ;
+                       :hasSymbol "$C$" ;
+                       rdfs:comment "Describes the material's strain rate sensitivity. Commonly used in constitutive equations under high-loading rates." ,
+                                    "Represents the parameter \"c\" in LS-Dyna Model" ;
+                       :hasName "Strain Rate Coefficient" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#StrikerBar
@@ -1482,13 +1599,15 @@ xsd:date rdf:type rdfs:Datatype .
                                    :ElasticModulus ,
                                    :PoissonsRatio ,
                                    :WaveSpeed ;
-            :hasLegendName "Striker Bar" .
+            :hasLegendName "Striker Bar" ;
+            rdfs:comment "Represents the striker bar of a SHPB experimental setup. Each instance of this class must contain the assigned properties." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureExtractedSignal
 :TemperatureExtractedSignal rdf:type owl:NamedIndividual ,
                                      :ExtractedSignal ;
-                            :hasUnits :DegreesCelsius .
+                            :hasUnits :DegreesCelsius ;
+                            rdfs:comment "Indicates the extracted signal from the temperature sensor, based on pulse duration. Used for SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureSensorSignal
@@ -1496,21 +1615,28 @@ xsd:date rdf:type rdfs:Datatype .
                                   :SensorSignal ;
                          :hasUnits :DegreesCelsius ,
                                    :DegressFahrenheit ;
-                         :hasLegendName "Temperature Signal" .
+                         :hasLegendName "Temperature Signal" ;
+                         rdfs:comment "Indicates the signal from the temperature sensor." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperedHT
+:TemperedHT rdf:type owl:NamedIndividual ;
+            :hasAbbreviation "Tempered Alloy" ;
+            rdfs:comment "Tempered Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ThermalSofteningCoefficient
 :ThermalSofteningCoefficient rdf:type owl:NamedIndividual ,
                                       :MechanicalProperty ;
-                             :hasSymbol "$C$" ;
-                             rdfs:comment "Thermal softening coefficient in the Johnson-Cook model." ;
+                             rdfs:comment "Describes the coefficient of thermal softening. Describes how the material's yield stress decreases as the temperature increases. Commonly used to model the behavior under high-rate loading." ;
                              :hasName "Thermal Softening Coefficient" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeExtractedSignal
 :TimeExtractedSignal rdf:type owl:NamedIndividual ,
                               :ExtractedSignal ;
-                     :hasUnits :Millisecond .
+                     :hasUnits :Millisecond ;
+                     rdfs:comment "Represents the pulse duration. Used for SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TimeSensorSignal
@@ -1519,7 +1645,8 @@ xsd:date rdf:type rdfs:Datatype .
                   :hasUnits :Microsecond ,
                             :Millisecond ,
                             :Second ;
-                  :hasLegendName "Time Signal" .
+                  :hasLegendName "Time Signal" ;
+                  rdfs:comment "Indicates the time signal collected." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedBar
@@ -1532,13 +1659,15 @@ xsd:date rdf:type rdfs:Datatype .
                                        :ElasticModulus ,
                                        :PoissonsRatio ,
                                        :WaveSpeed ;
-                :hasLegendName "Transmitted Bar" .
+                :hasLegendName "Transmitted Bar" ;
+                rdfs:comment "Represents the transmitted bar of a SHPB experimental setup. Each instance of this class must contain the assigned properties." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedExtractedSignal
 :TransmittedExtractedSignal rdf:type owl:NamedIndividual ,
                                      :ExtractedSignal ;
-                            :hasUnits :Unitless .
+                            :hasUnits :Unitless ;
+                            rdfs:comment "Indicates the extracted signal from the transmitted bar, based on pulse duration. Used for SHPB analysis." .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TransmittedSensorSignal
@@ -1555,7 +1684,7 @@ xsd:date rdf:type rdfs:Datatype .
 :TrueStrain rdf:type owl:NamedIndividual ,
                      :SeriesData ;
             :hasSymbol "$\\varepsilon_T$" ;
-            rdfs:comment "Represents true strain." ;
+            rdfs:comment "Represents true strain series data." ;
             :hasName "True Strain" .
 
 
@@ -1563,7 +1692,7 @@ xsd:date rdf:type rdfs:Datatype .
 :TrueStress rdf:type owl:NamedIndividual ,
                      :SeriesData ;
             :hasSymbol "$\\sigma_T$" ;
-            rdfs:comment "Represents true stress." ;
+            rdfs:comment "Represents true stress series data." ;
             :hasName "True Stress" .
 
 
@@ -1579,6 +1708,7 @@ xsd:date rdf:type rdfs:Datatype .
                    :Dimension ;
           :hasUnits :InchPerSecond ,
                     :MeterPerSecond ;
+          :hasAbbreviation "Velocity" ;
           :hasName "Velocity" .
 
 
@@ -1608,6 +1738,14 @@ xsd:date rdf:type rdfs:Datatype .
                :hasSymbol "$\\sigma_Y$" ;
                rdfs:comment "Initial yield strength of the material." ;
                :hasName "Yield Strength" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DPrintingProcess
+<https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#3DPrintingProcess> rdf:type owl:NamedIndividual ,
+                                                                                                           :SpecimenProcessing ;
+                                                                                                  :hasAbbreviation "3D Printed Specimen" ;
+                                                                                                  rdfs:comment "Refers to a specimen that was 3D Printed. Commonly used in SHPB testing" ;
+                                                                                                  :hasName "3D Printed Material" .
 
 
 #################################################################
