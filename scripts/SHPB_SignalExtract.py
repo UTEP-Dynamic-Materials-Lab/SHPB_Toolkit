@@ -350,7 +350,7 @@ class SignalExtractor:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Incident - Specimen Particle Velocity determined from pulse strains",
                                             datatype = self.experiment.XSD.string)))               
-        self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
+        self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasSeriesData,
                                     URIRef(series_name_uri)))
         self.add_instance_data(self.experiment.DYNAMAT.MeterPerSecond)
         
@@ -382,7 +382,7 @@ class SignalExtractor:
         self.experiment.add((URIRef(series_name_uri), self.experiment.DYNAMAT.hasDescription,
                                     Literal("Transmitted - Specimen Particle Velocity determined from pulse strains",
                                             datatype = self.experiment.XSD.string)))               
-        self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasExtractedSignal,
+        self.experiment.add((URIRef(self.secondary_data_uri), self.experiment.DYNAMAT.hasSeriesData,
                                     URIRef(series_name_uri)))
         self.add_instance_data(self.experiment.DYNAMAT.MeterPerSecond)
         

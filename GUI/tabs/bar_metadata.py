@@ -30,7 +30,8 @@ class BarMetadataWidget(QWidget):
         self.layout.addWidget(self.tabs)
 
         # Populate tabs for bar instances
-        self.populate_bar_tabs()
+        self.populate_bar_tabs()        
+        self.update_fea_button_visibility()
         
         # Confirm/Edit Button
         self.confirm_button = QPushButton("Confirm")
@@ -98,7 +99,6 @@ class BarMetadataWidget(QWidget):
         layout.addWidget(fea_button)
     
         # Set initial visibility
-        self.update_fea_button_visibility()
         layout.addStretch()
 
         # Set the content widget as the scroll area's widget
@@ -277,16 +277,7 @@ class BarMetadataWidget(QWidget):
         for fea_button in self.findChildren(QPushButton, "fea_button"):
             #print(f"setting button visible = {is_fea_mode}")
             fea_button.setVisible(is_fea_mode)
-            
-        if hasattr(self, "gauge_tab"):
-            gauge_tab_index = self.tabs.indexOf(self.gauge_tab)
-            if is_fea_mode == False:
-                # Add the SG Properties tab back if LAB is active
-                if gauge_tab_index == -1:
-                    self.tabs.addTab(self.gauge_tab, "SG Properties")   
-            else:
-                # Remove the SG Properties tab if FEA is active
-                self.tabs.removeTab(gauge_tab_index)
+
                    
 
       

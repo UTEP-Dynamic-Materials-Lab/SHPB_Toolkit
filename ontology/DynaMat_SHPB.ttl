@@ -690,9 +690,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Brass414
 :Brass414 rdf:type owl:NamedIndividual ,
                    :CopperAlloy ;
-          :hasAbbreviation "CU414" ;
-          :hasLegendName "Brass 414 Alloy" ;
-          :hasName "Brass 414 Alloy" .
+          :hasAbbreviation "CU414HO2" ;
+          :hasLegendName "Brass 414 H02 Alloy" ;
+          :hasName "Brass 414 H02 Alloy" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#BrianSchuster

@@ -1,0 +1,18 @@
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Experiment_Primary_Data ;
+            sh:resultMessage "Each Primary Data entry must have at least 1 signal of Time, Incident and Transmitted Sensors. " ;
+            sh:resultPath dynamat:hasSensorSignal ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:message "Each Primary Data entry must have at least 1 signal of Time, Incident and Transmitted Sensors. " ;
+                    sh:minCount 3 ;
+                    sh:node [ sh:or ( [ sh:class dynamat:IncidentSensorSignal ] [ sh:class dynamat:TransmittedSensorSignal ] [ sh:class dynamat:TimeSensorSignal ] ) ] ;
+                    sh:path dynamat:hasSensorSignal ] ] .
+

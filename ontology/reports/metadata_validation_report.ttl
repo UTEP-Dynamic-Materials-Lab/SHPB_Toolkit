@@ -1,0 +1,40 @@
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Testing_Conditions ;
+            sh:resultMessage "Testing conditions must specify a momentum trap condition." ;
+            sh:resultPath dynamat:hasMomentumTrap ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:maxCount 1 ;
+                    sh:message "Testing conditions must specify a momentum trap condition." ;
+                    sh:minCount 1 ;
+                    sh:path dynamat:hasMomentumTrap ] ],
+        [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Experiment_Metadata ;
+            sh:resultMessage "Each test must have a valid laboratory assignment." ;
+            sh:resultPath dynamat:hasLaboratory ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:class dynamat:Laboratory ;
+                    sh:maxCount 1 ;
+                    sh:message "Each test must have a valid laboratory assignment." ;
+                    sh:minCount 1 ;
+                    sh:path dynamat:hasLaboratory ] ],
+        [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Testing_Conditions ;
+            sh:resultMessage "Each Testing Conditions instance must have exactly three bars: Incident, Transmitted and Striker. " ;
+            sh:resultPath dynamat:hasBar ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:maxCount 3 ;
+                    sh:message "Each Testing Conditions instance must have exactly three bars: Incident, Transmitted and Striker. " ;
+                    sh:minCount 3 ;
+                    sh:node [ sh:or ( [ sh:class dynamat:IncidentBar ] [ sh:class dynamat:TransmittedBar ] [ sh:class dynamat:StrikerBar ] ) ] ;
+                    sh:path dynamat:hasBar ] ] .
+
