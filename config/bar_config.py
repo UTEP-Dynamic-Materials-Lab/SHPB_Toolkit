@@ -15,7 +15,7 @@ class BarConfiguration:
         self.StrikerBar_ElasticModulus_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Gigapascal"
         self.StrikerBar_PoissonsRatio_value = 0.29
         self.StrikerBar_PoissonsRatio_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unitless"
-        self.StrikerBar_WaveSpeed_value = 4973.770
+        self.StrikerBar_WaveSpeed_value = 4953.321
         self.StrikerBar_WaveSpeed_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MeterPerSecond"
 
         # Incident Bar
@@ -30,7 +30,7 @@ class BarConfiguration:
         self.IncidentBar_ElasticModulus_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Gigapascal"
         self.IncidentBar_PoissonsRatio_value = 0.29
         self.IncidentBar_PoissonsRatio_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unitless"
-        self.IncidentBar_WaveSpeed_value = 4973.770
+        self.IncidentBar_WaveSpeed_value = 4953.321
         self.IncidentBar_WaveSpeed_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MeterPerSecond"
 
         # Transmitted Bar 
@@ -45,7 +45,7 @@ class BarConfiguration:
         self.TransmittedBar_ElasticModulus_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Gigapascal"
         self.TransmittedBar_PoissonsRatio_value = 0.29
         self.TransmittedBar_PoissonsRatio_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Unitless"
-        self.TransmittedBar_WaveSpeed_value = 4973.770
+        self.TransmittedBar_WaveSpeed_value = 4953.321
         self.TransmittedBar_WaveSpeed_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#MeterPerSecond"        
 
     def __getitem__(self, key):

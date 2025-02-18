@@ -169,12 +169,30 @@ class RDFWrapper:
     
     def remove(self, triple):
         """
-        Remove a triple from the RDF graph.
-
+        Remove all matching triples from the RDF graph.
+    
         Args:
             triple (tuple): A tuple containing (subject, predicate, object).
+                           Use None as a wildcard to remove all matching triples.
         """
-        self.graph.remove(triple)
+        subject, predicate, obj = triple
+    
+        # Find all matching triples
+        triples_to_remove = list(self.graph.triples((subject, predicate, obj)))
+    
+        if not triples_to_remove:
+            #print(f"No matching triples found for {triple}, nothing to remove.")
+            return
+
+        for s, p, o in triples_to_remove:
+            self.graph.remove((s, p, o))  # Remove the current triple
+            if isinstance(o, URIRef):  # If the object is a URIRef, it may have children
+                self.remove((o, None, None))  # Recursively remove child triples
+        try:
+            print(f"Removed {len(triples_to_remove)} triples matching {subject.split('#')[-1], predicate.split('#')[-1]}")
+        except:
+            pass
+
 
     def len(self):
 

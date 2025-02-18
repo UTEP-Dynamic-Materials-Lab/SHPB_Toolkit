@@ -102,11 +102,9 @@ class VisualizationWindow(QWidget):
                 specimen_metadata = exp.get_instances_of_class("dynamat:SHPBSpecimen")[0]
                 specimen_material = exp.get_objects(specimen_metadata, "dynamat:hasMaterial")[0]
                 material_name = exp.get_objects(specimen_material, "dynamat:hasLegendName")[0]
-            else:
-                material_name = "Pulse Test"
-            x_data = self.get_series_data(exp, "dynamat:TimeExtractedSignal")
-            y_data = self.get_series_data(exp, "dynamat:ParticleVelocity")
-            self.add_fig_data(self.particle_velocity_fig, x_data, y_data, line_width, material_name, reverse_y = True) 
+                x_data = self.get_series_data(exp, "dynamat:TimeExtractedSignal")
+                y_data = self.get_series_data(exp, "dynamat:ParticleVelocity")
+                self.add_fig_data(self.particle_velocity_fig, x_data, y_data, line_width, material_name, reverse_y = True) 
         self.save_plotly_figure(self.particle_velocity_fig, "Particle Velocity", width=plot_width, height=plot_height)
 
         # Strain Rate

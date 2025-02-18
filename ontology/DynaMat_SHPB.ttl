@@ -449,6 +449,11 @@ xsd:date rdf:type rdfs:Datatype .
                rdfs:comment "Describes the type of element used in FE analysis. Includes definitions for 2D and 3D elements with respective documentation." .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#ForceUnit
+:ForceUnit rdf:type owl:Class ;
+           rdfs:subClassOf :Unit .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#FrequencyUnit
 :FrequencyUnit rdf:type owl:Class ;
                rdfs:subClassOf :Unit ;
@@ -1142,6 +1147,13 @@ xsd:date rdf:type rdfs:Datatype .
            :hasSymbol "$KHz$" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KiloNewton
+:KiloNewton rdf:type owl:NamedIndividual ,
+                     :ForceUnit ;
+            :hasAbbreviation "kN" ;
+            :hasSymbol "$kN$" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#KilogramPerCubicMeter
 :KilogramPerCubicMeter rdf:type owl:NamedIndividual ,
                                 :DensityUnit ;
@@ -1288,6 +1300,13 @@ xsd:date rdf:type rdfs:Datatype .
             :hasAbbreviation "Mono" ;
             rdfs:comment "A monolithic structure is made from a single piece of material. In this context refered as fully dense structures of a single material alloy." ;
             :hasName "Monolithic" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Newton
+:Newton rdf:type owl:NamedIndividual ,
+                 :ForceUnit ;
+        :hasAbbreviation "N" ;
+        :hasSymbol "$N$" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#NormalizingHT
@@ -1601,6 +1620,11 @@ xsd:date rdf:type rdfs:Datatype .
                                    :WaveSpeed ;
             :hasLegendName "Striker Bar" ;
             rdfs:comment "Represents the striker bar of a SHPB experimental setup. Each instance of this class must contain the assigned properties." .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SurfaceForce
+:SurfaceForce rdf:type owl:NamedIndividual ,
+                       :SeriesData .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#TemperatureExtractedSignal
