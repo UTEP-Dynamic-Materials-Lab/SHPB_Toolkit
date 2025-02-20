@@ -111,9 +111,9 @@ class SeriesData:
         #### Step 3: Calculate Average Engineering Strain Rate
         ##################################################################################        
         
-        self.strain_rate_3W = (self.bar_wave_speed / self.specimen_length) * (self.incident_extracted_pulse.iloc[:,0] -self.reflected_extracted_pulse.iloc[:,0] - self.transmitted_extracted_pulse.iloc[:,0]) *1000 # Converts from 1/ms to 1/s
+        self.strain_rate_3W = (self.bar_wave_speed / self.specimen_length) * (self.incident_extracted_pulse.iloc[:,0] -self.reflected_extracted_pulse.iloc[:,0] - self.transmitted_extracted_pulse.iloc[:,0]) * 1000 # Converts from 1/ms to 1/s
 
-        self.strain_rate_1W = (2*self.bar_wave_speed*self.reflected_extracted_pulse.iloc[:,0]) / self.specimen_length
+        self.strain_rate_1W = ((2*self.bar_wave_speed*self.reflected_extracted_pulse.iloc[:,0]) / self.specimen_length) *1000
 
         print("\n Data Series 2: Engineering Strain Rate")
         print("-----"*10)
@@ -433,7 +433,7 @@ class SeriesData:
             
         # Add RDF triples
         self.experiment.set((URIRef(series_name), self.experiment.RDF.type, series_class))
-        self.experiment.set((URIRef(series_name), self.experiment.RDF.type, self.experiment.DYNAMAT.SeriesData))
+        self.experiment.add((URIRef(series_name), self.experiment.RDF.type, self.experiment.DYNAMAT.SeriesData))
         
         if units:
             self.experiment.set((URIRef(series_name), self.experiment.DYNAMAT.hasUnits, units))

@@ -44,7 +44,7 @@ class PulseDataReduction:
         #### Step 2: Extract Pulse Windows From Approximation
         ###########################################################################################
         print("\n Extracting Pulse Windows From Approximations ...")
-        self.process_pulses(initial_pp_extra=0.1, max_pp_extra=2.0)
+        self.process_pulses(initial_pp_extra=0.15, max_pp_extra=2.0)
 
         # self.incident_start and self.transmitted_start are expected to be extracted to determine pulse wave speed. 
 
@@ -285,7 +285,7 @@ class PulseDataReduction:
                     self.subset_points = min(
                         len(self.incident_extracted), len(self.reflected_extracted), len(self.transmitted_extracted)
                     )
-                    self.reflected_extracted = self.reflected_extracted[:subset_points]
+                    self.reflected_extracted = self.reflected_extracted[:self.subset_points]
                 else:
                     self.subset_points = min(len(self.incident_extracted), len(self.transmitted_extracted))
     
@@ -301,7 +301,7 @@ class PulseDataReduction:
                 print(f"\nAttempt {attempt + 1} failed: {str(e)}. Increasing pp_extra and retrying...")
     
                 # Increase pp_extra and retry
-                pp_extra += 0.15  # Increase by 20%
+                pp_extra += 0.15  
                 attempt += 1
                 self.process_pulses(initial_pp_extra=pp_extra, max_pp_extra=2.0, attempt = attempt)
     

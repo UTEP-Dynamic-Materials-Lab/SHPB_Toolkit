@@ -392,6 +392,11 @@ xsd:date rdf:type rdfs:Datatype .
      rdfs:comment "Describes the bar utilized in SHPB testing. Includes instances for Incident, Striker and Transmitted Bars" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CompositeMaterial
+:CompositeMaterial rdf:type owl:Class ;
+                   rdfs:subClassOf :Material .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#CopperAlloy
 :CopperAlloy rdf:type owl:Class ;
              rdfs:subClassOf :Material ;
@@ -1512,6 +1517,14 @@ xsd:date rdf:type rdfs:Datatype .
        :hasAbbreviation "SS316" ;
        :hasLegendName "SS316 Alloy" ;
        :hasName "Stainless Steel 316 Alloy" .
+
+
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SS316A356_Composite
+:SS316A356_Composite rdf:type owl:NamedIndividual ,
+                              :CompositeMaterial ;
+                     :hasAbbreviation "SS316A356" ;
+                     :hasLegendName "SS 316 - Al 356 Composite" ;
+                     :hasName "Stainless 316 - A356 Composite" .
 
 
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Second

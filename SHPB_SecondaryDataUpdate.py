@@ -57,7 +57,7 @@ def update_all_files():
     """
     print("Starting batch update for all RDF files in the database...")
 
-    for filename in os.listdir(DATABASE_FOLDER)[-5:]:
+    for filename in os.listdir(DATABASE_FOLDER):
         if filename.endswith(".ttl"):
             file_path = os.path.join(DATABASE_FOLDER, filename)
             process_file(file_path)
