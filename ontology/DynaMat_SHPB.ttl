@@ -660,6 +660,14 @@ xsd:date rdf:type rdfs:Datatype .
 #    Individuals
 #################################################################
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#A356
+:A356 rdf:type owl:NamedIndividual ,
+               :AluminiumAlloy ;
+      :hasAbbreviation "A356" ;
+      :hasLegendName "Al 356 Alloy" ;
+      :hasName "Aluminium A356 Alloy" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AL6061T6
 :AL6061T6 rdf:type owl:NamedIndividual ,
                    :AluminiumAlloy ;

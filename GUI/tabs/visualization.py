@@ -318,16 +318,14 @@ class VisualizationWindow(QWidget):
                 font=dict(size=font_size+4, color="black", family="Arial"),
             ),
             xaxis=dict(
-                title=x_label,
-                titlefont=dict(size=font_size, color="black", family="Arial"),
+                title=dict(text=x_label, font=dict(family="Arial", size=font_size, color="black")),
                 tickfont=dict(size=font_size, color="black", family="Arial"),
                 showgrid=True,
                 gridcolor="lightgrey",
                 gridwidth=1,
             ),
             yaxis=dict(
-                title=y_label,
-                titlefont=dict(size=font_size, color="black", family="Arial"),
+                title=dict(text=y_label, font=dict(family="Arial", size=font_size, color="black")),
                 tickfont=dict(size=font_size, color="black", family="Arial"),
                 showgrid=True,
                 gridwidth=1,
