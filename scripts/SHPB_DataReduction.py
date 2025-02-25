@@ -51,6 +51,7 @@ class PulseDataReduction:
         ###########################################################################################
         #### Step 3: Apply Wave Dispersion Correction using Fourier Transform
         ###########################################################################################
+        """
         print("\n Correcting Wave Dispersion using Fourier Transform ...")
         omega0 = (2 * np.pi) / self.pulse_duration
         N = (self.subset_points // 1024) * 1024
@@ -68,23 +69,26 @@ class PulseDataReduction:
             reflected_corrected, _ = self.wave_dispersion_correction(self.time_extracted, self.reflected_extracted, self.bar_wave_speed,
                                                                      self.bar_radius, self.bar_poissons, omega0, self.delta_t,
                                                                      self.pulse_duration, N, np.abs(self.incident_SG_distance))
-
+        """
         ###########################################################################################
         #### Step 4: Apply Wave Dispersion Correction using Fourier Transform
         ###########################################################################################
         print("\n Fitting Pulse Windows ...")
         
         if test_type == "SpecimenTest":
-            fitted_pulses = self.fit_pulse_windows([incident_corrected, reflected_corrected, transmitted_corrected], 5e-4, [True,False,True])
+            #fitted_pulses = self.fit_pulse_windows([incident_corrected, reflected_corrected, transmitted_corrected], 5e-4, True,False,True]) 
+            fitted_pulses = self.fit_pulse_windows([self.incident_extracted, self.reflected_extracted, self.transmitted_extracted], 5e-4, [True,False,True])
             self.incident_corrected = np.array(fitted_pulses[0]) # Expected to be extracted
             self.reflected_corrected = np.array(fitted_pulses[1]) # Expected to be extracted
             self.transmitted_corrected = np.array(fitted_pulses[2]) # Expected to be extracted
         else:
-            fitted_pulses = self.fit_pulse_windows([incident_corrected, transmitted_corrected], 5e-4, [True,True])
+            #fitted_pulses = self.fit_pulse_windows([incident_corrected, transmitted_corrected], 5e-4, [True,True])
+            fitted_pulses = self.fit_pulse_windows([self.incident_extracted, self.transmitted_extracted], 5e-4, [True,True])
             self.incident_corrected = np.array(fitted_pulses[0]) # Expected to be extracted
             self.transmitted_corrected = np.array(fitted_pulses[1]) # Expected to be extracted
         
-        self.time_corrected = time_corrected[len(time_corrected) - len(self.incident_corrected):] # Expected to be extracted
+        #self.time_corrected = time_corrected[len(time_corrected) - len(self.incident_corrected):] # Expected to be extracted
+        self.time_corrected = self.time_extracted[len(self.time_extracted) - len(self.incident_corrected):]
 
         print("\n Data Reduction Process Completed ...")
         
