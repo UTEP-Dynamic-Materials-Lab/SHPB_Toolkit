@@ -7,6 +7,7 @@ from GUI.tabs.fea_metadata import FEAMetadataWindow
 from GUI.components.common_widgets import MaterialSelector, UnitSelector, DoubleSpinBox
 from GUI.components.common_widgets import SetDefaults, ClassInstanceSelection, SetUnitDefaults
 from config.specimen_config import SpecimenConfiguration
+import numpy as np
 
 class SpecimenMetadataWidget(QWidget):
     def __init__(self, ontology_path, test_config, experiment_temp_file):
@@ -18,6 +19,12 @@ class SpecimenMetadataWidget(QWidget):
         self.current_type = URIRef(self.test_config.test_type)
         self.current_mode = URIRef(self.test_config.test_mode)        
         self.specimen_material = self.test_config.specimen_material
+
+        self.originalDiameterSpinBox = None
+        self.originalCrossSectionSpinBox = None
+
+        self.deformedDiameterSpinBox = None
+        self.deformedCrossSectionSpinBox = None
 
         # Load ontology
         self.ontology = Graph()
@@ -99,6 +106,17 @@ class SpecimenMetadataWidget(QWidget):
                 field_layout.addWidget(label)
                 spinbox = DoubleSpinBox()
                 combo_box = UnitSelector(self.ontology_path, property_instance_uri)
+
+                # For demonstration, store references to diameter/cross-section:
+                if "OriginalDiameter" in property_instance_uri:
+                    self.originalDiameterSpinBox = spinbox
+                elif "OriginalCrossSectionalArea" in property_instance_uri:
+                    self.originalCrossSectionSpinBox = spinbox
+
+                elif "DeformedDiameter" in property_instance_uri:
+                    self.deformedDiameterSpinBox = spinbox
+                elif "DeformedCrossSectionalArea" in property_instance_uri:
+                    self.deformedCrossSectionSpinBox = spinbox
                 
                 try:                     
                     SetUnitDefaults(self.ontology_path, 
@@ -120,6 +138,8 @@ class SpecimenMetadataWidget(QWidget):
                     "spinbox": spinbox,
                     "combo_box": combo_box
                 })
+
+                self._connect_diameter_signals()
                 
         except Exception as e:
             print(f"Error querying properties for {property_instance_uri}: {e}")
@@ -243,6 +263,52 @@ class SpecimenMetadataWidget(QWidget):
     def update_specimen_material(self, current_specimen_material):
         self.material_label.setText(f"Specimen Material: {current_specimen_material}")
         return 
+
+    def _connect_diameter_signals(self):
+        """
+        Once we have references to both the diameter and cross-section spinboxes,
+        connect their signals so that changing the diameter auto-updates cross-section.
+        """
+
+        # If we have an OriginalDiameter and OriginalCrossSection, connect them:
+        if self.originalDiameterSpinBox and self.originalCrossSectionSpinBox:
+            self.originalDiameterSpinBox.valueChanged.connect(
+                lambda val: self.update_spcimen_dimensions(
+                    self.originalDiameterSpinBox,
+                    self.originalCrossSectionSpinBox
+                )
+            )
+        
+
+        # If we have a DeformedDiameter and DeformedCrossSection, connect them:
+        if self.deformedDiameterSpinBox and self.deformedCrossSectionSpinBox:
+            self.deformedDiameterSpinBox.valueChanged.connect(
+                lambda val: self.update_spcimen_dimensions(
+                    self.deformedDiameterSpinBox,
+                    self.deformedCrossSectionSpinBox
+                )
+            )
+
+    def update_spcimen_dimensions(self, diameter_spinbox, cross_section_spinbox):
+        """
+        Compute cross-sectional area if the shape is cylindrical
+        based on the given diameter spinbox, and update cross_section_spinbox.
+        """
+        shape_uri, shape_label = self.shape_selector.currentData()
+
+        if "Cylindrical" in shape_label or "Cylindrical" in shape_uri:
+            diameter_value = diameter_spinbox.value()
+            if diameter_value and diameter_value > 0:
+                cross_section = np.pi * (diameter_value / 2) ** 2
+                cross_section_spinbox.setValue(cross_section)
+                print(f"[INFO] Recalculated cross-section = {cross_section:.4f}")
+            else:
+                print("[WARNING] Diameter is zero or unset. Cannot compute cross-section.")
+                
+        else:
+            print("[INFO] Shape is not cylindrical; skipping cross-section calculation.")
+            
+        
         
     def clear_layout(self, layout):
         """Recursively clear all widgets and sublayouts from a layout."""

@@ -51,6 +51,7 @@ class TestDescriptionWidget(QWidget):
         user_label = QLabel("User:")
         self.layout.addWidget(user_label)
         self.user_selector = ClassInstanceSelection(self.ontology_path, self.experiment.DYNAMAT.User)
+        SetDefaults(self.ontology_path, self.test_config.test_user, self.user_selector)
         self.user_selector.currentIndexChanged.connect(self.update_test_name)
         self.user_selector.currentIndexChanged.connect(self.update_user)
         self.layout.addWidget(self.user_selector)

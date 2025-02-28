@@ -7,6 +7,8 @@ class BarConfiguration:
         self.StrikerBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
         self.StrikerBar_OriginalLength_value = 12
         self.StrikerBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
+        self.StrikerBar_OriginalDiameter_value = 0.375
+        self.StrikerBar_OriginalDiameter_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
         self.StrikerBar_OriginalCrossSectionalArea_value = 0.11044
         self.StrikerBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.StrikerBar_Density_value = 8082.500
@@ -22,6 +24,8 @@ class BarConfiguration:
         self.IncidentBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
         self.IncidentBar_OriginalLength_value = 8
         self.IncidentBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.IncidentBar_OriginalDiameter_value = 0.375
+        self.IncidentBar_OriginalDiameter_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
         self.IncidentBar_OriginalCrossSectionalArea_value = 0.11044
         self.IncidentBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.IncidentBar_Density_value = 8082.500
@@ -37,6 +41,8 @@ class BarConfiguration:
         self.TransmittedBar_Material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SteelC350"
         self.TransmittedBar_OriginalLength_value = 6
         self.TransmittedBar_OriginalLength_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Foot"
+        self.TransmittedBar_OriginalDiameter_value = 0.375
+        self.TransmittedBar_OriginalDiameter_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#Inch"
         self.TransmittedBar_OriginalCrossSectionalArea_value = 0.11044
         self.TransmittedBar_OriginalCrossSectionalArea_units = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SquareInches"
         self.TransmittedBar_Density_value = 8082.500
