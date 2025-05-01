@@ -165,12 +165,13 @@ class SecondaryDataWidget(QWidget):
         ##############################################
         ### Secondary Data 
         ###############################################
+
         print(f"Starting Secondary Data Analysis for {self.test_name}")
-        SignalExtractor(self.ontology_path, self.file_path)
+        #SignalExtractor(self.ontology_path, self.file_path)
         
         if URIRef(self.test_type) == self.primary_data.DYNAMAT.SpecimenTest:
             print("Determining series data for specimen test experiment...")
-            SeriesData(self.ontology_path, self.file_path)
+            #SeriesData(self.ontology_path, self.file_path)
 
         ##############################################
         ### Add data to database
@@ -193,7 +194,7 @@ class SecondaryDataWidget(QWidget):
             result_file_path = os.path.join("data", f"{self.test_name}.ttl")
             with open(result_file_path, "w") as f:
                 f.write(self.graph.serialize(format="turtle"))
-    
+            """
             #Add Data to widget:
             self.label = QLabel(f"Secondary Data Analysis for {self.test_name}")
             self.layout.addWidget(self.label)        
@@ -236,7 +237,6 @@ class SecondaryDataWidget(QWidget):
             print(f"See log info and refer to documentation")
             self.label = QLabel(f"{self.test_name} failed validation, and was not added to the database")
             self.layout.addWidget(self.label) 
-             
-
+            """
         
 

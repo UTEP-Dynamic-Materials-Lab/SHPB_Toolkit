@@ -6,193 +6,88 @@
 [] a sh:ValidationReport ;
     sh:conforms false ;
     sh:result [ a sh:ValidationResult ;
-            sh:detail [ a sh:ValidationResult ;
-                    sh:detail [ a sh:ValidationResult ;
-                            sh:detail [ a sh:ValidationResult ;
-                                    sh:focusNode dynamat:Millimeter ;
-                                    sh:resultMessage "Each unit must have a single abbreviation as a string." ;
-                                    sh:resultPath dynamat:hasAbbreviation ;
-                                    sh:resultSeverity sh:Violation ;
-                                    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
-                                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb70 ],
-                                [ a sh:ValidationResult ;
-                                    sh:focusNode dynamat:Millimeter ;
-                                    sh:resultMessage "Each unit must have a single symbol as a string." ;
-                                    sh:resultPath dynamat:hasSymbol ;
-                                    sh:resultSeverity sh:Violation ;
-                                    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
-                                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb71 ] ;
-                            sh:focusNode dynamat:IncidentStrainGauge_0_Distance ;
-                            sh:resultMessage "Each dimension must meters as the valid unit assigned." ;
-                            sh:resultPath dynamat:hasUnits ;
-                            sh:resultSeverity sh:Violation ;
-                            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-                            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb58 ;
-                            sh:value dynamat:Millimeter ] ;
-                    sh:focusNode dynamat:IncidentStrainGauge_0_Distance ;
-                    sh:resultMessage "Value does not conform to Shape dynamat:Length_shape. See details for more information." ;
-                    sh:resultSeverity sh:Violation ;
-                    sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb57 ;
-                    sh:value dynamat:IncidentStrainGauge_0_Distance ] ;
-            sh:focusNode dynamat:IncidentStrainGauge_0 ;
-            sh:resultMessage "The strain gauge must have the dimension StrainGaugeDistance)." ;
-            sh:resultPath dynamat:hasDimension ;
-            sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb56 ;
-            sh:value dynamat:IncidentStrainGauge_0_Distance ],
-        [ a sh:ValidationResult ;
-            sh:detail [ a sh:ValidationResult ;
-                    sh:focusNode dynamat:Transmitted_Bar_OriginalLength ;
-                    sh:resultMessage "Node dynamat:Transmitted_Bar_OriginalLength must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
-                    sh:resultSeverity sh:Violation ;
-                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb34 ;
-                    sh:value dynamat:Transmitted_Bar_OriginalLength ] ;
-            sh:focusNode dynamat:Transmitted_Bar ;
-            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
-            sh:resultPath dynamat:hasDimension ;
-            sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb33 ;
-            sh:value dynamat:Transmitted_Bar_OriginalLength ],
-        [ a sh:ValidationResult ;
-            sh:detail [ a sh:ValidationResult ;
-                    sh:focusNode dynamat:Striker_Bar_OriginalLength ;
-                    sh:resultMessage "Node dynamat:Striker_Bar_OriginalLength must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
-                    sh:resultSeverity sh:Violation ;
-                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb34 ;
-                    sh:value dynamat:Striker_Bar_OriginalLength ] ;
             sh:focusNode dynamat:Striker_Bar ;
             sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb33 ;
-            sh:value dynamat:Striker_Bar_OriginalLength ],
+            sh:sourceConstraintComponent sh:MaxCountConstraintComponent ;
+            sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b33 ],
         [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
-                    sh:focusNode dynamat:Incident_Bar_OriginalLength ;
-                    sh:resultMessage "Node dynamat:Incident_Bar_OriginalLength must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
+                    sh:focusNode dynamat:Incident_Bar_OriginalDiameter ;
+                    sh:resultMessage "Node dynamat:Incident_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
                     sh:resultSeverity sh:Violation ;
                     sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb34 ;
-                    sh:value dynamat:Incident_Bar_OriginalLength ] ;
+                    sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b34 ;
+                    sh:value dynamat:Incident_Bar_OriginalDiameter ] ;
             sh:focusNode dynamat:Incident_Bar ;
             sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb33 ;
-            sh:value dynamat:Incident_Bar_OriginalLength ],
+            sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b33 ;
+            sh:value dynamat:Incident_Bar_OriginalDiameter ],
         [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
-                    sh:detail [ a sh:ValidationResult ;
-                            sh:detail [ a sh:ValidationResult ;
-                                    sh:focusNode dynamat:Millimeter ;
-                                    sh:resultMessage "Each unit must have a single abbreviation as a string." ;
-                                    sh:resultPath dynamat:hasAbbreviation ;
-                                    sh:resultSeverity sh:Violation ;
-                                    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
-                                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb70 ],
-                                [ a sh:ValidationResult ;
-                                    sh:focusNode dynamat:Millimeter ;
-                                    sh:resultMessage "Each unit must have a single symbol as a string." ;
-                                    sh:resultPath dynamat:hasSymbol ;
-                                    sh:resultSeverity sh:Violation ;
-                                    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
-                                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb71 ] ;
-                            sh:focusNode dynamat:TransmittedStrainGauge_0_Distance ;
-                            sh:resultMessage "Each dimension must meters as the valid unit assigned." ;
-                            sh:resultPath dynamat:hasUnits ;
-                            sh:resultSeverity sh:Violation ;
-                            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-                            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb58 ;
-                            sh:value dynamat:Millimeter ] ;
-                    sh:focusNode dynamat:TransmittedStrainGauge_0_Distance ;
-                    sh:resultMessage "Value does not conform to Shape dynamat:Length_shape. See details for more information." ;
+                    sh:focusNode dynamat:Transmitted_Bar_OriginalDiameter ;
+                    sh:resultMessage "Node dynamat:Transmitted_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
                     sh:resultSeverity sh:Violation ;
-                    sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-                    sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb57 ;
-                    sh:value dynamat:TransmittedStrainGauge_0_Distance ] ;
-            sh:focusNode dynamat:TransmittedStrainGauge_0 ;
-            sh:resultMessage "The strain gauge must have the dimension StrainGaugeDistance)." ;
+                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
+                    sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b34 ;
+                    sh:value dynamat:Transmitted_Bar_OriginalDiameter ] ;
+            sh:focusNode dynamat:Transmitted_Bar ;
+            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n1b4333fda5cd4365a6904ec0f0b4ef8eb56 ;
-            sh:value dynamat:TransmittedStrainGauge_0_Distance ] .
+            sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b33 ;
+            sh:value dynamat:Transmitted_Bar_OriginalDiameter ],
+        [ a sh:ValidationResult ;
+            sh:detail [ a sh:ValidationResult ;
+                    sh:focusNode dynamat:Striker_Bar_OriginalDiameter ;
+                    sh:resultMessage "Node dynamat:Striker_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
+                    sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b34 ;
+                    sh:value dynamat:Striker_Bar_OriginalDiameter ] ;
+            sh:focusNode dynamat:Striker_Bar ;
+            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
+            sh:resultPath dynamat:hasDimension ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+            sh:sourceShape _:n78ffe100a47b4d6fac32c0e3479f39a1b33 ;
+            sh:value dynamat:Striker_Bar_OriginalDiameter ] .
 
-_:N0ffd0d5efd854d709da25ccc905102c9 rdf:first [ sh:class dynamat:Velocity ;
-            sh:node dynamat:Velocity_shape ;
-            sh:optional true ] ;
-    rdf:rest () .
-
-_:N1418eea76aad42488e4fd6c03d31758e sh:class dynamat:OriginalLength ;
+_:N313f6e6ee12f429181b1e82451400a14 sh:class dynamat:OriginalLength ;
     sh:node dynamat:Length_shape .
 
-_:N1b990e8270b747f0b62cfa8813297817 rdf:first [ sh:class dynamat:Velocity ;
-            sh:node dynamat:Velocity_shape ;
-            sh:optional true ] ;
-    rdf:rest () .
-
-_:N2091f3d48c054272b3522365cdaa0ae7 rdf:first _:N1418eea76aad42488e4fd6c03d31758e ;
+_:N3d239bef0c724dbeb7023aa53fd8e8c1 rdf:first [ sh:class dynamat:OriginalLength ;
+            sh:node dynamat:Length_shape ] ;
     rdf:rest ( [ sh:class dynamat:OriginalCrossSectionalArea ;
                 sh:node dynamat:Area_Shape ] [ sh:class dynamat:Pressure ;
                 sh:node dynamat:Pressure_shape ;
-                sh:optional true ] _:N963c8eec6eb6440d91580a1b3b71c9e5 ) .
+                sh:optional true ] [ sh:class dynamat:Velocity ;
+                sh:node dynamat:Velocity_shape ;
+                sh:optional true ] ) .
 
-_:N46719969e20e416eb47c2a853c16d686 sh:or _:N2091f3d48c054272b3522365cdaa0ae7 .
+_:N56e457afbb5044a5bc626b24a9286766 rdf:first [ sh:class dynamat:OriginalCrossSectionalArea ;
+            sh:node dynamat:Area_Shape ] ;
+    rdf:rest ( [ sh:class dynamat:Pressure ;
+                sh:node dynamat:Pressure_shape ;
+                sh:optional true ] [ sh:class dynamat:Velocity ;
+                sh:node dynamat:Velocity_shape ;
+                sh:optional true ] ) .
 
-_:N6776a3142f684a9b9356d0f9bb03da1d sh:class dynamat:Pressure ;
-    sh:node dynamat:Pressure_shape ;
-    sh:optional true .
+_:Nd6f8805b459c4e80b6cb182b161f6cfd rdf:first _:N313f6e6ee12f429181b1e82451400a14 ;
+    rdf:rest _:N56e457afbb5044a5bc626b24a9286766 .
 
-_:N80660557db4d4271bf3c75eeb09e1cf4 rdf:first _:N6776a3142f684a9b9356d0f9bb03da1d ;
-    rdf:rest _:N0ffd0d5efd854d709da25ccc905102c9 .
+_:Ne0c8b8a7b96e441caea5c3fc525a6ac3 sh:or _:N3d239bef0c724dbeb7023aa53fd8e8c1 .
 
-_:N9d0675d938b1453fb7ec72e6600ec705 sh:class dynamat:StrainGaugeDistance ;
-    sh:node dynamat:Length_shape .
+_:n78ffe100a47b4d6fac32c0e3479f39a1b34 sh:or _:Nd6f8805b459c4e80b6cb182b161f6cfd .
 
-_:Naee740c787a8445a8522e2905f195d64 rdf:first [ sh:class dynamat:OriginalLength ;
-            sh:node dynamat:Length_shape ] ;
-    rdf:rest ( [ sh:class dynamat:OriginalCrossSectionalArea ;
-                sh:node dynamat:Area_Shape ] _:N6776a3142f684a9b9356d0f9bb03da1d _:Nb4f64c636ff441ea9a41caa7c06cf5ba ) .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb56 sh:message "The strain gauge must have the dimension StrainGaugeDistance)." ;
-    sh:minCount 1 ;
-    sh:node _:N9d0675d938b1453fb7ec72e6600ec705 ;
-    sh:path dynamat:hasDimension .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb57 sh:class dynamat:StrainGaugeDistance ;
-    sh:node dynamat:Length_shape .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb58 sh:hasValue dynamat:Millimeter ;
-    sh:maxCount 1 ;
-    sh:message "Each dimension must meters as the valid unit assigned." ;
-    sh:minCount 1 ;
-    sh:node dynamat:Unit_Shape ;
-    sh:path dynamat:hasUnits .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb70 sh:datatype xsd:string ;
-    sh:maxCount 1 ;
-    sh:message "Each unit must have a single abbreviation as a string." ;
-    sh:minCount 1 ;
-    sh:path dynamat:hasAbbreviation .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb71 sh:datatype xsd:string ;
-    sh:maxCount 1 ;
-    sh:message "Each unit must have a single symbol as a string." ;
-    sh:minCount 1 ;
-    sh:path dynamat:hasSymbol .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb33 sh:maxCount 4 ;
+_:n78ffe100a47b4d6fac32c0e3479f39a1b33 sh:maxCount 4 ;
     sh:message "Each bar must have two dimensions: Length and Cross Sectional Area." ;
     sh:minCount 2 ;
-    sh:node _:N46719969e20e416eb47c2a853c16d686 ;
+    sh:node _:Ne0c8b8a7b96e441caea5c3fc525a6ac3 ;
     sh:path dynamat:hasDimension .
-
-_:n1b4333fda5cd4365a6904ec0f0b4ef8eb34 sh:or _:Naee740c787a8445a8522e2905f195d64 .
 
