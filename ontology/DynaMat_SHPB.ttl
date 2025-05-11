@@ -844,6 +844,18 @@ xsd:date rdf:type rdfs:Datatype .
                             :hasName "Deformed Cross Sectional Area" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DeformedDiameter
+:DeformedDiameter rdf:type owl:NamedIndividual ,
+                           :Dimension ;
+                  :hasUnits :Foot ,
+                            :Inch ,
+                            :Meter ,
+                            :Micrometer ,
+                            :Millimeter ;
+                  :hasAbbreviation "Deformed Diameter" ;
+                  :hasName "Deformed Diameter" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DeformedLength
 :DeformedLength rdf:type owl:NamedIndividual ,
                          :Dimension ;
@@ -1105,6 +1117,7 @@ xsd:date rdf:type rdfs:Datatype .
 :IncidentBar rdf:type owl:NamedIndividual ,
                       :Bar ;
              :hasDimension :OriginalCrossSectionalArea ,
+                           :OriginalDiameter ,
                            :OriginalLength ;
              :hasMaterial :SteelC350 ;
              :hasMechanicalProperty :Density ,
@@ -1345,6 +1358,18 @@ xsd:date rdf:type rdfs:Datatype .
                             :hasName "Original Cross Sectional Area" .
 
 
+###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#OriginalDiameter
+:OriginalDiameter rdf:type owl:NamedIndividual ,
+                           :Dimension ;
+                  :hasUnits :Foot ,
+                            :Inch ,
+                            :Meter ,
+                            :Micrometer ,
+                            :Millimeter ;
+                  :hasAbbreviation "Original Diameter" ;
+                  :hasName "Original Diameter" .
+
+
 ###  https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#OriginalLength
 :OriginalLength rdf:type owl:NamedIndividual ,
                          :Dimension ;
@@ -1492,8 +1517,10 @@ xsd:date rdf:type rdfs:Datatype .
 :SHPBSpecimen rdf:type owl:NamedIndividual ,
                        :Specimen ;
               :hasDimension :DeformedCrossSectionalArea ,
+                            :DeformedDiameter ,
                             :DeformedLength ,
                             :OriginalCrossSectionalArea ,
+                            :OriginalDiameter ,
                             :OriginalLength ;
               :hasMechanicalProperty :Density ,
                                      :ElasticModulus ,
@@ -1633,6 +1660,7 @@ xsd:date rdf:type rdfs:Datatype .
 :StrikerBar rdf:type owl:NamedIndividual ,
                      :Bar ;
             :hasDimension :OriginalCrossSectionalArea ,
+                          :OriginalDiameter ,
                           :OriginalLength ;
             :hasMaterial :SteelC350 ;
             :hasMechanicalProperty :Density ,
@@ -1698,6 +1726,7 @@ xsd:date rdf:type rdfs:Datatype .
 :TransmittedBar rdf:type owl:NamedIndividual ,
                          :Bar ;
                 :hasDimension :OriginalCrossSectionalArea ,
+                              :OriginalDiameter ,
                               :OriginalLength ;
                 :hasMaterial :SteelC350 ;
                 :hasMechanicalProperty :Density ,

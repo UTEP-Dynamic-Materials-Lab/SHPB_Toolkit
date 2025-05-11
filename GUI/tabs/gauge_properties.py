@@ -62,9 +62,10 @@ class GaugePropertiesWidget(QWidget):
             spinbox = QSpinBox()
             spinbox.setRange(0, 100)  # Adjust range as needed
             try: 
-                spinbox.setValue(float(self.sg_config[f"{URIRef(self.bar_list[idx]).split('#')[-1]}_Gauges"]))
-            except: 
+                spinbox.setValue(int(self.sg_config[f"{URIRef(self.bar_list[idx]).split('#')[-1]}_Gauges"]))
+            except Exception as e:
                 print(f"No default number of strain gauges found for: {label}")
+                print(e)
     
             sensor_layout.addWidget(sensor_label)
             sensor_layout.addWidget(spinbox)
@@ -320,4 +321,3 @@ class GaugePropertiesWidget(QWidget):
                         prop["combo_box"].setVisible(True)                  
                     except: 
                         continue
-

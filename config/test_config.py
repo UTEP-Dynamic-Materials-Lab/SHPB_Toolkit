@@ -3,6 +3,7 @@ class TestConfiguration:
     def __init__(self):
         # Defined Default Values for Test Description Tab
         self.test_name = None # Do not change! Generate one using the GUI
+        self.test_user = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DavidSantacruz"
         self.specimen_material = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SS316"
         self.test_type = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#SpecimenTest"
         self.test_mode = "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LABMode"
