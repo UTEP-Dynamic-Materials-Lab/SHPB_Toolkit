@@ -1,0 +1,442 @@
+@prefix dynamat: <https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dynamat:DKS_20250507_SS316_LAB_RT_035 a dynamat:SHPBExperiment ;
+    dynamat:hasMetadata dynamat:Experiment_Metadata ;
+    dynamat:hasPrimaryData dynamat:Experiment_Primary_Data ;
+    dynamat:hasSecondaryData dynamat:Experiment_Secondary_Data .
+
+dynamat:Cylindrical a owl:NamedIndividual,
+        dynamat:Shape ;
+    rdfs:comment "Cylindrical shaped test specimens, commonly used in SHPB testing."^^xsd:string ;
+    dynamat:hasAbbreviation "CYL"^^xsd:string ;
+    dynamat:hasName "Cylindrical Shape"^^xsd:string .
+
+dynamat:DavidSantacruz a owl:NamedIndividual,
+        dynamat:User ;
+    dynamat:hasAbbreviation "DKS"^^xsd:string ;
+    dynamat:hasAffiliation "The University of Texas at El Paso"^^xsd:string ;
+    dynamat:hasLocation "PHYS Building, Room 412"^^xsd:string ;
+    dynamat:hasName "David K. Santacruz"^^xsd:string ;
+    dynamat:hasSupervisor "Brian E. Schuster"^^xsd:string .
+
+dynamat:DynaMatLab a owl:NamedIndividual,
+        dynamat:Laboratory ;
+    dynamat:hasAbbreviation "Dynamic Materials Laboratory"^^xsd:string ;
+    dynamat:hasAffiliation "University of Texas at El Paso"^^xsd:string ;
+    dynamat:hasLocation "PHYS Building, Room 412"^^xsd:string ;
+    dynamat:hasName "Dynamic Material's Laboratory"^^xsd:string ;
+    dynamat:hasSupervisor "Dr Brian E Schuster"^^xsd:string .
+
+dynamat:Experiment_Metadata a dynamat:Metadata ;
+    dynamat:hasLaboratory dynamat:DynaMatLab ;
+    dynamat:hasSpecimen dynamat:Test_Specimen ;
+    dynamat:hasTestDate "2025-05-07"^^xsd:date ;
+    dynamat:hasTestName "DKS_20250507_SS316_LAB_RT_035"^^xsd:string ;
+    dynamat:hasTestingConditions dynamat:Testing_Conditions ;
+    dynamat:hasUser dynamat:DavidSantacruz .
+
+dynamat:Experiment_Primary_Data a dynamat:PrimaryData .
+
+dynamat:Experiment_Secondary_Data a dynamat:SecondaryData .
+
+dynamat:IncidentStrainGauge_0 a dynamat:SHPBStrainGauge ;
+    dynamat:hasDimension dynamat:IncidentStrainGauge_0_Distance ;
+    dynamat:hasStrainGaugeProperty dynamat:SG_CalibrationResistance,
+        dynamat:SG_CalibrationVoltage,
+        dynamat:SG_DataAcquisitionRate,
+        dynamat:SG_GaugeFactor,
+        dynamat:SG_Resistance .
+
+dynamat:IncidentStrainGauge_0_Distance a dynamat:Dimension,
+        dynamat:StrainGaugeDistance ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "1219.2"^^xsd:float .
+
+dynamat:Incident_Bar a dynamat:Bar,
+        dynamat:IncidentBar ;
+    dynamat:hasDimension dynamat:Incident_Bar_OriginalCrossSectionalArea,
+        dynamat:Incident_Bar_OriginalDiameter,
+        dynamat:Incident_Bar_OriginalLength ;
+    dynamat:hasMaterial dynamat:SteelC350 ;
+    dynamat:hasMechanicalProperty dynamat:Incident_Bar_Density,
+        dynamat:Incident_Bar_ElasticModulus,
+        dynamat:Incident_Bar_PoissonsRatio,
+        dynamat:Incident_Bar_WaveSpeed ;
+    dynamat:hasStrainGauge dynamat:IncidentStrainGauge_0 .
+
+dynamat:Incident_Bar_Density a dynamat:Density,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "Density of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:KilogramPerCubicMillimeter ;
+    dynamat:hasValue "8.0825e-06"^^xsd:float .
+
+dynamat:Incident_Bar_ElasticModulus a dynamat:ElasticModulus,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "ElasticModulus of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Megapascal ;
+    dynamat:hasValue "199990.0"^^xsd:float .
+
+dynamat:Incident_Bar_OriginalCrossSectionalArea a dynamat:Dimension,
+        dynamat:OriginalCrossSectionalArea ;
+    dynamat:hasDescription "OriginalCrossSectionalArea of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:SquareMilimeters ;
+    dynamat:hasValue "71.25147"^^xsd:float .
+
+dynamat:Incident_Bar_OriginalDiameter a dynamat:Dimension,
+        dynamat:OriginalDiameter ;
+    dynamat:hasDescription "OriginalDiameter of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "9.525"^^xsd:float .
+
+dynamat:Incident_Bar_OriginalLength a dynamat:Dimension,
+        dynamat:OriginalLength ;
+    dynamat:hasDescription "OriginalLength of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "2438.4"^^xsd:float .
+
+dynamat:Incident_Bar_PoissonsRatio a dynamat:MechanicalProperty,
+        dynamat:PoissonsRatio ;
+    dynamat:hasDescription "PoissonsRatio of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Unitless ;
+    dynamat:hasValue "0.29"^^xsd:float .
+
+dynamat:Incident_Bar_WaveSpeed a dynamat:MechanicalProperty,
+        dynamat:WaveSpeed ;
+    dynamat:hasDescription "WaveSpeed of the Incident_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:MeterPerSecond ;
+    dynamat:hasValue "4953.321"^^xsd:float .
+
+dynamat:LABMode a owl:NamedIndividual,
+        dynamat:TestMode ;
+    rdfs:comment "Indicates that the experiment was done using physical testing conditions."^^xsd:string ;
+    dynamat:hasAbbreviation "LAB"^^xsd:string ;
+    dynamat:hasName "LAB Testing Conditions"^^xsd:string .
+
+dynamat:MegaHertz a owl:NamedIndividual,
+        dynamat:FrequencyUnit ;
+    dynamat:hasAbbreviation "MHz"^^xsd:string ;
+    dynamat:hasSymbol "$MHz$"^^xsd:string .
+
+dynamat:MomentumTrapEngaged a owl:NamedIndividual,
+        dynamat:MomentumTrap ;
+    rdfs:comment "Indicates that the momentum trap was engaged during the test."^^xsd:string ;
+    dynamat:hasAbbreviation "Engaged"^^xsd:string ;
+    dynamat:hasName "Momentum Trap Engaged"^^xsd:string .
+
+dynamat:PrintCastProcess a owl:NamedIndividual,
+        dynamat:SpecimenProcessing ;
+    rdfs:comment "Refers to a specimen that was Print Casted. Commonly used in DynaMat Lab."^^xsd:string ;
+    dynamat:hasAbbreviation "Print Casted Specimen"^^xsd:string ;
+    dynamat:hasName "Print Casting Composite"^^xsd:string .
+
+dynamat:RoomTemperature a owl:NamedIndividual,
+        dynamat:TestTemperature ;
+    rdfs:comment "Indicates that the experiment was done using room temperature testing conditions."^^xsd:string ;
+    dynamat:hasAbbreviation "RT"^^xsd:string ;
+    dynamat:hasName "Room Temperature Testing"^^xsd:string .
+
+dynamat:SHPBExperiment a owl:NamedIndividual,
+        dynamat:Experiment ;
+    dynamat:hasAbbreviation "SHPB Test"^^xsd:string ;
+    dynamat:hasName "Split Hopkinson Pressure Bar Experiment"^^xsd:string .
+
+dynamat:SS316 a owl:NamedIndividual,
+        dynamat:Material,
+        dynamat:SteelAlloy ;
+    dynamat:hasAbbreviation "SS316"^^xsd:string ;
+    dynamat:hasLegendName "SS316 Alloy"^^xsd:string ;
+    dynamat:hasName "Stainless Steel 316 Alloy"^^xsd:string .
+
+dynamat:SimpleCubicLattice a owl:NamedIndividual,
+        dynamat:Structure ;
+    rdfs:comment "A simple cubic structure is a crystal structure with a cube-shaped unit cell. Represents the simple cubic bravais lattice used in material science."^^xsd:string ;
+    dynamat:hasAbbreviation "SC"^^xsd:string ;
+    dynamat:hasName "Simple Cubic Lattice"^^xsd:string .
+
+dynamat:SpecimenTest a owl:NamedIndividual,
+        dynamat:TestType ;
+    rdfs:comment "A test involving a specimen to evaluate its mechanical behavior."^^xsd:string ;
+    dynamat:hasAbbreviation "Specimen"^^xsd:string ;
+    dynamat:hasName "Specimen Test"^^xsd:string .
+
+dynamat:Striker_Bar a dynamat:Bar,
+        dynamat:StrikerBar ;
+    dynamat:hasDimension dynamat:Striker_Bar_OriginalCrossSectionalArea,
+        dynamat:Striker_Bar_OriginalDiameter,
+        dynamat:Striker_Bar_OriginalLength,
+        dynamat:Striker_Bar_Pressure,
+        dynamat:Striker_Bar_Velocity ;
+    dynamat:hasMaterial dynamat:SteelC350 ;
+    dynamat:hasMechanicalProperty dynamat:Striker_Bar_Density,
+        dynamat:Striker_Bar_ElasticModulus,
+        dynamat:Striker_Bar_PoissonsRatio,
+        dynamat:Striker_Bar_WaveSpeed .
+
+dynamat:Striker_Bar_Density a dynamat:Density,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "Density of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:KilogramPerCubicMillimeter ;
+    dynamat:hasValue "8.0825e-06"^^xsd:float .
+
+dynamat:Striker_Bar_ElasticModulus a dynamat:ElasticModulus,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "ElasticModulus of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Megapascal ;
+    dynamat:hasValue "199990.0"^^xsd:float .
+
+dynamat:Striker_Bar_OriginalCrossSectionalArea a dynamat:Dimension,
+        dynamat:OriginalCrossSectionalArea ;
+    dynamat:hasDescription "OriginalCrossSectionalArea of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:SquareMilimeters ;
+    dynamat:hasValue "71.25147"^^xsd:float .
+
+dynamat:Striker_Bar_OriginalDiameter a dynamat:Dimension,
+        dynamat:OriginalDiameter ;
+    dynamat:hasDescription "OriginalDiameter of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "9.525"^^xsd:float .
+
+dynamat:Striker_Bar_OriginalLength a dynamat:Dimension,
+        dynamat:OriginalLength ;
+    dynamat:hasDescription "OriginalLength of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "457.2"^^xsd:float .
+
+dynamat:Striker_Bar_PoissonsRatio a dynamat:MechanicalProperty,
+        dynamat:PoissonsRatio ;
+    dynamat:hasDescription "PoissonsRatio of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Unitless ;
+    dynamat:hasValue "0.29"^^xsd:float .
+
+dynamat:Striker_Bar_Pressure a dynamat:Dimension,
+        dynamat:Pressure ;
+    dynamat:hasDescription "Initial pressure of the striker bar during testing"^^xsd:string ;
+    dynamat:hasUnits dynamat:Megapascal ;
+    dynamat:hasValue "0.53089654"^^xsd:float .
+
+dynamat:Striker_Bar_Velocity a dynamat:Dimension,
+        dynamat:Velocity ;
+    dynamat:hasDescription "Initial velocity of the striker bar during testing"^^xsd:string ;
+    dynamat:hasUnits dynamat:MeterPerSecond ;
+    dynamat:hasValue "22.78"^^xsd:float .
+
+dynamat:Striker_Bar_WaveSpeed a dynamat:MechanicalProperty,
+        dynamat:WaveSpeed ;
+    dynamat:hasDescription "WaveSpeed of the Striker_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:MeterPerSecond ;
+    dynamat:hasValue "4953.321"^^xsd:float .
+
+dynamat:Test_Specimen a dynamat:SHPBSpecimen,
+        dynamat:Specimen ;
+    dynamat:hasDimension dynamat:Test_Specimen_DeformedCrossSectionalArea,
+        dynamat:Test_Specimen_DeformedDiameter,
+        dynamat:Test_Specimen_DeformedLength,
+        dynamat:Test_Specimen_OriginalCrossSectionalArea,
+        dynamat:Test_Specimen_OriginalDiameter,
+        dynamat:Test_Specimen_OriginalLength ;
+    dynamat:hasMaterial dynamat:SS316 ;
+    dynamat:hasShape dynamat:Cylindrical ;
+    dynamat:hasSpecimenProcessing dynamat:PrintCastProcess ;
+    dynamat:hasStructure dynamat:SimpleCubicLattice .
+
+dynamat:Test_Specimen_DeformedCrossSectionalArea a dynamat:DeformedCrossSectionalArea,
+        dynamat:Dimension ;
+    dynamat:hasDescription "DeformedCrossSectionalArea of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:SquareMilimeters ;
+    dynamat:hasValue "72.38229"^^xsd:float .
+
+dynamat:Test_Specimen_DeformedDiameter a dynamat:DeformedDiameter,
+        dynamat:Dimension ;
+    dynamat:hasDescription "DeformedDiameter of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "9.6"^^xsd:float .
+
+dynamat:Test_Specimen_DeformedLength a dynamat:DeformedLength,
+        dynamat:Dimension ;
+    dynamat:hasDescription "DeformedLength of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "2.86"^^xsd:float .
+
+dynamat:Test_Specimen_OriginalCrossSectionalArea a dynamat:Dimension,
+        dynamat:OriginalCrossSectionalArea ;
+    dynamat:hasDescription "OriginalCrossSectionalArea of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:SquareMilimeters ;
+    dynamat:hasValue "30.97485"^^xsd:float .
+
+dynamat:Test_Specimen_OriginalDiameter a dynamat:Dimension,
+        dynamat:OriginalDiameter ;
+    dynamat:hasDescription "OriginalDiameter of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "6.28"^^xsd:float .
+
+dynamat:Test_Specimen_OriginalLength a dynamat:Dimension,
+        dynamat:OriginalLength ;
+    dynamat:hasDescription "OriginalLength of the Test_Specimen"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "6.33"^^xsd:float .
+
+dynamat:Testing_Conditions a dynamat:TestingConditions ;
+    dynamat:hasBar dynamat:Incident_Bar,
+        dynamat:Striker_Bar,
+        dynamat:Transmitted_Bar ;
+    dynamat:hasMomentumTrap dynamat:MomentumTrapEngaged ;
+    dynamat:hasTestMode dynamat:LABMode ;
+    dynamat:hasTestTemperature dynamat:RoomTemperature ;
+    dynamat:hasTestType dynamat:SpecimenTest .
+
+dynamat:TransmittedStrainGauge_0 a dynamat:SHPBStrainGauge ;
+    dynamat:hasDimension dynamat:TransmittedStrainGauge_0_Distance ;
+    dynamat:hasStrainGaugeProperty dynamat:SG_CalibrationResistance,
+        dynamat:SG_CalibrationVoltage,
+        dynamat:SG_DataAcquisitionRate,
+        dynamat:SG_GaugeFactor,
+        dynamat:SG_Resistance .
+
+dynamat:TransmittedStrainGauge_0_Distance a dynamat:Dimension,
+        dynamat:StrainGaugeDistance ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "1219.2"^^xsd:float .
+
+dynamat:Transmitted_Bar a dynamat:Bar,
+        dynamat:TransmittedBar ;
+    dynamat:hasDimension dynamat:Transmitted_Bar_OriginalCrossSectionalArea,
+        dynamat:Transmitted_Bar_OriginalDiameter,
+        dynamat:Transmitted_Bar_OriginalLength ;
+    dynamat:hasMaterial dynamat:SteelC350 ;
+    dynamat:hasMechanicalProperty dynamat:Transmitted_Bar_Density,
+        dynamat:Transmitted_Bar_ElasticModulus,
+        dynamat:Transmitted_Bar_PoissonsRatio,
+        dynamat:Transmitted_Bar_WaveSpeed ;
+    dynamat:hasStrainGauge dynamat:TransmittedStrainGauge_0 .
+
+dynamat:Transmitted_Bar_Density a dynamat:Density,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "Density of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:KilogramPerCubicMillimeter ;
+    dynamat:hasValue "8.0825e-06"^^xsd:float .
+
+dynamat:Transmitted_Bar_ElasticModulus a dynamat:ElasticModulus,
+        dynamat:MechanicalProperty ;
+    dynamat:hasDescription "ElasticModulus of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Megapascal ;
+    dynamat:hasValue "199990.0"^^xsd:float .
+
+dynamat:Transmitted_Bar_OriginalCrossSectionalArea a dynamat:Dimension,
+        dynamat:OriginalCrossSectionalArea ;
+    dynamat:hasDescription "OriginalCrossSectionalArea of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:SquareMilimeters ;
+    dynamat:hasValue "71.25147"^^xsd:float .
+
+dynamat:Transmitted_Bar_OriginalDiameter a dynamat:Dimension,
+        dynamat:OriginalDiameter ;
+    dynamat:hasDescription "OriginalDiameter of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "9.525"^^xsd:float .
+
+dynamat:Transmitted_Bar_OriginalLength a dynamat:Dimension,
+        dynamat:OriginalLength ;
+    dynamat:hasDescription "OriginalLength of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Millimeter ;
+    dynamat:hasValue "1828.8"^^xsd:float .
+
+dynamat:Transmitted_Bar_PoissonsRatio a dynamat:MechanicalProperty,
+        dynamat:PoissonsRatio ;
+    dynamat:hasDescription "PoissonsRatio of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:Unitless ;
+    dynamat:hasValue "0.29"^^xsd:float .
+
+dynamat:Transmitted_Bar_WaveSpeed a dynamat:MechanicalProperty,
+        dynamat:WaveSpeed ;
+    dynamat:hasDescription "WaveSpeed of the Transmitted_Bar"^^xsd:string ;
+    dynamat:hasUnits dynamat:MeterPerSecond ;
+    dynamat:hasValue "4953.321"^^xsd:float .
+
+dynamat:Ohms a owl:NamedIndividual,
+        dynamat:ElectricalResistanceUnit ;
+    dynamat:hasAbbreviation "Ohms"^^xsd:string ;
+    dynamat:hasSymbol "$\\Omega$"^^xsd:string .
+
+dynamat:SG_CalibrationResistance a dynamat:CalibrationResistance,
+        dynamat:StrainGaugeProperty ;
+    dynamat:hasDescription "CalibrationResistance property of the strain gauges"^^xsd:string ;
+    dynamat:hasUnits dynamat:Ohms ;
+    dynamat:hasValue "59950.0"^^xsd:float .
+
+dynamat:SG_CalibrationVoltage a dynamat:CalibrationVoltage,
+        dynamat:StrainGaugeProperty ;
+    dynamat:hasDescription "CalibrationVoltage property of the strain gauges"^^xsd:string ;
+    dynamat:hasUnits dynamat:Volts ;
+    dynamat:hasValue "2.0"^^xsd:float .
+
+dynamat:SG_DataAcquisitionRate a dynamat:DataAcquisitionRate,
+        dynamat:StrainGaugeProperty ;
+    dynamat:hasDescription "DataAcquisitionRate property of the strain gauges"^^xsd:string ;
+    dynamat:hasUnits dynamat:MegaHertz ;
+    dynamat:hasValue "10.0"^^xsd:float .
+
+dynamat:SG_GaugeFactor a dynamat:GaugeFactor,
+        dynamat:StrainGaugeProperty ;
+    dynamat:hasDescription "GaugeFactor property of the strain gauges"^^xsd:string ;
+    dynamat:hasUnits dynamat:Unitless ;
+    dynamat:hasValue "2.06"^^xsd:float .
+
+dynamat:SG_Resistance a dynamat:Resistance,
+        dynamat:StrainGaugeProperty ;
+    dynamat:hasDescription "Resistance property of the strain gauges"^^xsd:string ;
+    dynamat:hasUnits dynamat:Ohms ;
+    dynamat:hasValue "120.0"^^xsd:float .
+
+dynamat:KilogramPerCubicMillimeter a owl:NamedIndividual,
+        dynamat:DensityUnit,
+        "http://www.w3.org/2002/07/owl#NamedIndividual"^^xsd:string,
+        "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#DensityUnit"^^xsd:string ;
+    rdfs:comment "Kilogram per cubic millimeter, a unit of density."^^xsd:string ;
+    dynamat:hasAbbreviation "Kg/mm^3"^^xsd:string ;
+    dynamat:hasSymbol "$\\frac{Kg}{mm^3}$"^^xsd:string .
+
+dynamat:SteelC350 a owl:NamedIndividual,
+        dynamat:Material,
+        dynamat:SteelAlloy ;
+    dynamat:hasAbbreviation "STC350"^^xsd:string ;
+    dynamat:hasLegendName "STC350 Alloy"^^xsd:string ;
+    dynamat:hasName "Steel C350 Alloy"^^xsd:string .
+
+dynamat:Megapascal a owl:NamedIndividual,
+        dynamat:PressureUnit,
+        "http://www.w3.org/2002/07/owl#NamedIndividual"^^xsd:string,
+        "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#PressureUnit"^^xsd:string ;
+    rdfs:comment "Megapascal, a unit of pressure in the SI system."^^xsd:string ;
+    dynamat:hasAbbreviation "MPa"^^xsd:string ;
+    dynamat:hasSymbol "$\\text{MPa}$"^^xsd:string .
+
+dynamat:MeterPerSecond a owl:NamedIndividual,
+        dynamat:VelocityUnit,
+        "http://www.w3.org/2002/07/owl#NamedIndividual"^^xsd:string,
+        "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#VelocityUnit"^^xsd:string ;
+    rdfs:comment "Meter per second, a unit of velocity in the SI system."^^xsd:string ;
+    dynamat:hasAbbreviation "m/s"^^xsd:string ;
+    dynamat:hasSymbol "$\\frac{m}{s}$"^^xsd:string .
+
+dynamat:Unitless a owl:NamedIndividual,
+        dynamat:UnitlessUnit ;
+    dynamat:hasAbbreviation "Unitless"^^xsd:string ;
+    dynamat:hasSymbol ""^^xsd:string .
+
+dynamat:SquareMilimeters a owl:NamedIndividual,
+        dynamat:AreaUnit,
+        "http://www.w3.org/2002/07/owl#NamedIndividual"^^xsd:string,
+        "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#AreaUnit"^^xsd:string ;
+    dynamat:hasAbbreviation "mm^2"^^xsd:string ;
+    dynamat:hasSymbol "$mm^2$"^^xsd:string .
+
+dynamat:Millimeter a owl:NamedIndividual,
+        dynamat:LengthUnit,
+        "http://www.w3.org/2002/07/owl#NamedIndividual"^^xsd:string,
+        "https://github.com/UTEP-Dynamic-Materials-Lab/SHPB_Toolkit/tree/main/ontology#LengthUnit"^^xsd:string ;
+    rdfs:comment "Millimeter, a unit of length in the SI system."^^xsd:string ;
+    dynamat:hasAbbreviation "mm"^^xsd:string ;
+    dynamat:hasSymbol "$mm$"^^xsd:string .
+

@@ -6,26 +6,19 @@
 [] a sh:ValidationReport ;
     sh:conforms false ;
     sh:result [ a sh:ValidationResult ;
-            sh:focusNode dynamat:Test_Specimen ;
-            sh:resultMessage "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
-            sh:resultPath dynamat:hasDimension ;
-            sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:MaxCountConstraintComponent ;
-            sh:sourceShape _:n144e4094b7f74d41b6820b7ac88de02ab3 ],
-        [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
                     sh:focusNode dynamat:Test_Specimen_DeformedDiameter ;
                     sh:resultMessage "Node dynamat:Test_Specimen_DeformedDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_shape ] , [ sh:class dynamat:DeformedLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:DeformedCrossSectionalArea ; sh:node dynamat:Area_shape ]" ;
                     sh:resultSeverity sh:Violation ;
                     sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n144e4094b7f74d41b6820b7ac88de02ab4 ;
+                    sh:sourceShape _:n6da92743821948bfb08396a420194898b4 ;
                     sh:value dynamat:Test_Specimen_DeformedDiameter ] ;
             sh:focusNode dynamat:Test_Specimen ;
             sh:resultMessage "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n144e4094b7f74d41b6820b7ac88de02ab3 ;
+            sh:sourceShape _:n6da92743821948bfb08396a420194898b3 ;
             sh:value dynamat:Test_Specimen_DeformedDiameter ],
         [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
@@ -33,49 +26,51 @@
                     sh:resultMessage "Node dynamat:Test_Specimen_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_shape ] , [ sh:class dynamat:DeformedLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:DeformedCrossSectionalArea ; sh:node dynamat:Area_shape ]" ;
                     sh:resultSeverity sh:Violation ;
                     sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n144e4094b7f74d41b6820b7ac88de02ab4 ;
+                    sh:sourceShape _:n6da92743821948bfb08396a420194898b4 ;
                     sh:value dynamat:Test_Specimen_OriginalDiameter ] ;
             sh:focusNode dynamat:Test_Specimen ;
             sh:resultMessage "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n144e4094b7f74d41b6820b7ac88de02ab3 ;
-            sh:value dynamat:Test_Specimen_OriginalDiameter ] .
+            sh:sourceShape _:n6da92743821948bfb08396a420194898b3 ;
+            sh:value dynamat:Test_Specimen_OriginalDiameter ],
+        [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Test_Specimen ;
+            sh:resultMessage "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
+            sh:resultPath dynamat:hasDimension ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MaxCountConstraintComponent ;
+            sh:sourceShape _:n6da92743821948bfb08396a420194898b3 ] .
 
-_:N0206d7c8a4d54a36b73d481c1d07f5bd rdf:first [ sh:class dynamat:DeformedCrossSectionalArea ;
-            sh:node dynamat:Area_shape ] ;
-    rdf:rest () .
+_:N021c8b91e48642d1bdd4058aa407321e sh:class dynamat:DeformedLength ;
+    sh:node dynamat:Length_shape .
 
-_:N236b79d3a11240c2b8eccef8fb655054 rdf:first [ sh:class dynamat:DeformedLength ;
-            sh:node dynamat:Length_shape ] ;
-    rdf:rest ( [ sh:class dynamat:DeformedCrossSectionalArea ;
-                sh:node dynamat:Area_shape ] ) .
-
-_:N25e382b896444125906b5b032299eb2b rdf:first [ sh:class dynamat:OriginalCrossSectionalArea ;
-            sh:node dynamat:Area_shape ] ;
-    rdf:rest _:N236b79d3a11240c2b8eccef8fb655054 .
-
-_:N2eba799cc3bd4327b3aa20e254167090 sh:class dynamat:OriginalCrossSectionalArea ;
+_:N0445c47b6af94657806d0f75f0218330 sh:class dynamat:DeformedCrossSectionalArea ;
     sh:node dynamat:Area_shape .
 
-_:N46e89db1aa624815b6c2ee791a127a10 sh:class dynamat:OriginalLength ;
-    sh:node dynamat:Length_shape .
+_:N0fbc69dc637c45cbb0530303e1f6f9c5 rdf:first [ sh:class dynamat:OriginalCrossSectionalArea ;
+            sh:node dynamat:Area_shape ] ;
+    rdf:rest ( [ sh:class dynamat:DeformedLength ;
+                sh:node dynamat:Length_shape ] [ sh:class dynamat:DeformedCrossSectionalArea ;
+                sh:node dynamat:Area_shape ] ) .
 
-_:N5605a631aa024ac4988f13db8aad40a1 sh:or ( _:N46e89db1aa624815b6c2ee791a127a10 _:Nea1a437f0b6347f996ad9c4bb8500769 _:N6349fb646aed4b5b99ea33258d7e925d _:N7e8b965a151b4054af165a990c513650 ) .
+_:N16344e59531b49f8903a5f79d954a821 rdf:first [ sh:class dynamat:OriginalLength ;
+            sh:node dynamat:Length_shape ] ;
+    rdf:rest _:N0fbc69dc637c45cbb0530303e1f6f9c5 .
 
-_:N885a910c86214f59a5579dd77c1176fe sh:class dynamat:OriginalLength ;
-    sh:node dynamat:Length_shape .
+_:N197ec5b9b96e4da08ca9a43daeaf405e rdf:first [ sh:class dynamat:OriginalLength ;
+            sh:node dynamat:Length_shape ] ;
+    rdf:rest ( [ sh:class dynamat:OriginalCrossSectionalArea ;
+                sh:node dynamat:Area_shape ] _:N021c8b91e48642d1bdd4058aa407321e _:N0445c47b6af94657806d0f75f0218330 ) .
 
-_:N8ef0a90e75ae48bc943e8c94142afd70 rdf:first _:N885a910c86214f59a5579dd77c1176fe ;
-    rdf:rest ( _:N2eba799cc3bd4327b3aa20e254167090 [ sh:class dynamat:DeformedLength ;
-                sh:node dynamat:Length_shape ] _:N2668ff5eb60e41a8a877786788e5df38 ) .
+_:N689812e2368849a88ff2fd0b6485016c sh:or _:N16344e59531b49f8903a5f79d954a821 .
 
-_:n144e4094b7f74d41b6820b7ac88de02ab4 sh:or _:N8ef0a90e75ae48bc943e8c94142afd70 .
+_:n6da92743821948bfb08396a420194898b4 sh:or _:N197ec5b9b96e4da08ca9a43daeaf405e .
 
-_:n144e4094b7f74d41b6820b7ac88de02ab3 sh:maxCount 4 ;
+_:n6da92743821948bfb08396a420194898b3 sh:maxCount 4 ;
     sh:message "Each Specimen must have 4 measured dimensions, Original and Deformed Lenghts and Cross Sections." ;
     sh:minCount 4 ;
-    sh:node _:N5605a631aa024ac4988f13db8aad40a1 ;
+    sh:node _:N689812e2368849a88ff2fd0b6485016c ;
     sh:path dynamat:hasDimension .
 
