@@ -6,19 +6,41 @@
 [] a sh:ValidationReport ;
     sh:conforms false ;
     sh:result [ a sh:ValidationResult ;
+            sh:focusNode dynamat:Striker_Bar ;
+            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
+            sh:resultPath dynamat:hasDimension ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MaxCountConstraintComponent ;
+            sh:sourceShape _:n75961c856b014a78ad943aea54155184b33 ],
+        [ a sh:ValidationResult ;
+            sh:detail [ a sh:ValidationResult ;
+                    sh:focusNode dynamat:Transmitted_Bar_OriginalDiameter ;
+                    sh:resultMessage "Node dynamat:Transmitted_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
+                    sh:sourceShape _:n75961c856b014a78ad943aea54155184b34 ;
+                    sh:value dynamat:Transmitted_Bar_OriginalDiameter ] ;
+            sh:focusNode dynamat:Transmitted_Bar ;
+            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
+            sh:resultPath dynamat:hasDimension ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+            sh:sourceShape _:n75961c856b014a78ad943aea54155184b33 ;
+            sh:value dynamat:Transmitted_Bar_OriginalDiameter ],
+        [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
                     sh:focusNode dynamat:Incident_Bar_OriginalDiameter ;
                     sh:resultMessage "Node dynamat:Incident_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
                     sh:resultSeverity sh:Violation ;
                     sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb34 ;
+                    sh:sourceShape _:n75961c856b014a78ad943aea54155184b34 ;
                     sh:value dynamat:Incident_Bar_OriginalDiameter ] ;
             sh:focusNode dynamat:Incident_Bar ;
             sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb33 ;
+            sh:sourceShape _:n75961c856b014a78ad943aea54155184b33 ;
             sh:value dynamat:Incident_Bar_OriginalDiameter ],
         [ a sh:ValidationResult ;
             sh:detail [ a sh:ValidationResult ;
@@ -26,65 +48,52 @@
                     sh:resultMessage "Node dynamat:Striker_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
                     sh:resultSeverity sh:Violation ;
                     sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb34 ;
+                    sh:sourceShape _:n75961c856b014a78ad943aea54155184b34 ;
                     sh:value dynamat:Striker_Bar_OriginalDiameter ] ;
             sh:focusNode dynamat:Striker_Bar ;
             sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
             sh:resultPath dynamat:hasDimension ;
             sh:resultSeverity sh:Violation ;
             sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb33 ;
-            sh:value dynamat:Striker_Bar_OriginalDiameter ],
-        [ a sh:ValidationResult ;
-            sh:focusNode dynamat:Striker_Bar ;
-            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
-            sh:resultPath dynamat:hasDimension ;
-            sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:MaxCountConstraintComponent ;
-            sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb33 ],
-        [ a sh:ValidationResult ;
-            sh:detail [ a sh:ValidationResult ;
-                    sh:focusNode dynamat:Transmitted_Bar_OriginalDiameter ;
-                    sh:resultMessage "Node dynamat:Transmitted_Bar_OriginalDiameter must conform to one or more shapes in [ sh:class dynamat:OriginalLength ; sh:node dynamat:Length_shape ] , [ sh:class dynamat:OriginalCrossSectionalArea ; sh:node dynamat:Area_Shape ] , [ sh:class dynamat:Pressure ; sh:node dynamat:Pressure_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ] , [ sh:class dynamat:Velocity ; sh:node dynamat:Velocity_shape ; sh:optional Literal(\"true\" = True, datatype=xsd:boolean) ]" ;
-                    sh:resultSeverity sh:Violation ;
-                    sh:sourceConstraintComponent sh:OrConstraintComponent ;
-                    sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb34 ;
-                    sh:value dynamat:Transmitted_Bar_OriginalDiameter ] ;
-            sh:focusNode dynamat:Transmitted_Bar ;
-            sh:resultMessage "Each bar must have two dimensions: Length and Cross Sectional Area." ;
-            sh:resultPath dynamat:hasDimension ;
-            sh:resultSeverity sh:Violation ;
-            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-            sh:sourceShape _:n12a73a10fd534dacb9ecdcc83c425a9eb33 ;
-            sh:value dynamat:Transmitted_Bar_OriginalDiameter ] .
+            sh:sourceShape _:n75961c856b014a78ad943aea54155184b33 ;
+            sh:value dynamat:Striker_Bar_OriginalDiameter ] .
 
-_:N30ce64179252447c83c876dee2939bd0 rdf:first [ sh:class dynamat:OriginalLength ;
+_:N10a387a310094fba9dcfe7bc9c7cfc62 sh:class dynamat:Velocity ;
+    sh:node dynamat:Velocity_shape ;
+    sh:optional true .
+
+_:N13ad76ffaf7c447ebee079cf766a199c rdf:first [ sh:class dynamat:Velocity ;
+            sh:node dynamat:Velocity_shape ;
+            sh:optional true ] ;
+    rdf:rest () .
+
+_:N200528e4304e44a29d582610e250bfd0 sh:class dynamat:OriginalLength ;
+    sh:node dynamat:Length_shape .
+
+_:N2666878a965a45bb989a4a9e54a4aac3 sh:class dynamat:OriginalCrossSectionalArea ;
+    sh:node dynamat:Area_Shape .
+
+_:N2df1a892f37840bb99792ebda36988f1 sh:class dynamat:Pressure ;
+    sh:node dynamat:Pressure_shape ;
+    sh:optional true .
+
+_:N4a75a5fb1e4b4d6586773bd45c38b9c3 rdf:first [ sh:class dynamat:OriginalLength ;
             sh:node dynamat:Length_shape ] ;
     rdf:rest ( [ sh:class dynamat:OriginalCrossSectionalArea ;
                 sh:node dynamat:Area_Shape ] [ sh:class dynamat:Pressure ;
                 sh:node dynamat:Pressure_shape ;
-                sh:optional true ] [ sh:class dynamat:Velocity ;
-                sh:node dynamat:Velocity_shape ;
-                sh:optional true ] ) .
+                sh:optional true ] _:N6a8fb4619e28439a8fac8c19c4964a17 ) .
 
-_:N32d48a9790b44c0abec6fcd2d193938b sh:class dynamat:OriginalCrossSectionalArea ;
-    sh:node dynamat:Area_Shape .
+_:N8dd7e3567ecf404bba84b5d714e35d4d rdf:first _:N2666878a965a45bb989a4a9e54a4aac3 ;
+    rdf:rest ( _:N2df1a892f37840bb99792ebda36988f1 _:N10a387a310094fba9dcfe7bc9c7cfc62 ) .
 
-_:N8d6f29434a334a9eb1561042379adf2c rdf:first [ sh:class dynamat:OriginalLength ;
-            sh:node dynamat:Length_shape ] ;
-    rdf:rest ( _:N32d48a9790b44c0abec6fcd2d193938b [ sh:class dynamat:Pressure ;
-                sh:node dynamat:Pressure_shape ;
-                sh:optional true ] [ sh:class dynamat:Velocity ;
-                sh:node dynamat:Velocity_shape ;
-                sh:optional true ] ) .
+_:Na159b5cd9dd74679acbb01f7f93ffc4e sh:or ( _:N200528e4304e44a29d582610e250bfd0 _:N2666878a965a45bb989a4a9e54a4aac3 _:N2df1a892f37840bb99792ebda36988f1 _:N10a387a310094fba9dcfe7bc9c7cfc62 ) .
 
-_:Ndd75172271194bf1841b5cd114818222 sh:or _:N30ce64179252447c83c876dee2939bd0 .
+_:n75961c856b014a78ad943aea54155184b34 sh:or _:N4a75a5fb1e4b4d6586773bd45c38b9c3 .
 
-_:n12a73a10fd534dacb9ecdcc83c425a9eb34 sh:or _:N8d6f29434a334a9eb1561042379adf2c .
-
-_:n12a73a10fd534dacb9ecdcc83c425a9eb33 sh:maxCount 4 ;
+_:n75961c856b014a78ad943aea54155184b33 sh:maxCount 4 ;
     sh:message "Each bar must have two dimensions: Length and Cross Sectional Area." ;
     sh:minCount 2 ;
-    sh:node _:Ndd75172271194bf1841b5cd114818222 ;
+    sh:node _:Na159b5cd9dd74679acbb01f7f93ffc4e ;
     sh:path dynamat:hasDimension .
 
